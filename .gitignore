@@ -57,6 +57,9 @@ __pycache__/
 /stage_records/
 /readme_materials/
 /docs/DRAFT_CHECKLIST.md
+/docs/RESULTS.md
+/docs/SCENE.md
+/docs/SUBMISSION.md
 
 # Raw captures and ad-hoc renders; published PNGs are under docs/images/.
 /*.png
