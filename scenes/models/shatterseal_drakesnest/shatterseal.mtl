@@ -1,0 +1,66 @@
+# Blender 4.5.6 LTS MTL File: 'Shatterseal_Drakesnest.blend'
+# www.blender.org
+
+newmtl Shatterseal_Glass
+Ks 0.500000 0.500000 0.500000
+Ni 1.500000
+illum 2
+Ps 0.000000
+Pc 0.000000
+Pcr 0.030000
+aniso 0.000000
+anisor 0.000000
+map_Kd textures/baked/Glass_basecolor.png
+map_Pm textures/baked/Glass_metallic.png
+map_Pr textures/baked/Glass_roughness.png
+map_Ke textures/baked/Glass_emission.png
+map_d textures/baked/Glass_alpha.png
+map_Bump -bm 1.000000 textures/baked/Glass_normal.png
+
+newmtl Shatterseal_Metal
+Ks 0.500000 0.500000 0.500000
+Ni 1.500000
+illum 2
+Ps 0.000000
+Pc 0.000000
+Pcr 0.030000
+aniso 0.000000
+anisor 0.000000
+map_Kd textures/baked/Metal_basecolor.png
+map_Pm textures/baked/Metal_metallic.png
+map_Pr textures/baked/Metal_roughness.png
+map_Ke textures/baked/Metal_emission.png
+map_d textures/baked/Metal_alpha.png
+map_Bump -bm 1.000000 textures/baked/Metal_normal.png
+
+newmtl Shatterseal_mirror
+Ks 0.500000 0.500000 0.500000
+Ni 1.500000
+illum 2
+Ps 0.000000
+Pc 0.000000
+Pcr 0.030000
+aniso 0.000000
+anisor 0.000000
+map_Kd textures/baked/mirror_basecolor.png
+map_Pm textures/baked/mirror_metallic.png
+map_Pr textures/baked/mirror_roughness.png
+map_Ke textures/baked/mirror_emission.png
+map_d textures/baked/mirror_alpha.png
+map_Bump -bm 1.000000 textures/baked/mirror_normal.png
+
+newmtl Shatterseal_mirror_test_RoughTransparent
+Ks 0.500000 0.500000 0.500000
+Ni 1.500000
+illum 2
+Ps 0.000000
+Pc 0.000000
+Pcr 0.030000
+aniso 0.000000
+anisor 0.000000
+map_Kd textures/baked/mirror_test_RoughTransparent_basecolor.png
+map_Pm textures/baked/mirror_test_RoughTransparent_metallic.png
+map_Pr textures/baked/mirror_test_RoughTransparent_roughness.png
+map_Ke textures/baked/mirror_test_RoughTransparent_emission.png
+map_d textures/baked/mirror_test_RoughTransparent_alpha.png
+map_Bump -bm 1.000000 textures/baked/mirror_test_RoughTransparent_normal.png

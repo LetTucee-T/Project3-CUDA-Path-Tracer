@@ -1,0 +1,90 @@
+{
+  "status": "phase_3_complete",
+  "audited_at_utc": "2026-09-26T15:32:28.702541+00:00",
+  "protected_existing_files_unchanged": true,
+  "protected_existing_file_count": 61,
+  "production_code_modified_this_phase": false,
+  "renderer_sha256": "09b471f3c6fb9142a99295ab4c44048ed8ade02006023a8d6e66bcf6679f0ea7",
+  "production_executable_matches_phase_2": true,
+  "original_headless_cuda_matches_production": true,
+  "new_project_files": [
+    "scenes/dof_gallery.json",
+    "scenes/models/dof_rosette.obj",
+    "scenes/models/dof_orbit_ring.obj",
+    "scenes/models/dof_ribbed_vase.obj",
+    "scenes/models/dof_pedestal.obj"
+  ],
+  "scene_objects": 24,
+  "scene_triangles": 14592,
+  "scene_generator_matches": true,
+  "showcase_image_sizes": {
+    "pinhole": [
+      640,
+      400
+    ],
+    "focus_near": [
+      640,
+      400
+    ],
+    "focus_middle": [
+      640,
+      400
+    ],
+    "focus_far": [
+      640,
+      400
+    ],
+    "small_aperture": [
+      640,
+      400
+    ],
+    "cover": [
+      960,
+      600
+    ]
+  },
+  "regular_run_count": 166,
+  "run_counts": {
+    "pilot": 18,
+    "pilot_final": 18,
+    "benchmark": 114,
+    "images": 6,
+    "convergence": 10
+  },
+  "all_record_hashes_verified": true,
+  "benchmark_repeats_per_configuration": 6,
+  "benchmark_resolution": [
+    320,
+    200
+  ],
+  "benchmark_spp": 128,
+  "benchmark_modes": [
+    "off",
+    "zero",
+    "on"
+  ],
+  "balanced_orders": true,
+  "benchmark_statistics_recomputed": true,
+  "formal_exact_comparisons": 184,
+  "initial_lighting_exact_comparisons": 22,
+  "memory_exact_comparisons": 3,
+  "memory_checks": 3,
+  "sanitizer_errors": 0,
+  "sanitizer_leaked_bytes": 0,
+  "convergence_spp": [
+    16,
+    64,
+    256,
+    1024
+  ],
+  "convergence_reference_spp": 8192,
+  "convergence_reference_first_iteration": 65537,
+  "convergence_estimator_first_iteration": 1,
+  "convergence_rmse_recomputed_from_unclamped_linear_rgb": true,
+  "cpu_gpu_speedup_measured": false,
+  "ctest_rerun_this_phase": false,
+  "prior_ctest_record": "../13_thin_lens_rendering_2026-09-25/logs/ctest.log",
+  "git_diff_check": "passed",
+  "archive_manifest": "artifact_hashes.json",
+  "local_markdown_links_checked": 86
+}

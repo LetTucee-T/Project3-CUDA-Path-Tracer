@@ -1,0 +1,29 @@
+{
+  "recorded_at_utc": "2026-09-25T21:23:42.610084+00:00",
+  "status": "complete",
+  "production_fix_files": [
+    "src/intersections.h",
+    "src/intersections.cu",
+    "tests/bvh_gpu_test_cases.h"
+  ],
+  "ctest": 4,
+  "cpu_bvh_tests": 58,
+  "scene_loader_tests": 48,
+  "gpu_tests": 136,
+  "measurement_runs": 164,
+  "comparisons": 219,
+  "all_compared_images_and_raw_bytes_equal": true,
+  "full_path_ray_audits": 3,
+  "sanitizer_runs": 4,
+  "sanitizer_errors": 0,
+  "sanitizer_leaked_bytes": 0,
+  "previous_pngs_identical": 5,
+  "benchmark_scenes": 3,
+  "modes": 3,
+  "repeats": 6,
+  "showcase_pngs": 11,
+  "plot_pngs": 4,
+  "plot_svgs": 4,
+  "renderer_sha256": "e0fda35f76f60715147f8cb2f2a2761523bc42f5ba741ed977bc60b14cb9c303",
+  "production_hashes_verified": true
+}

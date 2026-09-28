@@ -1,0 +1,13 @@
+{
+  "os": {
+    "Caption": "Microsoft Windows 11 家庭版 中文版",
+    "Version": "10.0.26200",
+    "BuildNumber": "26200",
+    "TotalVisibleMemorySize": 33251128
+  },
+  "cpu": {
+    "Name": "Intel(R) Core(TM) i7-14650HX",
+    "NumberOfCores": 16,
+    "NumberOfLogicalProcessors": 24
+  }
+}

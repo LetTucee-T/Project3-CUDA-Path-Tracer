@@ -1,0 +1,24 @@
+{
+  "antialiasing": true,
+  "bvh": true,
+  "compaction": true,
+  "depth": 8,
+  "dof": true,
+  "first_iteration": 1,
+  "focus_distance": 5.0,
+  "gpu": "NVIDIA GeForce RTX 4070 Laptop GPU",
+  "initialization_ms": 16.7581,
+  "kind": "production_renderer_headless",
+  "lens_radius": 0.012000000104308128,
+  "objects": 16,
+  "render_loop_ms": 810480.8104,
+  "resolution": [
+    1200,
+    800
+  ],
+  "scene_load_ms": 771.8841,
+  "sorting": false,
+  "spp": 3072,
+  "triangles": 86355,
+  "warmup_spp": 8
+}

@@ -1,0 +1,2597 @@
+{
+  "runs": [
+    {
+      "name": "simple_warmup_0",
+      "phase": "benchmark",
+      "wall_seconds": 0.9353397999948356,
+      "exit_code": 0,
+      "scene": "scenes/bench_simple_0.json",
+      "executable": "D:\\CodeForCourses\\GPU Programming\\Project3-CUDA-Path-Tracer\\build\\bin\\Release\\cis565_path_tracer.exe",
+      "executable_sha256": "ba5a043e59a3c5133c0f30ef7690acc58dace45182970150c7c8e3a479ed1ef2",
+      "image": "runs/benchmark/simple_warmup_0/aabb_result.2026-09-24_21-35-41z.64samp.png",
+      "image_sha256": "029f50c5452acea9d730e942da9c879f529472c18e07a4ad08d9234f168c1011"
+    },
+    {
+      "name": "simple_warmup_1",
+      "phase": "benchmark",
+      "wall_seconds": 0.9366580999922007,
+      "exit_code": 0,
+      "scene": "scenes/bench_simple_1.json",
+      "executable": "D:\\CodeForCourses\\GPU Programming\\Project3-CUDA-Path-Tracer\\build\\bin\\Release\\cis565_path_tracer.exe",
+      "executable_sha256": "ba5a043e59a3c5133c0f30ef7690acc58dace45182970150c7c8e3a479ed1ef2",
+      "image": "runs/benchmark/simple_warmup_1/aabb_result.2026-09-24_21-35-42z.64samp.png",
+      "image_sha256": "029f50c5452acea9d730e942da9c879f529472c18e07a4ad08d9234f168c1011"
+    },
+    {
+      "name": "simple_0_0_app",
+      "phase": "benchmark",
+      "wall_seconds": 0.9122324000054505,
+      "exit_code": 0,
+      "scene": "scenes/bench_simple_0.json",
+      "executable": "D:\\CodeForCourses\\GPU Programming\\Project3-CUDA-Path-Tracer\\build\\bin\\Release\\cis565_path_tracer.exe",
+      "executable_sha256": "ba5a043e59a3c5133c0f30ef7690acc58dace45182970150c7c8e3a479ed1ef2",
+      "image": "runs/benchmark/simple_0_0_app/aabb_result.2026-09-24_21-35-43z.64samp.png",
+      "image_sha256": "029f50c5452acea9d730e942da9c879f529472c18e07a4ad08d9234f168c1011"
+    },
+    {
+      "name": "simple_0_0_timing",
+      "phase": "benchmark",
+      "wall_seconds": 0.3007672999810893,
+      "exit_code": 0,
+      "scene": "scenes/bench_simple_0.json",
+      "executable": "D:\\CodeForCourses\\GPU Programming\\Project3-CUDA-Path-Tracer\\stage_records\\08_mesh_aabb_culling_2026-09-24\\diagnostic_build\\bin\\Release\\mesh_culling_timing.exe",
+      "executable_sha256": "6825e89da76e88a32c7faa3cb6705e96821f17921776a6ecbdd16e7ed4dc51e7",
+      "image": "runs/benchmark/simple_0_0_timing/metrics.png",
+      "image_sha256": "029f50c5452acea9d730e942da9c879f529472c18e07a4ad08d9234f168c1011",
+      "metrics": {
+        "aabb_rejected": 0,
+        "aabb_tests": 0,
+        "culling": false,
+        "depth": 8,
+        "gpu": "NVIDIA GeForce RTX 4070 Laptop GPU",
+        "intersection_kernel_calls": 512,
+        "intersection_ms_per_spp": 1.2508664993802086,
+        "intersection_total_ms": 80.05545596033335,
+        "kind": "cuda_event_timing_without_counters",
+        "mesh_visits": 0,
+        "render_loop_seconds": 0.1515985,
+        "resolution": [
+          256,
+          256
+        ],
+        "spp": 64,
+        "triangle_tests": 0,
+        "triangles": 36,
+        "warmup_spp": 8
+      },
+      "raw": "runs/benchmark/simple_0_0_timing/metrics.f32"
+    },
+    {
+      "name": "simple_0_1_app",
+      "phase": "benchmark",
+      "wall_seconds": 0.926803700014716,
+      "exit_code": 0,
+      "scene": "scenes/bench_simple_1.json",
+      "executable": "D:\\CodeForCourses\\GPU Programming\\Project3-CUDA-Path-Tracer\\build\\bin\\Release\\cis565_path_tracer.exe",
+      "executable_sha256": "ba5a043e59a3c5133c0f30ef7690acc58dace45182970150c7c8e3a479ed1ef2",
+      "image": "runs/benchmark/simple_0_1_app/aabb_result.2026-09-24_21-35-44z.64samp.png",
+      "image_sha256": "029f50c5452acea9d730e942da9c879f529472c18e07a4ad08d9234f168c1011"
+    },
+    {
+      "name": "simple_0_1_timing",
+      "phase": "benchmark",
+      "wall_seconds": 0.2980078000109643,
+      "exit_code": 0,
+      "scene": "scenes/bench_simple_1.json",
+      "executable": "D:\\CodeForCourses\\GPU Programming\\Project3-CUDA-Path-Tracer\\stage_records\\08_mesh_aabb_culling_2026-09-24\\diagnostic_build\\bin\\Release\\mesh_culling_timing.exe",
+      "executable_sha256": "6825e89da76e88a32c7faa3cb6705e96821f17921776a6ecbdd16e7ed4dc51e7",
+      "image": "runs/benchmark/simple_0_1_timing/metrics.png",
+      "image_sha256": "029f50c5452acea9d730e942da9c879f529472c18e07a4ad08d9234f168c1011",
+      "metrics": {
+        "aabb_rejected": 0,
+        "aabb_tests": 0,
+        "culling": true,
+        "depth": 8,
+        "gpu": "NVIDIA GeForce RTX 4070 Laptop GPU",
+        "intersection_kernel_calls": 512,
+        "intersection_ms_per_spp": 1.1068080012919381,
+        "intersection_total_ms": 70.83571208268404,
+        "kind": "cuda_event_timing_without_counters",
+        "mesh_visits": 0,
+        "render_loop_seconds": 0.1452975,
+        "resolution": [
+          256,
+          256
+        ],
+        "spp": 64,
+        "triangle_tests": 0,
+        "triangles": 36,
+        "warmup_spp": 8
+      },
+      "raw": "runs/benchmark/simple_0_1_timing/metrics.f32"
+    },
+    {
+      "name": "simple_1_1_app",
+      "phase": "benchmark",
+      "wall_seconds": 0.9119797000021208,
+      "exit_code": 0,
+      "scene": "scenes/bench_simple_1.json",
+      "executable": "D:\\CodeForCourses\\GPU Programming\\Project3-CUDA-Path-Tracer\\build\\bin\\Release\\cis565_path_tracer.exe",
+      "executable_sha256": "ba5a043e59a3c5133c0f30ef7690acc58dace45182970150c7c8e3a479ed1ef2",
+      "image": "runs/benchmark/simple_1_1_app/aabb_result.2026-09-24_21-35-45z.64samp.png",
+      "image_sha256": "029f50c5452acea9d730e942da9c879f529472c18e07a4ad08d9234f168c1011"
+    },
+    {
+      "name": "simple_1_1_timing",
+      "phase": "benchmark",
+      "wall_seconds": 0.305199199996423,
+      "exit_code": 0,
+      "scene": "scenes/bench_simple_1.json",
+      "executable": "D:\\CodeForCourses\\GPU Programming\\Project3-CUDA-Path-Tracer\\stage_records\\08_mesh_aabb_culling_2026-09-24\\diagnostic_build\\bin\\Release\\mesh_culling_timing.exe",
+      "executable_sha256": "6825e89da76e88a32c7faa3cb6705e96821f17921776a6ecbdd16e7ed4dc51e7",
+      "image": "runs/benchmark/simple_1_1_timing/metrics.png",
+      "image_sha256": "029f50c5452acea9d730e942da9c879f529472c18e07a4ad08d9234f168c1011",
+      "metrics": {
+        "aabb_rejected": 0,
+        "aabb_tests": 0,
+        "culling": true,
+        "depth": 8,
+        "gpu": "NVIDIA GeForce RTX 4070 Laptop GPU",
+        "intersection_kernel_calls": 512,
+        "intersection_ms_per_spp": 1.0583755021216348,
+        "intersection_total_ms": 67.73603213578463,
+        "kind": "cuda_event_timing_without_counters",
+        "mesh_visits": 0,
+        "render_loop_seconds": 0.1403402,
+        "resolution": [
+          256,
+          256
+        ],
+        "spp": 64,
+        "triangle_tests": 0,
+        "triangles": 36,
+        "warmup_spp": 8
+      },
+      "raw": "runs/benchmark/simple_1_1_timing/metrics.f32"
+    },
+    {
+      "name": "simple_1_0_app",
+      "phase": "benchmark",
+      "wall_seconds": 0.8920090999745298,
+      "exit_code": 0,
+      "scene": "scenes/bench_simple_0.json",
+      "executable": "D:\\CodeForCourses\\GPU Programming\\Project3-CUDA-Path-Tracer\\build\\bin\\Release\\cis565_path_tracer.exe",
+      "executable_sha256": "ba5a043e59a3c5133c0f30ef7690acc58dace45182970150c7c8e3a479ed1ef2",
+      "image": "runs/benchmark/simple_1_0_app/aabb_result.2026-09-24_21-35-46z.64samp.png",
+      "image_sha256": "029f50c5452acea9d730e942da9c879f529472c18e07a4ad08d9234f168c1011"
+    },
+    {
+      "name": "simple_1_0_timing",
+      "phase": "benchmark",
+      "wall_seconds": 0.3074764999910258,
+      "exit_code": 0,
+      "scene": "scenes/bench_simple_0.json",
+      "executable": "D:\\CodeForCourses\\GPU Programming\\Project3-CUDA-Path-Tracer\\stage_records\\08_mesh_aabb_culling_2026-09-24\\diagnostic_build\\bin\\Release\\mesh_culling_timing.exe",
+      "executable_sha256": "6825e89da76e88a32c7faa3cb6705e96821f17921776a6ecbdd16e7ed4dc51e7",
+      "image": "runs/benchmark/simple_1_0_timing/metrics.png",
+      "image_sha256": "029f50c5452acea9d730e942da9c879f529472c18e07a4ad08d9234f168c1011",
+      "metrics": {
+        "aabb_rejected": 0,
+        "aabb_tests": 0,
+        "culling": false,
+        "depth": 8,
+        "gpu": "NVIDIA GeForce RTX 4070 Laptop GPU",
+        "intersection_kernel_calls": 512,
+        "intersection_ms_per_spp": 1.2406595003558323,
+        "intersection_total_ms": 79.40220802277327,
+        "kind": "cuda_event_timing_without_counters",
+        "mesh_visits": 0,
+        "render_loop_seconds": 0.1521492,
+        "resolution": [
+          256,
+          256
+        ],
+        "spp": 64,
+        "triangle_tests": 0,
+        "triangles": 36,
+        "warmup_spp": 8
+      },
+      "raw": "runs/benchmark/simple_1_0_timing/metrics.f32"
+    },
+    {
+      "name": "simple_2_0_app",
+      "phase": "benchmark",
+      "wall_seconds": 0.8810576999967452,
+      "exit_code": 0,
+      "scene": "scenes/bench_simple_0.json",
+      "executable": "D:\\CodeForCourses\\GPU Programming\\Project3-CUDA-Path-Tracer\\build\\bin\\Release\\cis565_path_tracer.exe",
+      "executable_sha256": "ba5a043e59a3c5133c0f30ef7690acc58dace45182970150c7c8e3a479ed1ef2",
+      "image": "runs/benchmark/simple_2_0_app/aabb_result.2026-09-24_21-35-48z.64samp.png",
+      "image_sha256": "029f50c5452acea9d730e942da9c879f529472c18e07a4ad08d9234f168c1011"
+    },
+    {
+      "name": "simple_2_0_timing",
+      "phase": "benchmark",
+      "wall_seconds": 0.3029474999930244,
+      "exit_code": 0,
+      "scene": "scenes/bench_simple_0.json",
+      "executable": "D:\\CodeForCourses\\GPU Programming\\Project3-CUDA-Path-Tracer\\stage_records\\08_mesh_aabb_culling_2026-09-24\\diagnostic_build\\bin\\Release\\mesh_culling_timing.exe",
+      "executable_sha256": "6825e89da76e88a32c7faa3cb6705e96821f17921776a6ecbdd16e7ed4dc51e7",
+      "image": "runs/benchmark/simple_2_0_timing/metrics.png",
+      "image_sha256": "029f50c5452acea9d730e942da9c879f529472c18e07a4ad08d9234f168c1011",
+      "metrics": {
+        "aabb_rejected": 0,
+        "aabb_tests": 0,
+        "culling": false,
+        "depth": 8,
+        "gpu": "NVIDIA GeForce RTX 4070 Laptop GPU",
+        "intersection_kernel_calls": 512,
+        "intersection_ms_per_spp": 1.2305134991183877,
+        "intersection_total_ms": 78.75286394357681,
+        "kind": "cuda_event_timing_without_counters",
+        "mesh_visits": 0,
+        "render_loop_seconds": 0.151617,
+        "resolution": [
+          256,
+          256
+        ],
+        "spp": 64,
+        "triangle_tests": 0,
+        "triangles": 36,
+        "warmup_spp": 8
+      },
+      "raw": "runs/benchmark/simple_2_0_timing/metrics.f32"
+    },
+    {
+      "name": "simple_2_1_app",
+      "phase": "benchmark",
+      "wall_seconds": 0.98103500000434,
+      "exit_code": 0,
+      "scene": "scenes/bench_simple_1.json",
+      "executable": "D:\\CodeForCourses\\GPU Programming\\Project3-CUDA-Path-Tracer\\build\\bin\\Release\\cis565_path_tracer.exe",
+      "executable_sha256": "ba5a043e59a3c5133c0f30ef7690acc58dace45182970150c7c8e3a479ed1ef2",
+      "image": "runs/benchmark/simple_2_1_app/aabb_result.2026-09-24_21-35-49z.64samp.png",
+      "image_sha256": "029f50c5452acea9d730e942da9c879f529472c18e07a4ad08d9234f168c1011"
+    },
+    {
+      "name": "simple_2_1_timing",
+      "phase": "benchmark",
+      "wall_seconds": 0.3015302999992855,
+      "exit_code": 0,
+      "scene": "scenes/bench_simple_1.json",
+      "executable": "D:\\CodeForCourses\\GPU Programming\\Project3-CUDA-Path-Tracer\\stage_records\\08_mesh_aabb_culling_2026-09-24\\diagnostic_build\\bin\\Release\\mesh_culling_timing.exe",
+      "executable_sha256": "6825e89da76e88a32c7faa3cb6705e96821f17921776a6ecbdd16e7ed4dc51e7",
+      "image": "runs/benchmark/simple_2_1_timing/metrics.png",
+      "image_sha256": "029f50c5452acea9d730e942da9c879f529472c18e07a4ad08d9234f168c1011",
+      "metrics": {
+        "aabb_rejected": 0,
+        "aabb_tests": 0,
+        "culling": true,
+        "depth": 8,
+        "gpu": "NVIDIA GeForce RTX 4070 Laptop GPU",
+        "intersection_kernel_calls": 512,
+        "intersection_ms_per_spp": 1.056573502952233,
+        "intersection_total_ms": 67.62070418894291,
+        "kind": "cuda_event_timing_without_counters",
+        "mesh_visits": 0,
+        "render_loop_seconds": 0.1413491,
+        "resolution": [
+          256,
+          256
+        ],
+        "spp": 64,
+        "triangle_tests": 0,
+        "triangles": 36,
+        "warmup_spp": 8
+      },
+      "raw": "runs/benchmark/simple_2_1_timing/metrics.f32"
+    },
+    {
+      "name": "simple_3_1_app",
+      "phase": "benchmark",
+      "wall_seconds": 0.9603067999996711,
+      "exit_code": 0,
+      "scene": "scenes/bench_simple_1.json",
+      "executable": "D:\\CodeForCourses\\GPU Programming\\Project3-CUDA-Path-Tracer\\build\\bin\\Release\\cis565_path_tracer.exe",
+      "executable_sha256": "ba5a043e59a3c5133c0f30ef7690acc58dace45182970150c7c8e3a479ed1ef2",
+      "image": "runs/benchmark/simple_3_1_app/aabb_result.2026-09-24_21-35-50z.64samp.png",
+      "image_sha256": "029f50c5452acea9d730e942da9c879f529472c18e07a4ad08d9234f168c1011"
+    },
+    {
+      "name": "simple_3_1_timing",
+      "phase": "benchmark",
+      "wall_seconds": 0.3101520000200253,
+      "exit_code": 0,
+      "scene": "scenes/bench_simple_1.json",
+      "executable": "D:\\CodeForCourses\\GPU Programming\\Project3-CUDA-Path-Tracer\\stage_records\\08_mesh_aabb_culling_2026-09-24\\diagnostic_build\\bin\\Release\\mesh_culling_timing.exe",
+      "executable_sha256": "6825e89da76e88a32c7faa3cb6705e96821f17921776a6ecbdd16e7ed4dc51e7",
+      "image": "runs/benchmark/simple_3_1_timing/metrics.png",
+      "image_sha256": "029f50c5452acea9d730e942da9c879f529472c18e07a4ad08d9234f168c1011",
+      "metrics": {
+        "aabb_rejected": 0,
+        "aabb_tests": 0,
+        "culling": true,
+        "depth": 8,
+        "gpu": "NVIDIA GeForce RTX 4070 Laptop GPU",
+        "intersection_kernel_calls": 512,
+        "intersection_ms_per_spp": 1.0752310020616278,
+        "intersection_total_ms": 68.81478413194418,
+        "kind": "cuda_event_timing_without_counters",
+        "mesh_visits": 0,
+        "render_loop_seconds": 0.1400972,
+        "resolution": [
+          256,
+          256
+        ],
+        "spp": 64,
+        "triangle_tests": 0,
+        "triangles": 36,
+        "warmup_spp": 8
+      },
+      "raw": "runs/benchmark/simple_3_1_timing/metrics.f32"
+    },
+    {
+      "name": "simple_3_0_app",
+      "phase": "benchmark",
+      "wall_seconds": 0.9648194999899715,
+      "exit_code": 0,
+      "scene": "scenes/bench_simple_0.json",
+      "executable": "D:\\CodeForCourses\\GPU Programming\\Project3-CUDA-Path-Tracer\\build\\bin\\Release\\cis565_path_tracer.exe",
+      "executable_sha256": "ba5a043e59a3c5133c0f30ef7690acc58dace45182970150c7c8e3a479ed1ef2",
+      "image": "runs/benchmark/simple_3_0_app/aabb_result.2026-09-24_21-35-51z.64samp.png",
+      "image_sha256": "029f50c5452acea9d730e942da9c879f529472c18e07a4ad08d9234f168c1011"
+    },
+    {
+      "name": "simple_3_0_timing",
+      "phase": "benchmark",
+      "wall_seconds": 0.3034611000039149,
+      "exit_code": 0,
+      "scene": "scenes/bench_simple_0.json",
+      "executable": "D:\\CodeForCourses\\GPU Programming\\Project3-CUDA-Path-Tracer\\stage_records\\08_mesh_aabb_culling_2026-09-24\\diagnostic_build\\bin\\Release\\mesh_culling_timing.exe",
+      "executable_sha256": "6825e89da76e88a32c7faa3cb6705e96821f17921776a6ecbdd16e7ed4dc51e7",
+      "image": "runs/benchmark/simple_3_0_timing/metrics.png",
+      "image_sha256": "029f50c5452acea9d730e942da9c879f529472c18e07a4ad08d9234f168c1011",
+      "metrics": {
+        "aabb_rejected": 0,
+        "aabb_tests": 0,
+        "culling": false,
+        "depth": 8,
+        "gpu": "NVIDIA GeForce RTX 4070 Laptop GPU",
+        "intersection_kernel_calls": 512,
+        "intersection_ms_per_spp": 1.235143000842072,
+        "intersection_total_ms": 79.04915205389261,
+        "kind": "cuda_event_timing_without_counters",
+        "mesh_visits": 0,
+        "render_loop_seconds": 0.1520702,
+        "resolution": [
+          256,
+          256
+        ],
+        "spp": 64,
+        "triangle_tests": 0,
+        "triangles": 36,
+        "warmup_spp": 8
+      },
+      "raw": "runs/benchmark/simple_3_0_timing/metrics.f32"
+    },
+    {
+      "name": "simple_4_0_app",
+      "phase": "benchmark",
+      "wall_seconds": 0.9611085999931674,
+      "exit_code": 0,
+      "scene": "scenes/bench_simple_0.json",
+      "executable": "D:\\CodeForCourses\\GPU Programming\\Project3-CUDA-Path-Tracer\\build\\bin\\Release\\cis565_path_tracer.exe",
+      "executable_sha256": "ba5a043e59a3c5133c0f30ef7690acc58dace45182970150c7c8e3a479ed1ef2",
+      "image": "runs/benchmark/simple_4_0_app/aabb_result.2026-09-24_21-35-53z.64samp.png",
+      "image_sha256": "029f50c5452acea9d730e942da9c879f529472c18e07a4ad08d9234f168c1011"
+    },
+    {
+      "name": "simple_4_0_timing",
+      "phase": "benchmark",
+      "wall_seconds": 0.3304589000181295,
+      "exit_code": 0,
+      "scene": "scenes/bench_simple_0.json",
+      "executable": "D:\\CodeForCourses\\GPU Programming\\Project3-CUDA-Path-Tracer\\stage_records\\08_mesh_aabb_culling_2026-09-24\\diagnostic_build\\bin\\Release\\mesh_culling_timing.exe",
+      "executable_sha256": "6825e89da76e88a32c7faa3cb6705e96821f17921776a6ecbdd16e7ed4dc51e7",
+      "image": "runs/benchmark/simple_4_0_timing/metrics.png",
+      "image_sha256": "029f50c5452acea9d730e942da9c879f529472c18e07a4ad08d9234f168c1011",
+      "metrics": {
+        "aabb_rejected": 0,
+        "aabb_tests": 0,
+        "culling": false,
+        "depth": 8,
+        "gpu": "NVIDIA GeForce RTX 4070 Laptop GPU",
+        "intersection_kernel_calls": 512,
+        "intersection_ms_per_spp": 1.2477555004879832,
+        "intersection_total_ms": 79.85635203123093,
+        "kind": "cuda_event_timing_without_counters",
+        "mesh_visits": 0,
+        "render_loop_seconds": 0.152506,
+        "resolution": [
+          256,
+          256
+        ],
+        "spp": 64,
+        "triangle_tests": 0,
+        "triangles": 36,
+        "warmup_spp": 8
+      },
+      "raw": "runs/benchmark/simple_4_0_timing/metrics.f32"
+    },
+    {
+      "name": "simple_4_1_app",
+      "phase": "benchmark",
+      "wall_seconds": 0.9039624000142794,
+      "exit_code": 0,
+      "scene": "scenes/bench_simple_1.json",
+      "executable": "D:\\CodeForCourses\\GPU Programming\\Project3-CUDA-Path-Tracer\\build\\bin\\Release\\cis565_path_tracer.exe",
+      "executable_sha256": "ba5a043e59a3c5133c0f30ef7690acc58dace45182970150c7c8e3a479ed1ef2",
+      "image": "runs/benchmark/simple_4_1_app/aabb_result.2026-09-24_21-35-54z.64samp.png",
+      "image_sha256": "029f50c5452acea9d730e942da9c879f529472c18e07a4ad08d9234f168c1011"
+    },
+    {
+      "name": "simple_4_1_timing",
+      "phase": "benchmark",
+      "wall_seconds": 0.3244433000218123,
+      "exit_code": 0,
+      "scene": "scenes/bench_simple_1.json",
+      "executable": "D:\\CodeForCourses\\GPU Programming\\Project3-CUDA-Path-Tracer\\stage_records\\08_mesh_aabb_culling_2026-09-24\\diagnostic_build\\bin\\Release\\mesh_culling_timing.exe",
+      "executable_sha256": "6825e89da76e88a32c7faa3cb6705e96821f17921776a6ecbdd16e7ed4dc51e7",
+      "image": "runs/benchmark/simple_4_1_timing/metrics.png",
+      "image_sha256": "029f50c5452acea9d730e942da9c879f529472c18e07a4ad08d9234f168c1011",
+      "metrics": {
+        "aabb_rejected": 0,
+        "aabb_tests": 0,
+        "culling": true,
+        "depth": 8,
+        "gpu": "NVIDIA GeForce RTX 4070 Laptop GPU",
+        "intersection_kernel_calls": 512,
+        "intersection_ms_per_spp": 1.074444003868848,
+        "intersection_total_ms": 68.76441624760628,
+        "kind": "cuda_event_timing_without_counters",
+        "mesh_visits": 0,
+        "render_loop_seconds": 0.1425221,
+        "resolution": [
+          256,
+          256
+        ],
+        "spp": 64,
+        "triangle_tests": 0,
+        "triangles": 36,
+        "warmup_spp": 8
+      },
+      "raw": "runs/benchmark/simple_4_1_timing/metrics.f32"
+    },
+    {
+      "name": "simple_counts_0",
+      "phase": "benchmark",
+      "wall_seconds": 0.4846290000132285,
+      "exit_code": 0,
+      "scene": "scenes/bench_simple_0.json",
+      "executable": "D:\\CodeForCourses\\GPU Programming\\Project3-CUDA-Path-Tracer\\stage_records\\08_mesh_aabb_culling_2026-09-24\\diagnostic_build\\bin\\Release\\mesh_culling_counts.exe",
+      "executable_sha256": "b3dc76a943f826ed98d66b01bc0ea3a7ac0540d11c4c23dc043a1bdfc04775eb",
+      "image": "runs/benchmark/simple_counts_0/metrics.png",
+      "image_sha256": "029f50c5452acea9d730e942da9c879f529472c18e07a4ad08d9234f168c1011",
+      "metrics": {
+        "aabb_rejected": 0,
+        "aabb_tests": 0,
+        "culling": false,
+        "depth": 8,
+        "gpu": "NVIDIA GeForce RTX 4070 Laptop GPU",
+        "intersection_kernel_calls": 512,
+        "intersection_ms_per_spp": 1.3195140003226697,
+        "intersection_total_ms": 84.44889602065086,
+        "kind": "counts_only_not_for_timing",
+        "mesh_visits": 60352671,
+        "render_loop_seconds": 0.2924937,
+        "resolution": [
+          256,
+          256
+        ],
+        "spp": 64,
+        "triangle_tests": 724232052,
+        "triangles": 36,
+        "warmup_spp": 8
+      },
+      "raw": "runs/benchmark/simple_counts_0/metrics.f32"
+    },
+    {
+      "name": "simple_counts_1",
+      "phase": "benchmark",
+      "wall_seconds": 0.47114069998497143,
+      "exit_code": 0,
+      "scene": "scenes/bench_simple_1.json",
+      "executable": "D:\\CodeForCourses\\GPU Programming\\Project3-CUDA-Path-Tracer\\stage_records\\08_mesh_aabb_culling_2026-09-24\\diagnostic_build\\bin\\Release\\mesh_culling_counts.exe",
+      "executable_sha256": "b3dc76a943f826ed98d66b01bc0ea3a7ac0540d11c4c23dc043a1bdfc04775eb",
+      "image": "runs/benchmark/simple_counts_1/metrics.png",
+      "image_sha256": "029f50c5452acea9d730e942da9c879f529472c18e07a4ad08d9234f168c1011",
+      "metrics": {
+        "aabb_rejected": 57477382,
+        "aabb_tests": 60352671,
+        "culling": true,
+        "depth": 8,
+        "gpu": "NVIDIA GeForce RTX 4070 Laptop GPU",
+        "intersection_kernel_calls": 512,
+        "intersection_ms_per_spp": 1.1658155003096908,
+        "intersection_total_ms": 74.61219201982021,
+        "kind": "counts_only_not_for_timing",
+        "mesh_visits": 60352671,
+        "render_loop_seconds": 0.2944353,
+        "resolution": [
+          256,
+          256
+        ],
+        "spp": 64,
+        "triangle_tests": 34503468,
+        "triangles": 36,
+        "warmup_spp": 8
+      },
+      "raw": "runs/benchmark/simple_counts_1/metrics.f32"
+    },
+    {
+      "name": "torus_exterior_warmup_0",
+      "phase": "benchmark",
+      "wall_seconds": 4.128500300023006,
+      "exit_code": 0,
+      "scene": "scenes/bench_torus_exterior_0.json",
+      "executable": "D:\\CodeForCourses\\GPU Programming\\Project3-CUDA-Path-Tracer\\build\\bin\\Release\\cis565_path_tracer.exe",
+      "executable_sha256": "ba5a043e59a3c5133c0f30ef7690acc58dace45182970150c7c8e3a479ed1ef2",
+      "image": "runs/benchmark/torus_exterior_warmup_0/aabb_result.2026-09-24_21-35-56z.64samp.png",
+      "image_sha256": "a87dc058f66a2691d9738638aed909125e3615d464498856921192ed6fb95375"
+    },
+    {
+      "name": "torus_exterior_warmup_1",
+      "phase": "benchmark",
+      "wall_seconds": 3.0722703999781515,
+      "exit_code": 0,
+      "scene": "scenes/bench_torus_exterior_1.json",
+      "executable": "D:\\CodeForCourses\\GPU Programming\\Project3-CUDA-Path-Tracer\\build\\bin\\Release\\cis565_path_tracer.exe",
+      "executable_sha256": "ba5a043e59a3c5133c0f30ef7690acc58dace45182970150c7c8e3a479ed1ef2",
+      "image": "runs/benchmark/torus_exterior_warmup_1/aabb_result.2026-09-24_21-36-00z.64samp.png",
+      "image_sha256": "a87dc058f66a2691d9738638aed909125e3615d464498856921192ed6fb95375"
+    },
+    {
+      "name": "torus_exterior_0_0_app",
+      "phase": "benchmark",
+      "wall_seconds": 4.1358139000076335,
+      "exit_code": 0,
+      "scene": "scenes/bench_torus_exterior_0.json",
+      "executable": "D:\\CodeForCourses\\GPU Programming\\Project3-CUDA-Path-Tracer\\build\\bin\\Release\\cis565_path_tracer.exe",
+      "executable_sha256": "ba5a043e59a3c5133c0f30ef7690acc58dace45182970150c7c8e3a479ed1ef2",
+      "image": "runs/benchmark/torus_exterior_0_0_app/aabb_result.2026-09-24_21-36-03z.64samp.png",
+      "image_sha256": "a87dc058f66a2691d9738638aed909125e3615d464498856921192ed6fb95375"
+    },
+    {
+      "name": "torus_exterior_0_0_timing",
+      "phase": "benchmark",
+      "wall_seconds": 3.956571899994742,
+      "exit_code": 0,
+      "scene": "scenes/bench_torus_exterior_0.json",
+      "executable": "D:\\CodeForCourses\\GPU Programming\\Project3-CUDA-Path-Tracer\\stage_records\\08_mesh_aabb_culling_2026-09-24\\diagnostic_build\\bin\\Release\\mesh_culling_timing.exe",
+      "executable_sha256": "6825e89da76e88a32c7faa3cb6705e96821f17921776a6ecbdd16e7ed4dc51e7",
+      "image": "runs/benchmark/torus_exterior_0_0_timing/metrics.png",
+      "image_sha256": "a87dc058f66a2691d9738638aed909125e3615d464498856921192ed6fb95375",
+      "metrics": {
+        "aabb_rejected": 0,
+        "aabb_tests": 0,
+        "culling": false,
+        "depth": 8,
+        "gpu": "NVIDIA GeForce RTX 4070 Laptop GPU",
+        "intersection_kernel_calls": 512,
+        "intersection_ms_per_spp": 50.480463951826096,
+        "intersection_total_ms": 3230.74969291687,
+        "kind": "cuda_event_timing_without_counters",
+        "mesh_visits": 0,
+        "render_loop_seconds": 3.3491327,
+        "resolution": [
+          256,
+          256
+        ],
+        "spp": 64,
+        "triangle_tests": 0,
+        "triangles": 4108,
+        "warmup_spp": 8
+      },
+      "raw": "runs/benchmark/torus_exterior_0_0_timing/metrics.f32"
+    },
+    {
+      "name": "torus_exterior_0_1_app",
+      "phase": "benchmark",
+      "wall_seconds": 3.0679443000117317,
+      "exit_code": 0,
+      "scene": "scenes/bench_torus_exterior_1.json",
+      "executable": "D:\\CodeForCourses\\GPU Programming\\Project3-CUDA-Path-Tracer\\build\\bin\\Release\\cis565_path_tracer.exe",
+      "executable_sha256": "ba5a043e59a3c5133c0f30ef7690acc58dace45182970150c7c8e3a479ed1ef2",
+      "image": "runs/benchmark/torus_exterior_0_1_app/aabb_result.2026-09-24_21-36-11z.64samp.png",
+      "image_sha256": "a87dc058f66a2691d9738638aed909125e3615d464498856921192ed6fb95375"
+    },
+    {
+      "name": "torus_exterior_0_1_timing",
+      "phase": "benchmark",
+      "wall_seconds": 2.788457200018456,
+      "exit_code": 0,
+      "scene": "scenes/bench_torus_exterior_1.json",
+      "executable": "D:\\CodeForCourses\\GPU Programming\\Project3-CUDA-Path-Tracer\\stage_records\\08_mesh_aabb_culling_2026-09-24\\diagnostic_build\\bin\\Release\\mesh_culling_timing.exe",
+      "executable_sha256": "6825e89da76e88a32c7faa3cb6705e96821f17921776a6ecbdd16e7ed4dc51e7",
+      "image": "runs/benchmark/torus_exterior_0_1_timing/metrics.png",
+      "image_sha256": "a87dc058f66a2691d9738638aed909125e3615d464498856921192ed6fb95375",
+      "metrics": {
+        "aabb_rejected": 0,
+        "aabb_tests": 0,
+        "culling": true,
+        "depth": 8,
+        "gpu": "NVIDIA GeForce RTX 4070 Laptop GPU",
+        "intersection_kernel_calls": 512,
+        "intersection_ms_per_spp": 34.63826955296099,
+        "intersection_total_ms": 2216.8492513895035,
+        "kind": "cuda_event_timing_without_counters",
+        "mesh_visits": 0,
+        "render_loop_seconds": 2.3306345,
+        "resolution": [
+          256,
+          256
+        ],
+        "spp": 64,
+        "triangle_tests": 0,
+        "triangles": 4108,
+        "warmup_spp": 8
+      },
+      "raw": "runs/benchmark/torus_exterior_0_1_timing/metrics.f32"
+    },
+    {
+      "name": "torus_exterior_1_1_app",
+      "phase": "benchmark",
+      "wall_seconds": 3.0803851000091527,
+      "exit_code": 0,
+      "scene": "scenes/bench_torus_exterior_1.json",
+      "executable": "D:\\CodeForCourses\\GPU Programming\\Project3-CUDA-Path-Tracer\\build\\bin\\Release\\cis565_path_tracer.exe",
+      "executable_sha256": "ba5a043e59a3c5133c0f30ef7690acc58dace45182970150c7c8e3a479ed1ef2",
+      "image": "runs/benchmark/torus_exterior_1_1_app/aabb_result.2026-09-24_21-36-17z.64samp.png",
+      "image_sha256": "a87dc058f66a2691d9738638aed909125e3615d464498856921192ed6fb95375"
+    },
+    {
+      "name": "torus_exterior_1_1_timing",
+      "phase": "benchmark",
+      "wall_seconds": 2.793067799997516,
+      "exit_code": 0,
+      "scene": "scenes/bench_torus_exterior_1.json",
+      "executable": "D:\\CodeForCourses\\GPU Programming\\Project3-CUDA-Path-Tracer\\stage_records\\08_mesh_aabb_culling_2026-09-24\\diagnostic_build\\bin\\Release\\mesh_culling_timing.exe",
+      "executable_sha256": "6825e89da76e88a32c7faa3cb6705e96821f17921776a6ecbdd16e7ed4dc51e7",
+      "image": "runs/benchmark/torus_exterior_1_1_timing/metrics.png",
+      "image_sha256": "a87dc058f66a2691d9738638aed909125e3615d464498856921192ed6fb95375",
+      "metrics": {
+        "aabb_rejected": 0,
+        "aabb_tests": 0,
+        "culling": true,
+        "depth": 8,
+        "gpu": "NVIDIA GeForce RTX 4070 Laptop GPU",
+        "intersection_kernel_calls": 512,
+        "intersection_ms_per_spp": 34.92669304087758,
+        "intersection_total_ms": 2235.308354616165,
+        "kind": "cuda_event_timing_without_counters",
+        "mesh_visits": 0,
+        "render_loop_seconds": 2.3548435,
+        "resolution": [
+          256,
+          256
+        ],
+        "spp": 64,
+        "triangle_tests": 0,
+        "triangles": 4108,
+        "warmup_spp": 8
+      },
+      "raw": "runs/benchmark/torus_exterior_1_1_timing/metrics.f32"
+    },
+    {
+      "name": "torus_exterior_1_0_app",
+      "phase": "benchmark",
+      "wall_seconds": 4.089562699984526,
+      "exit_code": 0,
+      "scene": "scenes/bench_torus_exterior_0.json",
+      "executable": "D:\\CodeForCourses\\GPU Programming\\Project3-CUDA-Path-Tracer\\build\\bin\\Release\\cis565_path_tracer.exe",
+      "executable_sha256": "ba5a043e59a3c5133c0f30ef7690acc58dace45182970150c7c8e3a479ed1ef2",
+      "image": "runs/benchmark/torus_exterior_1_0_app/aabb_result.2026-09-24_21-36-23z.64samp.png",
+      "image_sha256": "a87dc058f66a2691d9738638aed909125e3615d464498856921192ed6fb95375"
+    },
+    {
+      "name": "torus_exterior_1_0_timing",
+      "phase": "benchmark",
+      "wall_seconds": 3.9638169999816455,
+      "exit_code": 0,
+      "scene": "scenes/bench_torus_exterior_0.json",
+      "executable": "D:\\CodeForCourses\\GPU Programming\\Project3-CUDA-Path-Tracer\\stage_records\\08_mesh_aabb_culling_2026-09-24\\diagnostic_build\\bin\\Release\\mesh_culling_timing.exe",
+      "executable_sha256": "6825e89da76e88a32c7faa3cb6705e96821f17921776a6ecbdd16e7ed4dc51e7",
+      "image": "runs/benchmark/torus_exterior_1_0_timing/metrics.png",
+      "image_sha256": "a87dc058f66a2691d9738638aed909125e3615d464498856921192ed6fb95375",
+      "metrics": {
+        "aabb_rejected": 0,
+        "aabb_tests": 0,
+        "culling": false,
+        "depth": 8,
+        "gpu": "NVIDIA GeForce RTX 4070 Laptop GPU",
+        "intersection_kernel_calls": 512,
+        "intersection_ms_per_spp": 50.50796913728118,
+        "intersection_total_ms": 3232.5100247859955,
+        "kind": "cuda_event_timing_without_counters",
+        "mesh_visits": 0,
+        "render_loop_seconds": 3.3501049,
+        "resolution": [
+          256,
+          256
+        ],
+        "spp": 64,
+        "triangle_tests": 0,
+        "triangles": 4108,
+        "warmup_spp": 8
+      },
+      "raw": "runs/benchmark/torus_exterior_1_0_timing/metrics.f32"
+    },
+    {
+      "name": "torus_exterior_2_0_app",
+      "phase": "benchmark",
+      "wall_seconds": 4.173462300008396,
+      "exit_code": 0,
+      "scene": "scenes/bench_torus_exterior_0.json",
+      "executable": "D:\\CodeForCourses\\GPU Programming\\Project3-CUDA-Path-Tracer\\build\\bin\\Release\\cis565_path_tracer.exe",
+      "executable_sha256": "ba5a043e59a3c5133c0f30ef7690acc58dace45182970150c7c8e3a479ed1ef2",
+      "image": "runs/benchmark/torus_exterior_2_0_app/aabb_result.2026-09-24_21-36-31z.64samp.png",
+      "image_sha256": "a87dc058f66a2691d9738638aed909125e3615d464498856921192ed6fb95375"
+    },
+    {
+      "name": "torus_exterior_2_0_timing",
+      "phase": "benchmark",
+      "wall_seconds": 3.9441515999787953,
+      "exit_code": 0,
+      "scene": "scenes/bench_torus_exterior_0.json",
+      "executable": "D:\\CodeForCourses\\GPU Programming\\Project3-CUDA-Path-Tracer\\stage_records\\08_mesh_aabb_culling_2026-09-24\\diagnostic_build\\bin\\Release\\mesh_culling_timing.exe",
+      "executable_sha256": "6825e89da76e88a32c7faa3cb6705e96821f17921776a6ecbdd16e7ed4dc51e7",
+      "image": "runs/benchmark/torus_exterior_2_0_timing/metrics.png",
+      "image_sha256": "a87dc058f66a2691d9738638aed909125e3615d464498856921192ed6fb95375",
+      "metrics": {
+        "aabb_rejected": 0,
+        "aabb_tests": 0,
+        "culling": false,
+        "depth": 8,
+        "gpu": "NVIDIA GeForce RTX 4070 Laptop GPU",
+        "intersection_kernel_calls": 512,
+        "intersection_ms_per_spp": 50.455381974577904,
+        "intersection_total_ms": 3229.144446372986,
+        "kind": "cuda_event_timing_without_counters",
+        "mesh_visits": 0,
+        "render_loop_seconds": 3.3496991,
+        "resolution": [
+          256,
+          256
+        ],
+        "spp": 64,
+        "triangle_tests": 0,
+        "triangles": 4108,
+        "warmup_spp": 8
+      },
+      "raw": "runs/benchmark/torus_exterior_2_0_timing/metrics.f32"
+    },
+    {
+      "name": "torus_exterior_2_1_app",
+      "phase": "benchmark",
+      "wall_seconds": 3.0699641999963205,
+      "exit_code": 0,
+      "scene": "scenes/bench_torus_exterior_1.json",
+      "executable": "D:\\CodeForCourses\\GPU Programming\\Project3-CUDA-Path-Tracer\\build\\bin\\Release\\cis565_path_tracer.exe",
+      "executable_sha256": "ba5a043e59a3c5133c0f30ef7690acc58dace45182970150c7c8e3a479ed1ef2",
+      "image": "runs/benchmark/torus_exterior_2_1_app/aabb_result.2026-09-24_21-36-39z.64samp.png",
+      "image_sha256": "a87dc058f66a2691d9738638aed909125e3615d464498856921192ed6fb95375"
+    },
+    {
+      "name": "torus_exterior_2_1_timing",
+      "phase": "benchmark",
+      "wall_seconds": 2.8314394999761134,
+      "exit_code": 0,
+      "scene": "scenes/bench_torus_exterior_1.json",
+      "executable": "D:\\CodeForCourses\\GPU Programming\\Project3-CUDA-Path-Tracer\\stage_records\\08_mesh_aabb_culling_2026-09-24\\diagnostic_build\\bin\\Release\\mesh_culling_timing.exe",
+      "executable_sha256": "6825e89da76e88a32c7faa3cb6705e96821f17921776a6ecbdd16e7ed4dc51e7",
+      "image": "runs/benchmark/torus_exterior_2_1_timing/metrics.png",
+      "image_sha256": "a87dc058f66a2691d9738638aed909125e3615d464498856921192ed6fb95375",
+      "metrics": {
+        "aabb_rejected": 0,
+        "aabb_tests": 0,
+        "culling": true,
+        "depth": 8,
+        "gpu": "NVIDIA GeForce RTX 4070 Laptop GPU",
+        "intersection_kernel_calls": 512,
+        "intersection_ms_per_spp": 34.67745894938707,
+        "intersection_total_ms": 2219.3573727607727,
+        "kind": "cuda_event_timing_without_counters",
+        "mesh_visits": 0,
+        "render_loop_seconds": 2.3336759,
+        "resolution": [
+          256,
+          256
+        ],
+        "spp": 64,
+        "triangle_tests": 0,
+        "triangles": 4108,
+        "warmup_spp": 8
+      },
+      "raw": "runs/benchmark/torus_exterior_2_1_timing/metrics.f32"
+    },
+    {
+      "name": "torus_exterior_3_1_app",
+      "phase": "benchmark",
+      "wall_seconds": 3.0631417999975383,
+      "exit_code": 0,
+      "scene": "scenes/bench_torus_exterior_1.json",
+      "executable": "D:\\CodeForCourses\\GPU Programming\\Project3-CUDA-Path-Tracer\\build\\bin\\Release\\cis565_path_tracer.exe",
+      "executable_sha256": "ba5a043e59a3c5133c0f30ef7690acc58dace45182970150c7c8e3a479ed1ef2",
+      "image": "runs/benchmark/torus_exterior_3_1_app/aabb_result.2026-09-24_21-36-45z.64samp.png",
+      "image_sha256": "a87dc058f66a2691d9738638aed909125e3615d464498856921192ed6fb95375"
+    },
+    {
+      "name": "torus_exterior_3_1_timing",
+      "phase": "benchmark",
+      "wall_seconds": 2.8053326999943238,
+      "exit_code": 0,
+      "scene": "scenes/bench_torus_exterior_1.json",
+      "executable": "D:\\CodeForCourses\\GPU Programming\\Project3-CUDA-Path-Tracer\\stage_records\\08_mesh_aabb_culling_2026-09-24\\diagnostic_build\\bin\\Release\\mesh_culling_timing.exe",
+      "executable_sha256": "6825e89da76e88a32c7faa3cb6705e96821f17921776a6ecbdd16e7ed4dc51e7",
+      "image": "runs/benchmark/torus_exterior_3_1_timing/metrics.png",
+      "image_sha256": "a87dc058f66a2691d9738638aed909125e3615d464498856921192ed6fb95375",
+      "metrics": {
+        "aabb_rejected": 0,
+        "aabb_tests": 0,
+        "culling": true,
+        "depth": 8,
+        "gpu": "NVIDIA GeForce RTX 4070 Laptop GPU",
+        "intersection_kernel_calls": 512,
+        "intersection_ms_per_spp": 34.9389180354774,
+        "intersection_total_ms": 2236.0907542705536,
+        "kind": "cuda_event_timing_without_counters",
+        "mesh_visits": 0,
+        "render_loop_seconds": 2.3591641,
+        "resolution": [
+          256,
+          256
+        ],
+        "spp": 64,
+        "triangle_tests": 0,
+        "triangles": 4108,
+        "warmup_spp": 8
+      },
+      "raw": "runs/benchmark/torus_exterior_3_1_timing/metrics.f32"
+    },
+    {
+      "name": "torus_exterior_3_0_app",
+      "phase": "benchmark",
+      "wall_seconds": 4.050851600011811,
+      "exit_code": 0,
+      "scene": "scenes/bench_torus_exterior_0.json",
+      "executable": "D:\\CodeForCourses\\GPU Programming\\Project3-CUDA-Path-Tracer\\build\\bin\\Release\\cis565_path_tracer.exe",
+      "executable_sha256": "ba5a043e59a3c5133c0f30ef7690acc58dace45182970150c7c8e3a479ed1ef2",
+      "image": "runs/benchmark/torus_exterior_3_0_app/aabb_result.2026-09-24_21-36-51z.64samp.png",
+      "image_sha256": "a87dc058f66a2691d9738638aed909125e3615d464498856921192ed6fb95375"
+    },
+    {
+      "name": "torus_exterior_3_0_timing",
+      "phase": "benchmark",
+      "wall_seconds": 4.019149400002789,
+      "exit_code": 0,
+      "scene": "scenes/bench_torus_exterior_0.json",
+      "executable": "D:\\CodeForCourses\\GPU Programming\\Project3-CUDA-Path-Tracer\\stage_records\\08_mesh_aabb_culling_2026-09-24\\diagnostic_build\\bin\\Release\\mesh_culling_timing.exe",
+      "executable_sha256": "6825e89da76e88a32c7faa3cb6705e96821f17921776a6ecbdd16e7ed4dc51e7",
+      "image": "runs/benchmark/torus_exterior_3_0_timing/metrics.png",
+      "image_sha256": "a87dc058f66a2691d9738638aed909125e3615d464498856921192ed6fb95375",
+      "metrics": {
+        "aabb_rejected": 0,
+        "aabb_tests": 0,
+        "culling": false,
+        "depth": 8,
+        "gpu": "NVIDIA GeForce RTX 4070 Laptop GPU",
+        "intersection_kernel_calls": 512,
+        "intersection_ms_per_spp": 50.666271548718214,
+        "intersection_total_ms": 3242.6413791179657,
+        "kind": "cuda_event_timing_without_counters",
+        "mesh_visits": 0,
+        "render_loop_seconds": 3.3653371,
+        "resolution": [
+          256,
+          256
+        ],
+        "spp": 64,
+        "triangle_tests": 0,
+        "triangles": 4108,
+        "warmup_spp": 8
+      },
+      "raw": "runs/benchmark/torus_exterior_3_0_timing/metrics.f32"
+    },
+    {
+      "name": "torus_exterior_4_0_app",
+      "phase": "benchmark",
+      "wall_seconds": 4.137555900000734,
+      "exit_code": 0,
+      "scene": "scenes/bench_torus_exterior_0.json",
+      "executable": "D:\\CodeForCourses\\GPU Programming\\Project3-CUDA-Path-Tracer\\build\\bin\\Release\\cis565_path_tracer.exe",
+      "executable_sha256": "ba5a043e59a3c5133c0f30ef7690acc58dace45182970150c7c8e3a479ed1ef2",
+      "image": "runs/benchmark/torus_exterior_4_0_app/aabb_result.2026-09-24_21-36-59z.64samp.png",
+      "image_sha256": "a87dc058f66a2691d9738638aed909125e3615d464498856921192ed6fb95375"
+    },
+    {
+      "name": "torus_exterior_4_0_timing",
+      "phase": "benchmark",
+      "wall_seconds": 3.9458726000157185,
+      "exit_code": 0,
+      "scene": "scenes/bench_torus_exterior_0.json",
+      "executable": "D:\\CodeForCourses\\GPU Programming\\Project3-CUDA-Path-Tracer\\stage_records\\08_mesh_aabb_culling_2026-09-24\\diagnostic_build\\bin\\Release\\mesh_culling_timing.exe",
+      "executable_sha256": "6825e89da76e88a32c7faa3cb6705e96821f17921776a6ecbdd16e7ed4dc51e7",
+      "image": "runs/benchmark/torus_exterior_4_0_timing/metrics.png",
+      "image_sha256": "a87dc058f66a2691d9738638aed909125e3615d464498856921192ed6fb95375",
+      "metrics": {
+        "aabb_rejected": 0,
+        "aabb_tests": 0,
+        "culling": false,
+        "depth": 8,
+        "gpu": "NVIDIA GeForce RTX 4070 Laptop GPU",
+        "intersection_kernel_calls": 512,
+        "intersection_ms_per_spp": 50.70368750393391,
+        "intersection_total_ms": 3245.03600025177,
+        "kind": "cuda_event_timing_without_counters",
+        "mesh_visits": 0,
+        "render_loop_seconds": 3.3608798,
+        "resolution": [
+          256,
+          256
+        ],
+        "spp": 64,
+        "triangle_tests": 0,
+        "triangles": 4108,
+        "warmup_spp": 8
+      },
+      "raw": "runs/benchmark/torus_exterior_4_0_timing/metrics.f32"
+    },
+    {
+      "name": "torus_exterior_4_1_app",
+      "phase": "benchmark",
+      "wall_seconds": 3.0875774000014644,
+      "exit_code": 0,
+      "scene": "scenes/bench_torus_exterior_1.json",
+      "executable": "D:\\CodeForCourses\\GPU Programming\\Project3-CUDA-Path-Tracer\\build\\bin\\Release\\cis565_path_tracer.exe",
+      "executable_sha256": "ba5a043e59a3c5133c0f30ef7690acc58dace45182970150c7c8e3a479ed1ef2",
+      "image": "runs/benchmark/torus_exterior_4_1_app/aabb_result.2026-09-24_21-37-07z.64samp.png",
+      "image_sha256": "a87dc058f66a2691d9738638aed909125e3615d464498856921192ed6fb95375"
+    },
+    {
+      "name": "torus_exterior_4_1_timing",
+      "phase": "benchmark",
+      "wall_seconds": 2.753354299988132,
+      "exit_code": 0,
+      "scene": "scenes/bench_torus_exterior_1.json",
+      "executable": "D:\\CodeForCourses\\GPU Programming\\Project3-CUDA-Path-Tracer\\stage_records\\08_mesh_aabb_culling_2026-09-24\\diagnostic_build\\bin\\Release\\mesh_culling_timing.exe",
+      "executable_sha256": "6825e89da76e88a32c7faa3cb6705e96821f17921776a6ecbdd16e7ed4dc51e7",
+      "image": "runs/benchmark/torus_exterior_4_1_timing/metrics.png",
+      "image_sha256": "a87dc058f66a2691d9738638aed909125e3615d464498856921192ed6fb95375",
+      "metrics": {
+        "aabb_rejected": 0,
+        "aabb_tests": 0,
+        "culling": true,
+        "depth": 8,
+        "gpu": "NVIDIA GeForce RTX 4070 Laptop GPU",
+        "intersection_kernel_calls": 512,
+        "intersection_ms_per_spp": 34.61819947138429,
+        "intersection_total_ms": 2215.5647661685944,
+        "kind": "cuda_event_timing_without_counters",
+        "mesh_visits": 0,
+        "render_loop_seconds": 2.3016845,
+        "resolution": [
+          256,
+          256
+        ],
+        "spp": 64,
+        "triangle_tests": 0,
+        "triangles": 4108,
+        "warmup_spp": 8
+      },
+      "raw": "runs/benchmark/torus_exterior_4_1_timing/metrics.f32"
+    },
+    {
+      "name": "torus_exterior_counts_0",
+      "phase": "benchmark",
+      "wall_seconds": 4.084151399991242,
+      "exit_code": 0,
+      "scene": "scenes/bench_torus_exterior_0.json",
+      "executable": "D:\\CodeForCourses\\GPU Programming\\Project3-CUDA-Path-Tracer\\stage_records\\08_mesh_aabb_culling_2026-09-24\\diagnostic_build\\bin\\Release\\mesh_culling_counts.exe",
+      "executable_sha256": "b3dc76a943f826ed98d66b01bc0ea3a7ac0540d11c4c23dc043a1bdfc04775eb",
+      "image": "runs/benchmark/torus_exterior_counts_0/metrics.png",
+      "image_sha256": "a87dc058f66a2691d9738638aed909125e3615d464498856921192ed6fb95375",
+      "metrics": {
+        "aabb_rejected": 0,
+        "aabb_tests": 0,
+        "culling": false,
+        "depth": 8,
+        "gpu": "NVIDIA GeForce RTX 4070 Laptop GPU",
+        "intersection_kernel_calls": 512,
+        "intersection_ms_per_spp": 50.15096013620496,
+        "intersection_total_ms": 3209.6614487171173,
+        "kind": "counts_only_not_for_timing",
+        "mesh_visits": 39541908,
+        "render_loop_seconds": 3.474138,
+        "resolution": [
+          256,
+          256
+        ],
+        "spp": 64,
+        "triangle_tests": 81219079032,
+        "triangles": 4108,
+        "warmup_spp": 8
+      },
+      "raw": "runs/benchmark/torus_exterior_counts_0/metrics.f32"
+    },
+    {
+      "name": "torus_exterior_counts_1",
+      "phase": "benchmark",
+      "wall_seconds": 2.9832930999982636,
+      "exit_code": 0,
+      "scene": "scenes/bench_torus_exterior_1.json",
+      "executable": "D:\\CodeForCourses\\GPU Programming\\Project3-CUDA-Path-Tracer\\stage_records\\08_mesh_aabb_culling_2026-09-24\\diagnostic_build\\bin\\Release\\mesh_culling_counts.exe",
+      "executable_sha256": "b3dc76a943f826ed98d66b01bc0ea3a7ac0540d11c4c23dc043a1bdfc04775eb",
+      "image": "runs/benchmark/torus_exterior_counts_1/metrics.png",
+      "image_sha256": "a87dc058f66a2691d9738638aed909125e3615d464498856921192ed6fb95375",
+      "metrics": {
+        "aabb_rejected": 38561054,
+        "aabb_tests": 39541908,
+        "culling": true,
+        "depth": 8,
+        "gpu": "NVIDIA GeForce RTX 4070 Laptop GPU",
+        "intersection_kernel_calls": 512,
+        "intersection_ms_per_spp": 34.74684299342334,
+        "intersection_total_ms": 2223.797951579094,
+        "kind": "counts_only_not_for_timing",
+        "mesh_visits": 39541908,
+        "render_loop_seconds": 2.4715838,
+        "resolution": [
+          256,
+          256
+        ],
+        "spp": 64,
+        "triangle_tests": 2182943084,
+        "triangles": 4108,
+        "warmup_spp": 8
+      },
+      "raw": "runs/benchmark/torus_exterior_counts_1/metrics.f32"
+    },
+    {
+      "name": "torus_interior_warmup_0",
+      "phase": "benchmark",
+      "wall_seconds": 4.167728200001875,
+      "exit_code": 0,
+      "scene": "scenes/bench_torus_interior_0.json",
+      "executable": "D:\\CodeForCourses\\GPU Programming\\Project3-CUDA-Path-Tracer\\build\\bin\\Release\\cis565_path_tracer.exe",
+      "executable_sha256": "ba5a043e59a3c5133c0f30ef7690acc58dace45182970150c7c8e3a479ed1ef2",
+      "image": "runs/benchmark/torus_interior_warmup_0/aabb_result.2026-09-24_21-37-20z.64samp.png",
+      "image_sha256": "698e224e5d1b635a286885286d73e010b90f614917cf64c6e6e4f3e11c62a36b"
+    },
+    {
+      "name": "torus_interior_warmup_1",
+      "phase": "benchmark",
+      "wall_seconds": 3.8982568999927025,
+      "exit_code": 0,
+      "scene": "scenes/bench_torus_interior_1.json",
+      "executable": "D:\\CodeForCourses\\GPU Programming\\Project3-CUDA-Path-Tracer\\build\\bin\\Release\\cis565_path_tracer.exe",
+      "executable_sha256": "ba5a043e59a3c5133c0f30ef7690acc58dace45182970150c7c8e3a479ed1ef2",
+      "image": "runs/benchmark/torus_interior_warmup_1/aabb_result.2026-09-24_21-37-25z.64samp.png",
+      "image_sha256": "698e224e5d1b635a286885286d73e010b90f614917cf64c6e6e4f3e11c62a36b"
+    },
+    {
+      "name": "torus_interior_0_0_app",
+      "phase": "benchmark",
+      "wall_seconds": 4.214643599989358,
+      "exit_code": 0,
+      "scene": "scenes/bench_torus_interior_0.json",
+      "executable": "D:\\CodeForCourses\\GPU Programming\\Project3-CUDA-Path-Tracer\\build\\bin\\Release\\cis565_path_tracer.exe",
+      "executable_sha256": "ba5a043e59a3c5133c0f30ef7690acc58dace45182970150c7c8e3a479ed1ef2",
+      "image": "runs/benchmark/torus_interior_0_0_app/aabb_result.2026-09-24_21-37-28z.64samp.png",
+      "image_sha256": "698e224e5d1b635a286885286d73e010b90f614917cf64c6e6e4f3e11c62a36b"
+    },
+    {
+      "name": "torus_interior_0_0_timing",
+      "phase": "benchmark",
+      "wall_seconds": 3.960455299995374,
+      "exit_code": 0,
+      "scene": "scenes/bench_torus_interior_0.json",
+      "executable": "D:\\CodeForCourses\\GPU Programming\\Project3-CUDA-Path-Tracer\\stage_records\\08_mesh_aabb_culling_2026-09-24\\diagnostic_build\\bin\\Release\\mesh_culling_timing.exe",
+      "executable_sha256": "6825e89da76e88a32c7faa3cb6705e96821f17921776a6ecbdd16e7ed4dc51e7",
+      "image": "runs/benchmark/torus_interior_0_0_timing/metrics.png",
+      "image_sha256": "698e224e5d1b635a286885286d73e010b90f614917cf64c6e6e4f3e11c62a36b",
+      "metrics": {
+        "aabb_rejected": 0,
+        "aabb_tests": 0,
+        "culling": false,
+        "depth": 8,
+        "gpu": "NVIDIA GeForce RTX 4070 Laptop GPU",
+        "intersection_kernel_calls": 512,
+        "intersection_ms_per_spp": 50.76195639371872,
+        "intersection_total_ms": 3248.765209197998,
+        "kind": "cuda_event_timing_without_counters",
+        "mesh_visits": 0,
+        "render_loop_seconds": 3.3664211,
+        "resolution": [
+          256,
+          256
+        ],
+        "spp": 64,
+        "triangle_tests": 0,
+        "triangles": 4108,
+        "warmup_spp": 8
+      },
+      "raw": "runs/benchmark/torus_interior_0_0_timing/metrics.f32"
+    },
+    {
+      "name": "torus_interior_0_1_app",
+      "phase": "benchmark",
+      "wall_seconds": 3.8560945999925025,
+      "exit_code": 0,
+      "scene": "scenes/bench_torus_interior_1.json",
+      "executable": "D:\\CodeForCourses\\GPU Programming\\Project3-CUDA-Path-Tracer\\build\\bin\\Release\\cis565_path_tracer.exe",
+      "executable_sha256": "ba5a043e59a3c5133c0f30ef7690acc58dace45182970150c7c8e3a479ed1ef2",
+      "image": "runs/benchmark/torus_interior_0_1_app/aabb_result.2026-09-24_21-37-37z.64samp.png",
+      "image_sha256": "698e224e5d1b635a286885286d73e010b90f614917cf64c6e6e4f3e11c62a36b"
+    },
+    {
+      "name": "torus_interior_0_1_timing",
+      "phase": "benchmark",
+      "wall_seconds": 3.6467891999927815,
+      "exit_code": 0,
+      "scene": "scenes/bench_torus_interior_1.json",
+      "executable": "D:\\CodeForCourses\\GPU Programming\\Project3-CUDA-Path-Tracer\\stage_records\\08_mesh_aabb_culling_2026-09-24\\diagnostic_build\\bin\\Release\\mesh_culling_timing.exe",
+      "executable_sha256": "6825e89da76e88a32c7faa3cb6705e96821f17921776a6ecbdd16e7ed4dc51e7",
+      "image": "runs/benchmark/torus_interior_0_1_timing/metrics.png",
+      "image_sha256": "698e224e5d1b635a286885286d73e010b90f614917cf64c6e6e4f3e11c62a36b",
+      "metrics": {
+        "aabb_rejected": 0,
+        "aabb_tests": 0,
+        "culling": true,
+        "depth": 8,
+        "gpu": "NVIDIA GeForce RTX 4070 Laptop GPU",
+        "intersection_kernel_calls": 512,
+        "intersection_ms_per_spp": 46.23978504166007,
+        "intersection_total_ms": 2959.3462426662445,
+        "kind": "cuda_event_timing_without_counters",
+        "mesh_visits": 0,
+        "render_loop_seconds": 3.0811587,
+        "resolution": [
+          256,
+          256
+        ],
+        "spp": 64,
+        "triangle_tests": 0,
+        "triangles": 4108,
+        "warmup_spp": 8
+      },
+      "raw": "runs/benchmark/torus_interior_0_1_timing/metrics.f32"
+    },
+    {
+      "name": "torus_interior_1_1_app",
+      "phase": "benchmark",
+      "wall_seconds": 3.8244573999836575,
+      "exit_code": 0,
+      "scene": "scenes/bench_torus_interior_1.json",
+      "executable": "D:\\CodeForCourses\\GPU Programming\\Project3-CUDA-Path-Tracer\\build\\bin\\Release\\cis565_path_tracer.exe",
+      "executable_sha256": "ba5a043e59a3c5133c0f30ef7690acc58dace45182970150c7c8e3a479ed1ef2",
+      "image": "runs/benchmark/torus_interior_1_1_app/aabb_result.2026-09-24_21-37-44z.64samp.png",
+      "image_sha256": "698e224e5d1b635a286885286d73e010b90f614917cf64c6e6e4f3e11c62a36b"
+    },
+    {
+      "name": "torus_interior_1_1_timing",
+      "phase": "benchmark",
+      "wall_seconds": 3.652057400002377,
+      "exit_code": 0,
+      "scene": "scenes/bench_torus_interior_1.json",
+      "executable": "D:\\CodeForCourses\\GPU Programming\\Project3-CUDA-Path-Tracer\\stage_records\\08_mesh_aabb_culling_2026-09-24\\diagnostic_build\\bin\\Release\\mesh_culling_timing.exe",
+      "executable_sha256": "6825e89da76e88a32c7faa3cb6705e96821f17921776a6ecbdd16e7ed4dc51e7",
+      "image": "runs/benchmark/torus_interior_1_1_timing/metrics.png",
+      "image_sha256": "698e224e5d1b635a286885286d73e010b90f614917cf64c6e6e4f3e11c62a36b",
+      "metrics": {
+        "aabb_rejected": 0,
+        "aabb_tests": 0,
+        "culling": true,
+        "depth": 8,
+        "gpu": "NVIDIA GeForce RTX 4070 Laptop GPU",
+        "intersection_kernel_calls": 512,
+        "intersection_ms_per_spp": 46.398415038362145,
+        "intersection_total_ms": 2969.4985624551773,
+        "kind": "cuda_event_timing_without_counters",
+        "mesh_visits": 0,
+        "render_loop_seconds": 3.0985626,
+        "resolution": [
+          256,
+          256
+        ],
+        "spp": 64,
+        "triangle_tests": 0,
+        "triangles": 4108,
+        "warmup_spp": 8
+      },
+      "raw": "runs/benchmark/torus_interior_1_1_timing/metrics.f32"
+    },
+    {
+      "name": "torus_interior_1_0_app",
+      "phase": "benchmark",
+      "wall_seconds": 4.1615402000024915,
+      "exit_code": 0,
+      "scene": "scenes/bench_torus_interior_0.json",
+      "executable": "D:\\CodeForCourses\\GPU Programming\\Project3-CUDA-Path-Tracer\\build\\bin\\Release\\cis565_path_tracer.exe",
+      "executable_sha256": "ba5a043e59a3c5133c0f30ef7690acc58dace45182970150c7c8e3a479ed1ef2",
+      "image": "runs/benchmark/torus_interior_1_0_app/aabb_result.2026-09-24_21-37-52z.64samp.png",
+      "image_sha256": "698e224e5d1b635a286885286d73e010b90f614917cf64c6e6e4f3e11c62a36b"
+    },
+    {
+      "name": "torus_interior_1_0_timing",
+      "phase": "benchmark",
+      "wall_seconds": 4.037826399988262,
+      "exit_code": 0,
+      "scene": "scenes/bench_torus_interior_0.json",
+      "executable": "D:\\CodeForCourses\\GPU Programming\\Project3-CUDA-Path-Tracer\\stage_records\\08_mesh_aabb_culling_2026-09-24\\diagnostic_build\\bin\\Release\\mesh_culling_timing.exe",
+      "executable_sha256": "6825e89da76e88a32c7faa3cb6705e96821f17921776a6ecbdd16e7ed4dc51e7",
+      "image": "runs/benchmark/torus_interior_1_0_timing/metrics.png",
+      "image_sha256": "698e224e5d1b635a286885286d73e010b90f614917cf64c6e6e4f3e11c62a36b",
+      "metrics": {
+        "aabb_rejected": 0,
+        "aabb_tests": 0,
+        "culling": false,
+        "depth": 8,
+        "gpu": "NVIDIA GeForce RTX 4070 Laptop GPU",
+        "intersection_kernel_calls": 512,
+        "intersection_ms_per_spp": 51.45676648244262,
+        "intersection_total_ms": 3293.2330548763275,
+        "kind": "cuda_event_timing_without_counters",
+        "mesh_visits": 0,
+        "render_loop_seconds": 3.4250135,
+        "resolution": [
+          256,
+          256
+        ],
+        "spp": 64,
+        "triangle_tests": 0,
+        "triangles": 4108,
+        "warmup_spp": 8
+      },
+      "raw": "runs/benchmark/torus_interior_1_0_timing/metrics.f32"
+    },
+    {
+      "name": "torus_interior_2_0_app",
+      "phase": "benchmark",
+      "wall_seconds": 4.13239800001611,
+      "exit_code": 0,
+      "scene": "scenes/bench_torus_interior_0.json",
+      "executable": "D:\\CodeForCourses\\GPU Programming\\Project3-CUDA-Path-Tracer\\build\\bin\\Release\\cis565_path_tracer.exe",
+      "executable_sha256": "ba5a043e59a3c5133c0f30ef7690acc58dace45182970150c7c8e3a479ed1ef2",
+      "image": "runs/benchmark/torus_interior_2_0_app/aabb_result.2026-09-24_21-38-00z.64samp.png",
+      "image_sha256": "698e224e5d1b635a286885286d73e010b90f614917cf64c6e6e4f3e11c62a36b"
+    },
+    {
+      "name": "torus_interior_2_0_timing",
+      "phase": "benchmark",
+      "wall_seconds": 4.028675799985649,
+      "exit_code": 0,
+      "scene": "scenes/bench_torus_interior_0.json",
+      "executable": "D:\\CodeForCourses\\GPU Programming\\Project3-CUDA-Path-Tracer\\stage_records\\08_mesh_aabb_culling_2026-09-24\\diagnostic_build\\bin\\Release\\mesh_culling_timing.exe",
+      "executable_sha256": "6825e89da76e88a32c7faa3cb6705e96821f17921776a6ecbdd16e7ed4dc51e7",
+      "image": "runs/benchmark/torus_interior_2_0_timing/metrics.png",
+      "image_sha256": "698e224e5d1b635a286885286d73e010b90f614917cf64c6e6e4f3e11c62a36b",
+      "metrics": {
+        "aabb_rejected": 0,
+        "aabb_tests": 0,
+        "culling": false,
+        "depth": 8,
+        "gpu": "NVIDIA GeForce RTX 4070 Laptop GPU",
+        "intersection_kernel_calls": 512,
+        "intersection_ms_per_spp": 51.61104602739215,
+        "intersection_total_ms": 3303.1069457530975,
+        "kind": "cuda_event_timing_without_counters",
+        "mesh_visits": 0,
+        "render_loop_seconds": 3.4248341,
+        "resolution": [
+          256,
+          256
+        ],
+        "spp": 64,
+        "triangle_tests": 0,
+        "triangles": 4108,
+        "warmup_spp": 8
+      },
+      "raw": "runs/benchmark/torus_interior_2_0_timing/metrics.f32"
+    },
+    {
+      "name": "torus_interior_2_1_app",
+      "phase": "benchmark",
+      "wall_seconds": 3.857455100020161,
+      "exit_code": 0,
+      "scene": "scenes/bench_torus_interior_1.json",
+      "executable": "D:\\CodeForCourses\\GPU Programming\\Project3-CUDA-Path-Tracer\\build\\bin\\Release\\cis565_path_tracer.exe",
+      "executable_sha256": "ba5a043e59a3c5133c0f30ef7690acc58dace45182970150c7c8e3a479ed1ef2",
+      "image": "runs/benchmark/torus_interior_2_1_app/aabb_result.2026-09-24_21-38-08z.64samp.png",
+      "image_sha256": "698e224e5d1b635a286885286d73e010b90f614917cf64c6e6e4f3e11c62a36b"
+    },
+    {
+      "name": "torus_interior_2_1_timing",
+      "phase": "benchmark",
+      "wall_seconds": 3.6634536999918055,
+      "exit_code": 0,
+      "scene": "scenes/bench_torus_interior_1.json",
+      "executable": "D:\\CodeForCourses\\GPU Programming\\Project3-CUDA-Path-Tracer\\stage_records\\08_mesh_aabb_culling_2026-09-24\\diagnostic_build\\bin\\Release\\mesh_culling_timing.exe",
+      "executable_sha256": "6825e89da76e88a32c7faa3cb6705e96821f17921776a6ecbdd16e7ed4dc51e7",
+      "image": "runs/benchmark/torus_interior_2_1_timing/metrics.png",
+      "image_sha256": "698e224e5d1b635a286885286d73e010b90f614917cf64c6e6e4f3e11c62a36b",
+      "metrics": {
+        "aabb_rejected": 0,
+        "aabb_tests": 0,
+        "culling": true,
+        "depth": 8,
+        "gpu": "NVIDIA GeForce RTX 4070 Laptop GPU",
+        "intersection_kernel_calls": 512,
+        "intersection_ms_per_spp": 46.500403985381126,
+        "intersection_total_ms": 2976.025855064392,
+        "kind": "cuda_event_timing_without_counters",
+        "mesh_visits": 0,
+        "render_loop_seconds": 3.0948998,
+        "resolution": [
+          256,
+          256
+        ],
+        "spp": 64,
+        "triangle_tests": 0,
+        "triangles": 4108,
+        "warmup_spp": 8
+      },
+      "raw": "runs/benchmark/torus_interior_2_1_timing/metrics.f32"
+    },
+    {
+      "name": "torus_interior_3_1_app",
+      "phase": "benchmark",
+      "wall_seconds": 3.7962872000061907,
+      "exit_code": 0,
+      "scene": "scenes/bench_torus_interior_1.json",
+      "executable": "D:\\CodeForCourses\\GPU Programming\\Project3-CUDA-Path-Tracer\\build\\bin\\Release\\cis565_path_tracer.exe",
+      "executable_sha256": "ba5a043e59a3c5133c0f30ef7690acc58dace45182970150c7c8e3a479ed1ef2",
+      "image": "runs/benchmark/torus_interior_3_1_app/aabb_result.2026-09-24_21-38-16z.64samp.png",
+      "image_sha256": "698e224e5d1b635a286885286d73e010b90f614917cf64c6e6e4f3e11c62a36b"
+    },
+    {
+      "name": "torus_interior_3_1_timing",
+      "phase": "benchmark",
+      "wall_seconds": 3.6449035000114236,
+      "exit_code": 0,
+      "scene": "scenes/bench_torus_interior_1.json",
+      "executable": "D:\\CodeForCourses\\GPU Programming\\Project3-CUDA-Path-Tracer\\stage_records\\08_mesh_aabb_culling_2026-09-24\\diagnostic_build\\bin\\Release\\mesh_culling_timing.exe",
+      "executable_sha256": "6825e89da76e88a32c7faa3cb6705e96821f17921776a6ecbdd16e7ed4dc51e7",
+      "image": "runs/benchmark/torus_interior_3_1_timing/metrics.png",
+      "image_sha256": "698e224e5d1b635a286885286d73e010b90f614917cf64c6e6e4f3e11c62a36b",
+      "metrics": {
+        "aabb_rejected": 0,
+        "aabb_tests": 0,
+        "culling": true,
+        "depth": 8,
+        "gpu": "NVIDIA GeForce RTX 4070 Laptop GPU",
+        "intersection_kernel_calls": 512,
+        "intersection_ms_per_spp": 46.23766601830721,
+        "intersection_total_ms": 2959.2106251716614,
+        "kind": "cuda_event_timing_without_counters",
+        "mesh_visits": 0,
+        "render_loop_seconds": 3.079811,
+        "resolution": [
+          256,
+          256
+        ],
+        "spp": 64,
+        "triangle_tests": 0,
+        "triangles": 4108,
+        "warmup_spp": 8
+      },
+      "raw": "runs/benchmark/torus_interior_3_1_timing/metrics.f32"
+    },
+    {
+      "name": "torus_interior_3_0_app",
+      "phase": "benchmark",
+      "wall_seconds": 4.163924399996176,
+      "exit_code": 0,
+      "scene": "scenes/bench_torus_interior_0.json",
+      "executable": "D:\\CodeForCourses\\GPU Programming\\Project3-CUDA-Path-Tracer\\build\\bin\\Release\\cis565_path_tracer.exe",
+      "executable_sha256": "ba5a043e59a3c5133c0f30ef7690acc58dace45182970150c7c8e3a479ed1ef2",
+      "image": "runs/benchmark/torus_interior_3_0_app/aabb_result.2026-09-24_21-38-23z.64samp.png",
+      "image_sha256": "698e224e5d1b635a286885286d73e010b90f614917cf64c6e6e4f3e11c62a36b"
+    },
+    {
+      "name": "torus_interior_3_0_timing",
+      "phase": "benchmark",
+      "wall_seconds": 4.0097451000183355,
+      "exit_code": 0,
+      "scene": "scenes/bench_torus_interior_0.json",
+      "executable": "D:\\CodeForCourses\\GPU Programming\\Project3-CUDA-Path-Tracer\\stage_records\\08_mesh_aabb_culling_2026-09-24\\diagnostic_build\\bin\\Release\\mesh_culling_timing.exe",
+      "executable_sha256": "6825e89da76e88a32c7faa3cb6705e96821f17921776a6ecbdd16e7ed4dc51e7",
+      "image": "runs/benchmark/torus_interior_3_0_timing/metrics.png",
+      "image_sha256": "698e224e5d1b635a286885286d73e010b90f614917cf64c6e6e4f3e11c62a36b",
+      "metrics": {
+        "aabb_rejected": 0,
+        "aabb_tests": 0,
+        "culling": false,
+        "depth": 8,
+        "gpu": "NVIDIA GeForce RTX 4070 Laptop GPU",
+        "intersection_kernel_calls": 512,
+        "intersection_ms_per_spp": 51.330458119511604,
+        "intersection_total_ms": 3285.1493196487427,
+        "kind": "cuda_event_timing_without_counters",
+        "mesh_visits": 0,
+        "render_loop_seconds": 3.4050063,
+        "resolution": [
+          256,
+          256
+        ],
+        "spp": 64,
+        "triangle_tests": 0,
+        "triangles": 4108,
+        "warmup_spp": 8
+      },
+      "raw": "runs/benchmark/torus_interior_3_0_timing/metrics.f32"
+    },
+    {
+      "name": "torus_interior_4_0_app",
+      "phase": "benchmark",
+      "wall_seconds": 4.148637300007977,
+      "exit_code": 0,
+      "scene": "scenes/bench_torus_interior_0.json",
+      "executable": "D:\\CodeForCourses\\GPU Programming\\Project3-CUDA-Path-Tracer\\build\\bin\\Release\\cis565_path_tracer.exe",
+      "executable_sha256": "ba5a043e59a3c5133c0f30ef7690acc58dace45182970150c7c8e3a479ed1ef2",
+      "image": "runs/benchmark/torus_interior_4_0_app/aabb_result.2026-09-24_21-38-31z.64samp.png",
+      "image_sha256": "698e224e5d1b635a286885286d73e010b90f614917cf64c6e6e4f3e11c62a36b"
+    },
+    {
+      "name": "torus_interior_4_0_timing",
+      "phase": "benchmark",
+      "wall_seconds": 4.003436800005147,
+      "exit_code": 0,
+      "scene": "scenes/bench_torus_interior_0.json",
+      "executable": "D:\\CodeForCourses\\GPU Programming\\Project3-CUDA-Path-Tracer\\stage_records\\08_mesh_aabb_culling_2026-09-24\\diagnostic_build\\bin\\Release\\mesh_culling_timing.exe",
+      "executable_sha256": "6825e89da76e88a32c7faa3cb6705e96821f17921776a6ecbdd16e7ed4dc51e7",
+      "image": "runs/benchmark/torus_interior_4_0_timing/metrics.png",
+      "image_sha256": "698e224e5d1b635a286885286d73e010b90f614917cf64c6e6e4f3e11c62a36b",
+      "metrics": {
+        "aabb_rejected": 0,
+        "aabb_tests": 0,
+        "culling": false,
+        "depth": 8,
+        "gpu": "NVIDIA GeForce RTX 4070 Laptop GPU",
+        "intersection_kernel_calls": 512,
+        "intersection_ms_per_spp": 51.15345646813512,
+        "intersection_total_ms": 3273.8212139606476,
+        "kind": "cuda_event_timing_without_counters",
+        "mesh_visits": 0,
+        "render_loop_seconds": 3.3986733,
+        "resolution": [
+          256,
+          256
+        ],
+        "spp": 64,
+        "triangle_tests": 0,
+        "triangles": 4108,
+        "warmup_spp": 8
+      },
+      "raw": "runs/benchmark/torus_interior_4_0_timing/metrics.f32"
+    },
+    {
+      "name": "torus_interior_4_1_app",
+      "phase": "benchmark",
+      "wall_seconds": 3.81443730002502,
+      "exit_code": 0,
+      "scene": "scenes/bench_torus_interior_1.json",
+      "executable": "D:\\CodeForCourses\\GPU Programming\\Project3-CUDA-Path-Tracer\\build\\bin\\Release\\cis565_path_tracer.exe",
+      "executable_sha256": "ba5a043e59a3c5133c0f30ef7690acc58dace45182970150c7c8e3a479ed1ef2",
+      "image": "runs/benchmark/torus_interior_4_1_app/aabb_result.2026-09-24_21-38-39z.64samp.png",
+      "image_sha256": "698e224e5d1b635a286885286d73e010b90f614917cf64c6e6e4f3e11c62a36b"
+    },
+    {
+      "name": "torus_interior_4_1_timing",
+      "phase": "benchmark",
+      "wall_seconds": 3.618337599997176,
+      "exit_code": 0,
+      "scene": "scenes/bench_torus_interior_1.json",
+      "executable": "D:\\CodeForCourses\\GPU Programming\\Project3-CUDA-Path-Tracer\\stage_records\\08_mesh_aabb_culling_2026-09-24\\diagnostic_build\\bin\\Release\\mesh_culling_timing.exe",
+      "executable_sha256": "6825e89da76e88a32c7faa3cb6705e96821f17921776a6ecbdd16e7ed4dc51e7",
+      "image": "runs/benchmark/torus_interior_4_1_timing/metrics.png",
+      "image_sha256": "698e224e5d1b635a286885286d73e010b90f614917cf64c6e6e4f3e11c62a36b",
+      "metrics": {
+        "aabb_rejected": 0,
+        "aabb_tests": 0,
+        "culling": true,
+        "depth": 8,
+        "gpu": "NVIDIA GeForce RTX 4070 Laptop GPU",
+        "intersection_kernel_calls": 512,
+        "intersection_ms_per_spp": 46.10197453573346,
+        "intersection_total_ms": 2950.5263702869415,
+        "kind": "cuda_event_timing_without_counters",
+        "mesh_visits": 0,
+        "render_loop_seconds": 3.0683576,
+        "resolution": [
+          256,
+          256
+        ],
+        "spp": 64,
+        "triangle_tests": 0,
+        "triangles": 4108,
+        "warmup_spp": 8
+      },
+      "raw": "runs/benchmark/torus_interior_4_1_timing/metrics.f32"
+    },
+    {
+      "name": "torus_interior_counts_0",
+      "phase": "benchmark",
+      "wall_seconds": 4.086202900012722,
+      "exit_code": 0,
+      "scene": "scenes/bench_torus_interior_0.json",
+      "executable": "D:\\CodeForCourses\\GPU Programming\\Project3-CUDA-Path-Tracer\\stage_records\\08_mesh_aabb_culling_2026-09-24\\diagnostic_build\\bin\\Release\\mesh_culling_counts.exe",
+      "executable_sha256": "b3dc76a943f826ed98d66b01bc0ea3a7ac0540d11c4c23dc043a1bdfc04775eb",
+      "image": "runs/benchmark/torus_interior_counts_0/metrics.png",
+      "image_sha256": "698e224e5d1b635a286885286d73e010b90f614917cf64c6e6e4f3e11c62a36b",
+      "metrics": {
+        "aabb_rejected": 0,
+        "aabb_tests": 0,
+        "culling": false,
+        "depth": 8,
+        "gpu": "NVIDIA GeForce RTX 4070 Laptop GPU",
+        "intersection_kernel_calls": 512,
+        "intersection_ms_per_spp": 50.39571740850806,
+        "intersection_total_ms": 3225.325914144516,
+        "kind": "counts_only_not_for_timing",
+        "mesh_visits": 41245788,
+        "render_loop_seconds": 3.4966528,
+        "resolution": [
+          256,
+          256
+        ],
+        "spp": 64,
+        "triangle_tests": 84718848552,
+        "triangles": 4108,
+        "warmup_spp": 8
+      },
+      "raw": "runs/benchmark/torus_interior_counts_0/metrics.f32"
+    },
+    {
+      "name": "torus_interior_counts_1",
+      "phase": "benchmark",
+      "wall_seconds": 3.8061775999958627,
+      "exit_code": 0,
+      "scene": "scenes/bench_torus_interior_1.json",
+      "executable": "D:\\CodeForCourses\\GPU Programming\\Project3-CUDA-Path-Tracer\\stage_records\\08_mesh_aabb_culling_2026-09-24\\diagnostic_build\\bin\\Release\\mesh_culling_counts.exe",
+      "executable_sha256": "b3dc76a943f826ed98d66b01bc0ea3a7ac0540d11c4c23dc043a1bdfc04775eb",
+      "image": "runs/benchmark/torus_interior_counts_1/metrics.png",
+      "image_sha256": "698e224e5d1b635a286885286d73e010b90f614917cf64c6e6e4f3e11c62a36b",
+      "metrics": {
+        "aabb_rejected": 36001579,
+        "aabb_tests": 41245788,
+        "culling": true,
+        "depth": 8,
+        "gpu": "NVIDIA GeForce RTX 4070 Laptop GPU",
+        "intersection_kernel_calls": 512,
+        "intersection_ms_per_spp": 46.36665051989257,
+        "intersection_total_ms": 2967.4656332731247,
+        "kind": "counts_only_not_for_timing",
+        "mesh_visits": 41245788,
+        "render_loop_seconds": 3.2250453,
+        "resolution": [
+          256,
+          256
+        ],
+        "spp": 64,
+        "triangle_tests": 19915168744,
+        "triangles": 4108,
+        "warmup_spp": 8
+      },
+      "raw": "runs/benchmark/torus_interior_counts_1/metrics.f32"
+    }
+  ],
+  "comparisons": [
+    {
+      "first": "runs/benchmark/simple_0_0_app/aabb_result.2026-09-24_21-35-43z.64samp.png",
+      "second": "runs/benchmark/simple_0_0_timing/metrics.png",
+      "kind": "decoded_png",
+      "different_components": 0,
+      "max_absolute_error": 0.0
+    },
+    {
+      "first": "runs/benchmark/simple_0_1_app/aabb_result.2026-09-24_21-35-44z.64samp.png",
+      "second": "runs/benchmark/simple_0_1_timing/metrics.png",
+      "kind": "decoded_png",
+      "different_components": 0,
+      "max_absolute_error": 0.0
+    },
+    {
+      "first": "runs/benchmark/simple_0_0_timing/metrics.png",
+      "second": "runs/benchmark/simple_0_1_timing/metrics.png",
+      "kind": "decoded_png",
+      "different_components": 0,
+      "max_absolute_error": 0.0
+    },
+    {
+      "first": "runs/benchmark/simple_0_0_timing/metrics.f32",
+      "second": "runs/benchmark/simple_0_1_timing/metrics.f32",
+      "kind": "float32",
+      "different_components": 0,
+      "max_absolute_error": 0.0
+    },
+    {
+      "first": "runs/benchmark/simple_1_1_app/aabb_result.2026-09-24_21-35-45z.64samp.png",
+      "second": "runs/benchmark/simple_1_1_timing/metrics.png",
+      "kind": "decoded_png",
+      "different_components": 0,
+      "max_absolute_error": 0.0
+    },
+    {
+      "first": "runs/benchmark/simple_0_0_timing/metrics.png",
+      "second": "runs/benchmark/simple_1_1_timing/metrics.png",
+      "kind": "decoded_png",
+      "different_components": 0,
+      "max_absolute_error": 0.0
+    },
+    {
+      "first": "runs/benchmark/simple_0_0_timing/metrics.f32",
+      "second": "runs/benchmark/simple_1_1_timing/metrics.f32",
+      "kind": "float32",
+      "different_components": 0,
+      "max_absolute_error": 0.0
+    },
+    {
+      "first": "runs/benchmark/simple_1_0_app/aabb_result.2026-09-24_21-35-46z.64samp.png",
+      "second": "runs/benchmark/simple_1_0_timing/metrics.png",
+      "kind": "decoded_png",
+      "different_components": 0,
+      "max_absolute_error": 0.0
+    },
+    {
+      "first": "runs/benchmark/simple_0_0_timing/metrics.png",
+      "second": "runs/benchmark/simple_1_0_timing/metrics.png",
+      "kind": "decoded_png",
+      "different_components": 0,
+      "max_absolute_error": 0.0
+    },
+    {
+      "first": "runs/benchmark/simple_0_0_timing/metrics.f32",
+      "second": "runs/benchmark/simple_1_0_timing/metrics.f32",
+      "kind": "float32",
+      "different_components": 0,
+      "max_absolute_error": 0.0
+    },
+    {
+      "first": "runs/benchmark/simple_2_0_app/aabb_result.2026-09-24_21-35-48z.64samp.png",
+      "second": "runs/benchmark/simple_2_0_timing/metrics.png",
+      "kind": "decoded_png",
+      "different_components": 0,
+      "max_absolute_error": 0.0
+    },
+    {
+      "first": "runs/benchmark/simple_0_0_timing/metrics.png",
+      "second": "runs/benchmark/simple_2_0_timing/metrics.png",
+      "kind": "decoded_png",
+      "different_components": 0,
+      "max_absolute_error": 0.0
+    },
+    {
+      "first": "runs/benchmark/simple_0_0_timing/metrics.f32",
+      "second": "runs/benchmark/simple_2_0_timing/metrics.f32",
+      "kind": "float32",
+      "different_components": 0,
+      "max_absolute_error": 0.0
+    },
+    {
+      "first": "runs/benchmark/simple_2_1_app/aabb_result.2026-09-24_21-35-49z.64samp.png",
+      "second": "runs/benchmark/simple_2_1_timing/metrics.png",
+      "kind": "decoded_png",
+      "different_components": 0,
+      "max_absolute_error": 0.0
+    },
+    {
+      "first": "runs/benchmark/simple_0_0_timing/metrics.png",
+      "second": "runs/benchmark/simple_2_1_timing/metrics.png",
+      "kind": "decoded_png",
+      "different_components": 0,
+      "max_absolute_error": 0.0
+    },
+    {
+      "first": "runs/benchmark/simple_0_0_timing/metrics.f32",
+      "second": "runs/benchmark/simple_2_1_timing/metrics.f32",
+      "kind": "float32",
+      "different_components": 0,
+      "max_absolute_error": 0.0
+    },
+    {
+      "first": "runs/benchmark/simple_3_1_app/aabb_result.2026-09-24_21-35-50z.64samp.png",
+      "second": "runs/benchmark/simple_3_1_timing/metrics.png",
+      "kind": "decoded_png",
+      "different_components": 0,
+      "max_absolute_error": 0.0
+    },
+    {
+      "first": "runs/benchmark/simple_0_0_timing/metrics.png",
+      "second": "runs/benchmark/simple_3_1_timing/metrics.png",
+      "kind": "decoded_png",
+      "different_components": 0,
+      "max_absolute_error": 0.0
+    },
+    {
+      "first": "runs/benchmark/simple_0_0_timing/metrics.f32",
+      "second": "runs/benchmark/simple_3_1_timing/metrics.f32",
+      "kind": "float32",
+      "different_components": 0,
+      "max_absolute_error": 0.0
+    },
+    {
+      "first": "runs/benchmark/simple_3_0_app/aabb_result.2026-09-24_21-35-51z.64samp.png",
+      "second": "runs/benchmark/simple_3_0_timing/metrics.png",
+      "kind": "decoded_png",
+      "different_components": 0,
+      "max_absolute_error": 0.0
+    },
+    {
+      "first": "runs/benchmark/simple_0_0_timing/metrics.png",
+      "second": "runs/benchmark/simple_3_0_timing/metrics.png",
+      "kind": "decoded_png",
+      "different_components": 0,
+      "max_absolute_error": 0.0
+    },
+    {
+      "first": "runs/benchmark/simple_0_0_timing/metrics.f32",
+      "second": "runs/benchmark/simple_3_0_timing/metrics.f32",
+      "kind": "float32",
+      "different_components": 0,
+      "max_absolute_error": 0.0
+    },
+    {
+      "first": "runs/benchmark/simple_4_0_app/aabb_result.2026-09-24_21-35-53z.64samp.png",
+      "second": "runs/benchmark/simple_4_0_timing/metrics.png",
+      "kind": "decoded_png",
+      "different_components": 0,
+      "max_absolute_error": 0.0
+    },
+    {
+      "first": "runs/benchmark/simple_0_0_timing/metrics.png",
+      "second": "runs/benchmark/simple_4_0_timing/metrics.png",
+      "kind": "decoded_png",
+      "different_components": 0,
+      "max_absolute_error": 0.0
+    },
+    {
+      "first": "runs/benchmark/simple_0_0_timing/metrics.f32",
+      "second": "runs/benchmark/simple_4_0_timing/metrics.f32",
+      "kind": "float32",
+      "different_components": 0,
+      "max_absolute_error": 0.0
+    },
+    {
+      "first": "runs/benchmark/simple_4_1_app/aabb_result.2026-09-24_21-35-54z.64samp.png",
+      "second": "runs/benchmark/simple_4_1_timing/metrics.png",
+      "kind": "decoded_png",
+      "different_components": 0,
+      "max_absolute_error": 0.0
+    },
+    {
+      "first": "runs/benchmark/simple_0_0_timing/metrics.png",
+      "second": "runs/benchmark/simple_4_1_timing/metrics.png",
+      "kind": "decoded_png",
+      "different_components": 0,
+      "max_absolute_error": 0.0
+    },
+    {
+      "first": "runs/benchmark/simple_0_0_timing/metrics.f32",
+      "second": "runs/benchmark/simple_4_1_timing/metrics.f32",
+      "kind": "float32",
+      "different_components": 0,
+      "max_absolute_error": 0.0
+    },
+    {
+      "first": "runs/benchmark/simple_0_0_timing/metrics.png",
+      "second": "runs/benchmark/simple_counts_0/metrics.png",
+      "kind": "decoded_png",
+      "different_components": 0,
+      "max_absolute_error": 0.0
+    },
+    {
+      "first": "runs/benchmark/simple_0_0_timing/metrics.f32",
+      "second": "runs/benchmark/simple_counts_0/metrics.f32",
+      "kind": "float32",
+      "different_components": 0,
+      "max_absolute_error": 0.0
+    },
+    {
+      "first": "runs/benchmark/simple_0_0_timing/metrics.png",
+      "second": "runs/benchmark/simple_counts_1/metrics.png",
+      "kind": "decoded_png",
+      "different_components": 0,
+      "max_absolute_error": 0.0
+    },
+    {
+      "first": "runs/benchmark/simple_0_0_timing/metrics.f32",
+      "second": "runs/benchmark/simple_counts_1/metrics.f32",
+      "kind": "float32",
+      "different_components": 0,
+      "max_absolute_error": 0.0
+    },
+    {
+      "first": "runs/benchmark/torus_exterior_0_0_app/aabb_result.2026-09-24_21-36-03z.64samp.png",
+      "second": "runs/benchmark/torus_exterior_0_0_timing/metrics.png",
+      "kind": "decoded_png",
+      "different_components": 0,
+      "max_absolute_error": 0.0
+    },
+    {
+      "first": "runs/benchmark/torus_exterior_0_1_app/aabb_result.2026-09-24_21-36-11z.64samp.png",
+      "second": "runs/benchmark/torus_exterior_0_1_timing/metrics.png",
+      "kind": "decoded_png",
+      "different_components": 0,
+      "max_absolute_error": 0.0
+    },
+    {
+      "first": "runs/benchmark/torus_exterior_0_0_timing/metrics.png",
+      "second": "runs/benchmark/torus_exterior_0_1_timing/metrics.png",
+      "kind": "decoded_png",
+      "different_components": 0,
+      "max_absolute_error": 0.0
+    },
+    {
+      "first": "runs/benchmark/torus_exterior_0_0_timing/metrics.f32",
+      "second": "runs/benchmark/torus_exterior_0_1_timing/metrics.f32",
+      "kind": "float32",
+      "different_components": 0,
+      "max_absolute_error": 0.0
+    },
+    {
+      "first": "runs/benchmark/torus_exterior_1_1_app/aabb_result.2026-09-24_21-36-17z.64samp.png",
+      "second": "runs/benchmark/torus_exterior_1_1_timing/metrics.png",
+      "kind": "decoded_png",
+      "different_components": 0,
+      "max_absolute_error": 0.0
+    },
+    {
+      "first": "runs/benchmark/torus_exterior_0_0_timing/metrics.png",
+      "second": "runs/benchmark/torus_exterior_1_1_timing/metrics.png",
+      "kind": "decoded_png",
+      "different_components": 0,
+      "max_absolute_error": 0.0
+    },
+    {
+      "first": "runs/benchmark/torus_exterior_0_0_timing/metrics.f32",
+      "second": "runs/benchmark/torus_exterior_1_1_timing/metrics.f32",
+      "kind": "float32",
+      "different_components": 0,
+      "max_absolute_error": 0.0
+    },
+    {
+      "first": "runs/benchmark/torus_exterior_1_0_app/aabb_result.2026-09-24_21-36-23z.64samp.png",
+      "second": "runs/benchmark/torus_exterior_1_0_timing/metrics.png",
+      "kind": "decoded_png",
+      "different_components": 0,
+      "max_absolute_error": 0.0
+    },
+    {
+      "first": "runs/benchmark/torus_exterior_0_0_timing/metrics.png",
+      "second": "runs/benchmark/torus_exterior_1_0_timing/metrics.png",
+      "kind": "decoded_png",
+      "different_components": 0,
+      "max_absolute_error": 0.0
+    },
+    {
+      "first": "runs/benchmark/torus_exterior_0_0_timing/metrics.f32",
+      "second": "runs/benchmark/torus_exterior_1_0_timing/metrics.f32",
+      "kind": "float32",
+      "different_components": 0,
+      "max_absolute_error": 0.0
+    },
+    {
+      "first": "runs/benchmark/torus_exterior_2_0_app/aabb_result.2026-09-24_21-36-31z.64samp.png",
+      "second": "runs/benchmark/torus_exterior_2_0_timing/metrics.png",
+      "kind": "decoded_png",
+      "different_components": 0,
+      "max_absolute_error": 0.0
+    },
+    {
+      "first": "runs/benchmark/torus_exterior_0_0_timing/metrics.png",
+      "second": "runs/benchmark/torus_exterior_2_0_timing/metrics.png",
+      "kind": "decoded_png",
+      "different_components": 0,
+      "max_absolute_error": 0.0
+    },
+    {
+      "first": "runs/benchmark/torus_exterior_0_0_timing/metrics.f32",
+      "second": "runs/benchmark/torus_exterior_2_0_timing/metrics.f32",
+      "kind": "float32",
+      "different_components": 0,
+      "max_absolute_error": 0.0
+    },
+    {
+      "first": "runs/benchmark/torus_exterior_2_1_app/aabb_result.2026-09-24_21-36-39z.64samp.png",
+      "second": "runs/benchmark/torus_exterior_2_1_timing/metrics.png",
+      "kind": "decoded_png",
+      "different_components": 0,
+      "max_absolute_error": 0.0
+    },
+    {
+      "first": "runs/benchmark/torus_exterior_0_0_timing/metrics.png",
+      "second": "runs/benchmark/torus_exterior_2_1_timing/metrics.png",
+      "kind": "decoded_png",
+      "different_components": 0,
+      "max_absolute_error": 0.0
+    },
+    {
+      "first": "runs/benchmark/torus_exterior_0_0_timing/metrics.f32",
+      "second": "runs/benchmark/torus_exterior_2_1_timing/metrics.f32",
+      "kind": "float32",
+      "different_components": 0,
+      "max_absolute_error": 0.0
+    },
+    {
+      "first": "runs/benchmark/torus_exterior_3_1_app/aabb_result.2026-09-24_21-36-45z.64samp.png",
+      "second": "runs/benchmark/torus_exterior_3_1_timing/metrics.png",
+      "kind": "decoded_png",
+      "different_components": 0,
+      "max_absolute_error": 0.0
+    },
+    {
+      "first": "runs/benchmark/torus_exterior_0_0_timing/metrics.png",
+      "second": "runs/benchmark/torus_exterior_3_1_timing/metrics.png",
+      "kind": "decoded_png",
+      "different_components": 0,
+      "max_absolute_error": 0.0
+    },
+    {
+      "first": "runs/benchmark/torus_exterior_0_0_timing/metrics.f32",
+      "second": "runs/benchmark/torus_exterior_3_1_timing/metrics.f32",
+      "kind": "float32",
+      "different_components": 0,
+      "max_absolute_error": 0.0
+    },
+    {
+      "first": "runs/benchmark/torus_exterior_3_0_app/aabb_result.2026-09-24_21-36-51z.64samp.png",
+      "second": "runs/benchmark/torus_exterior_3_0_timing/metrics.png",
+      "kind": "decoded_png",
+      "different_components": 0,
+      "max_absolute_error": 0.0
+    },
+    {
+      "first": "runs/benchmark/torus_exterior_0_0_timing/metrics.png",
+      "second": "runs/benchmark/torus_exterior_3_0_timing/metrics.png",
+      "kind": "decoded_png",
+      "different_components": 0,
+      "max_absolute_error": 0.0
+    },
+    {
+      "first": "runs/benchmark/torus_exterior_0_0_timing/metrics.f32",
+      "second": "runs/benchmark/torus_exterior_3_0_timing/metrics.f32",
+      "kind": "float32",
+      "different_components": 0,
+      "max_absolute_error": 0.0
+    },
+    {
+      "first": "runs/benchmark/torus_exterior_4_0_app/aabb_result.2026-09-24_21-36-59z.64samp.png",
+      "second": "runs/benchmark/torus_exterior_4_0_timing/metrics.png",
+      "kind": "decoded_png",
+      "different_components": 0,
+      "max_absolute_error": 0.0
+    },
+    {
+      "first": "runs/benchmark/torus_exterior_0_0_timing/metrics.png",
+      "second": "runs/benchmark/torus_exterior_4_0_timing/metrics.png",
+      "kind": "decoded_png",
+      "different_components": 0,
+      "max_absolute_error": 0.0
+    },
+    {
+      "first": "runs/benchmark/torus_exterior_0_0_timing/metrics.f32",
+      "second": "runs/benchmark/torus_exterior_4_0_timing/metrics.f32",
+      "kind": "float32",
+      "different_components": 0,
+      "max_absolute_error": 0.0
+    },
+    {
+      "first": "runs/benchmark/torus_exterior_4_1_app/aabb_result.2026-09-24_21-37-07z.64samp.png",
+      "second": "runs/benchmark/torus_exterior_4_1_timing/metrics.png",
+      "kind": "decoded_png",
+      "different_components": 0,
+      "max_absolute_error": 0.0
+    },
+    {
+      "first": "runs/benchmark/torus_exterior_0_0_timing/metrics.png",
+      "second": "runs/benchmark/torus_exterior_4_1_timing/metrics.png",
+      "kind": "decoded_png",
+      "different_components": 0,
+      "max_absolute_error": 0.0
+    },
+    {
+      "first": "runs/benchmark/torus_exterior_0_0_timing/metrics.f32",
+      "second": "runs/benchmark/torus_exterior_4_1_timing/metrics.f32",
+      "kind": "float32",
+      "different_components": 0,
+      "max_absolute_error": 0.0
+    },
+    {
+      "first": "runs/benchmark/torus_exterior_0_0_timing/metrics.png",
+      "second": "runs/benchmark/torus_exterior_counts_0/metrics.png",
+      "kind": "decoded_png",
+      "different_components": 0,
+      "max_absolute_error": 0.0
+    },
+    {
+      "first": "runs/benchmark/torus_exterior_0_0_timing/metrics.f32",
+      "second": "runs/benchmark/torus_exterior_counts_0/metrics.f32",
+      "kind": "float32",
+      "different_components": 0,
+      "max_absolute_error": 0.0
+    },
+    {
+      "first": "runs/benchmark/torus_exterior_0_0_timing/metrics.png",
+      "second": "runs/benchmark/torus_exterior_counts_1/metrics.png",
+      "kind": "decoded_png",
+      "different_components": 0,
+      "max_absolute_error": 0.0
+    },
+    {
+      "first": "runs/benchmark/torus_exterior_0_0_timing/metrics.f32",
+      "second": "runs/benchmark/torus_exterior_counts_1/metrics.f32",
+      "kind": "float32",
+      "different_components": 0,
+      "max_absolute_error": 0.0
+    },
+    {
+      "first": "runs/benchmark/torus_interior_0_0_app/aabb_result.2026-09-24_21-37-28z.64samp.png",
+      "second": "runs/benchmark/torus_interior_0_0_timing/metrics.png",
+      "kind": "decoded_png",
+      "different_components": 0,
+      "max_absolute_error": 0.0
+    },
+    {
+      "first": "runs/benchmark/torus_interior_0_1_app/aabb_result.2026-09-24_21-37-37z.64samp.png",
+      "second": "runs/benchmark/torus_interior_0_1_timing/metrics.png",
+      "kind": "decoded_png",
+      "different_components": 0,
+      "max_absolute_error": 0.0
+    },
+    {
+      "first": "runs/benchmark/torus_interior_0_0_timing/metrics.png",
+      "second": "runs/benchmark/torus_interior_0_1_timing/metrics.png",
+      "kind": "decoded_png",
+      "different_components": 0,
+      "max_absolute_error": 0.0
+    },
+    {
+      "first": "runs/benchmark/torus_interior_0_0_timing/metrics.f32",
+      "second": "runs/benchmark/torus_interior_0_1_timing/metrics.f32",
+      "kind": "float32",
+      "different_components": 0,
+      "max_absolute_error": 0.0
+    },
+    {
+      "first": "runs/benchmark/torus_interior_1_1_app/aabb_result.2026-09-24_21-37-44z.64samp.png",
+      "second": "runs/benchmark/torus_interior_1_1_timing/metrics.png",
+      "kind": "decoded_png",
+      "different_components": 0,
+      "max_absolute_error": 0.0
+    },
+    {
+      "first": "runs/benchmark/torus_interior_0_0_timing/metrics.png",
+      "second": "runs/benchmark/torus_interior_1_1_timing/metrics.png",
+      "kind": "decoded_png",
+      "different_components": 0,
+      "max_absolute_error": 0.0
+    },
+    {
+      "first": "runs/benchmark/torus_interior_0_0_timing/metrics.f32",
+      "second": "runs/benchmark/torus_interior_1_1_timing/metrics.f32",
+      "kind": "float32",
+      "different_components": 0,
+      "max_absolute_error": 0.0
+    },
+    {
+      "first": "runs/benchmark/torus_interior_1_0_app/aabb_result.2026-09-24_21-37-52z.64samp.png",
+      "second": "runs/benchmark/torus_interior_1_0_timing/metrics.png",
+      "kind": "decoded_png",
+      "different_components": 0,
+      "max_absolute_error": 0.0
+    },
+    {
+      "first": "runs/benchmark/torus_interior_0_0_timing/metrics.png",
+      "second": "runs/benchmark/torus_interior_1_0_timing/metrics.png",
+      "kind": "decoded_png",
+      "different_components": 0,
+      "max_absolute_error": 0.0
+    },
+    {
+      "first": "runs/benchmark/torus_interior_0_0_timing/metrics.f32",
+      "second": "runs/benchmark/torus_interior_1_0_timing/metrics.f32",
+      "kind": "float32",
+      "different_components": 0,
+      "max_absolute_error": 0.0
+    },
+    {
+      "first": "runs/benchmark/torus_interior_2_0_app/aabb_result.2026-09-24_21-38-00z.64samp.png",
+      "second": "runs/benchmark/torus_interior_2_0_timing/metrics.png",
+      "kind": "decoded_png",
+      "different_components": 0,
+      "max_absolute_error": 0.0
+    },
+    {
+      "first": "runs/benchmark/torus_interior_0_0_timing/metrics.png",
+      "second": "runs/benchmark/torus_interior_2_0_timing/metrics.png",
+      "kind": "decoded_png",
+      "different_components": 0,
+      "max_absolute_error": 0.0
+    },
+    {
+      "first": "runs/benchmark/torus_interior_0_0_timing/metrics.f32",
+      "second": "runs/benchmark/torus_interior_2_0_timing/metrics.f32",
+      "kind": "float32",
+      "different_components": 0,
+      "max_absolute_error": 0.0
+    },
+    {
+      "first": "runs/benchmark/torus_interior_2_1_app/aabb_result.2026-09-24_21-38-08z.64samp.png",
+      "second": "runs/benchmark/torus_interior_2_1_timing/metrics.png",
+      "kind": "decoded_png",
+      "different_components": 0,
+      "max_absolute_error": 0.0
+    },
+    {
+      "first": "runs/benchmark/torus_interior_0_0_timing/metrics.png",
+      "second": "runs/benchmark/torus_interior_2_1_timing/metrics.png",
+      "kind": "decoded_png",
+      "different_components": 0,
+      "max_absolute_error": 0.0
+    },
+    {
+      "first": "runs/benchmark/torus_interior_0_0_timing/metrics.f32",
+      "second": "runs/benchmark/torus_interior_2_1_timing/metrics.f32",
+      "kind": "float32",
+      "different_components": 0,
+      "max_absolute_error": 0.0
+    },
+    {
+      "first": "runs/benchmark/torus_interior_3_1_app/aabb_result.2026-09-24_21-38-16z.64samp.png",
+      "second": "runs/benchmark/torus_interior_3_1_timing/metrics.png",
+      "kind": "decoded_png",
+      "different_components": 0,
+      "max_absolute_error": 0.0
+    },
+    {
+      "first": "runs/benchmark/torus_interior_0_0_timing/metrics.png",
+      "second": "runs/benchmark/torus_interior_3_1_timing/metrics.png",
+      "kind": "decoded_png",
+      "different_components": 0,
+      "max_absolute_error": 0.0
+    },
+    {
+      "first": "runs/benchmark/torus_interior_0_0_timing/metrics.f32",
+      "second": "runs/benchmark/torus_interior_3_1_timing/metrics.f32",
+      "kind": "float32",
+      "different_components": 0,
+      "max_absolute_error": 0.0
+    },
+    {
+      "first": "runs/benchmark/torus_interior_3_0_app/aabb_result.2026-09-24_21-38-23z.64samp.png",
+      "second": "runs/benchmark/torus_interior_3_0_timing/metrics.png",
+      "kind": "decoded_png",
+      "different_components": 0,
+      "max_absolute_error": 0.0
+    },
+    {
+      "first": "runs/benchmark/torus_interior_0_0_timing/metrics.png",
+      "second": "runs/benchmark/torus_interior_3_0_timing/metrics.png",
+      "kind": "decoded_png",
+      "different_components": 0,
+      "max_absolute_error": 0.0
+    },
+    {
+      "first": "runs/benchmark/torus_interior_0_0_timing/metrics.f32",
+      "second": "runs/benchmark/torus_interior_3_0_timing/metrics.f32",
+      "kind": "float32",
+      "different_components": 0,
+      "max_absolute_error": 0.0
+    },
+    {
+      "first": "runs/benchmark/torus_interior_4_0_app/aabb_result.2026-09-24_21-38-31z.64samp.png",
+      "second": "runs/benchmark/torus_interior_4_0_timing/metrics.png",
+      "kind": "decoded_png",
+      "different_components": 0,
+      "max_absolute_error": 0.0
+    },
+    {
+      "first": "runs/benchmark/torus_interior_0_0_timing/metrics.png",
+      "second": "runs/benchmark/torus_interior_4_0_timing/metrics.png",
+      "kind": "decoded_png",
+      "different_components": 0,
+      "max_absolute_error": 0.0
+    },
+    {
+      "first": "runs/benchmark/torus_interior_0_0_timing/metrics.f32",
+      "second": "runs/benchmark/torus_interior_4_0_timing/metrics.f32",
+      "kind": "float32",
+      "different_components": 0,
+      "max_absolute_error": 0.0
+    },
+    {
+      "first": "runs/benchmark/torus_interior_4_1_app/aabb_result.2026-09-24_21-38-39z.64samp.png",
+      "second": "runs/benchmark/torus_interior_4_1_timing/metrics.png",
+      "kind": "decoded_png",
+      "different_components": 0,
+      "max_absolute_error": 0.0
+    },
+    {
+      "first": "runs/benchmark/torus_interior_0_0_timing/metrics.png",
+      "second": "runs/benchmark/torus_interior_4_1_timing/metrics.png",
+      "kind": "decoded_png",
+      "different_components": 0,
+      "max_absolute_error": 0.0
+    },
+    {
+      "first": "runs/benchmark/torus_interior_0_0_timing/metrics.f32",
+      "second": "runs/benchmark/torus_interior_4_1_timing/metrics.f32",
+      "kind": "float32",
+      "different_components": 0,
+      "max_absolute_error": 0.0
+    },
+    {
+      "first": "runs/benchmark/torus_interior_0_0_timing/metrics.png",
+      "second": "runs/benchmark/torus_interior_counts_0/metrics.png",
+      "kind": "decoded_png",
+      "different_components": 0,
+      "max_absolute_error": 0.0
+    },
+    {
+      "first": "runs/benchmark/torus_interior_0_0_timing/metrics.f32",
+      "second": "runs/benchmark/torus_interior_counts_0/metrics.f32",
+      "kind": "float32",
+      "different_components": 0,
+      "max_absolute_error": 0.0
+    },
+    {
+      "first": "runs/benchmark/torus_interior_0_0_timing/metrics.png",
+      "second": "runs/benchmark/torus_interior_counts_1/metrics.png",
+      "kind": "decoded_png",
+      "different_components": 0,
+      "max_absolute_error": 0.0
+    },
+    {
+      "first": "runs/benchmark/torus_interior_0_0_timing/metrics.f32",
+      "second": "runs/benchmark/torus_interior_counts_1/metrics.f32",
+      "kind": "float32",
+      "different_components": 0,
+      "max_absolute_error": 0.0
+    }
+  ],
+  "summaries": [
+    {
+      "scene": "simple",
+      "resolution": [
+        256,
+        256
+      ],
+      "spp": 64,
+      "depth": 8,
+      "triangles": 36,
+      "repeats": 5,
+      "modes": {
+        "off": {
+          "application_seconds": [
+            0.9122324000054505,
+            0.8920090999745298,
+            0.8810576999967452,
+            0.9648194999899715,
+            0.9611085999931674
+          ],
+          "application_median_seconds": 0.9122324000054505,
+          "application_range_seconds": [
+            0.8810576999967452,
+            0.9648194999899715
+          ],
+          "intersection_ms_per_spp": [
+            1.2508664993802086,
+            1.2406595003558323,
+            1.2305134991183877,
+            1.235143000842072,
+            1.2477555004879832
+          ],
+          "intersection_median_ms_per_spp": 1.2406595003558323,
+          "intersection_range_ms_per_spp": [
+            1.2305134991183877,
+            1.2508664993802086
+          ]
+        },
+        "on": {
+          "application_seconds": [
+            0.926803700014716,
+            0.9119797000021208,
+            0.98103500000434,
+            0.9603067999996711,
+            0.9039624000142794
+          ],
+          "application_median_seconds": 0.926803700014716,
+          "application_range_seconds": [
+            0.9039624000142794,
+            0.98103500000434
+          ],
+          "intersection_ms_per_spp": [
+            1.1068080012919381,
+            1.0583755021216348,
+            1.056573502952233,
+            1.0752310020616278,
+            1.074444003868848
+          ],
+          "intersection_median_ms_per_spp": 1.074444003868848,
+          "intersection_range_ms_per_spp": [
+            1.056573502952233,
+            1.1068080012919381
+          ]
+        }
+      },
+      "aabb_rejection_fraction": 0.9523585459871362,
+      "triangle_test_reduction_fraction": 0.9523585459871362,
+      "counts_off": {
+        "aabb_rejected": 0,
+        "aabb_tests": 0,
+        "culling": false,
+        "depth": 8,
+        "gpu": "NVIDIA GeForce RTX 4070 Laptop GPU",
+        "intersection_kernel_calls": 512,
+        "intersection_ms_per_spp": 1.3195140003226697,
+        "intersection_total_ms": 84.44889602065086,
+        "kind": "counts_only_not_for_timing",
+        "mesh_visits": 60352671,
+        "render_loop_seconds": 0.2924937,
+        "resolution": [
+          256,
+          256
+        ],
+        "spp": 64,
+        "triangle_tests": 724232052,
+        "triangles": 36,
+        "warmup_spp": 8
+      },
+      "counts_on": {
+        "aabb_rejected": 57477382,
+        "aabb_tests": 60352671,
+        "culling": true,
+        "depth": 8,
+        "gpu": "NVIDIA GeForce RTX 4070 Laptop GPU",
+        "intersection_kernel_calls": 512,
+        "intersection_ms_per_spp": 1.1658155003096908,
+        "intersection_total_ms": 74.61219201982021,
+        "kind": "counts_only_not_for_timing",
+        "mesh_visits": 60352671,
+        "render_loop_seconds": 0.2944353,
+        "resolution": [
+          256,
+          256
+        ],
+        "spp": 64,
+        "triangle_tests": 34503468,
+        "triangles": 36,
+        "warmup_spp": 8
+      },
+      "application_speedup": 0.9842779004777018,
+      "intersection_speedup": 1.15469907774484
+    },
+    {
+      "scene": "torus_exterior",
+      "resolution": [
+        256,
+        256
+      ],
+      "spp": 64,
+      "depth": 8,
+      "triangles": 4108,
+      "repeats": 5,
+      "modes": {
+        "off": {
+          "application_seconds": [
+            4.1358139000076335,
+            4.089562699984526,
+            4.173462300008396,
+            4.050851600011811,
+            4.137555900000734
+          ],
+          "application_median_seconds": 4.1358139000076335,
+          "application_range_seconds": [
+            4.050851600011811,
+            4.173462300008396
+          ],
+          "intersection_ms_per_spp": [
+            50.480463951826096,
+            50.50796913728118,
+            50.455381974577904,
+            50.666271548718214,
+            50.70368750393391
+          ],
+          "intersection_median_ms_per_spp": 50.50796913728118,
+          "intersection_range_ms_per_spp": [
+            50.455381974577904,
+            50.70368750393391
+          ]
+        },
+        "on": {
+          "application_seconds": [
+            3.0679443000117317,
+            3.0803851000091527,
+            3.0699641999963205,
+            3.0631417999975383,
+            3.0875774000014644
+          ],
+          "application_median_seconds": 3.0699641999963205,
+          "application_range_seconds": [
+            3.0631417999975383,
+            3.0875774000014644
+          ],
+          "intersection_ms_per_spp": [
+            34.63826955296099,
+            34.92669304087758,
+            34.67745894938707,
+            34.9389180354774,
+            34.61819947138429
+          ],
+          "intersection_median_ms_per_spp": 34.67745894938707,
+          "intersection_range_ms_per_spp": [
+            34.61819947138429,
+            34.9389180354774
+          ]
+        }
+      },
+      "aabb_rejection_fraction": 0.9751945707829779,
+      "triangle_test_reduction_fraction": 0.9731227796471328,
+      "counts_off": {
+        "aabb_rejected": 0,
+        "aabb_tests": 0,
+        "culling": false,
+        "depth": 8,
+        "gpu": "NVIDIA GeForce RTX 4070 Laptop GPU",
+        "intersection_kernel_calls": 512,
+        "intersection_ms_per_spp": 50.15096013620496,
+        "intersection_total_ms": 3209.6614487171173,
+        "kind": "counts_only_not_for_timing",
+        "mesh_visits": 39541908,
+        "render_loop_seconds": 3.474138,
+        "resolution": [
+          256,
+          256
+        ],
+        "spp": 64,
+        "triangle_tests": 81219079032,
+        "triangles": 4108,
+        "warmup_spp": 8
+      },
+      "counts_on": {
+        "aabb_rejected": 38561054,
+        "aabb_tests": 39541908,
+        "culling": true,
+        "depth": 8,
+        "gpu": "NVIDIA GeForce RTX 4070 Laptop GPU",
+        "intersection_kernel_calls": 512,
+        "intersection_ms_per_spp": 34.74684299342334,
+        "intersection_total_ms": 2223.797951579094,
+        "kind": "counts_only_not_for_timing",
+        "mesh_visits": 39541908,
+        "render_loop_seconds": 2.4715838,
+        "resolution": [
+          256,
+          256
+        ],
+        "spp": 64,
+        "triangle_tests": 2182943084,
+        "triangles": 4108,
+        "warmup_spp": 8
+      },
+      "application_speedup": 1.3471863613303994,
+      "intersection_speedup": 1.4565072144126614
+    },
+    {
+      "scene": "torus_interior",
+      "resolution": [
+        256,
+        256
+      ],
+      "spp": 64,
+      "depth": 8,
+      "triangles": 4108,
+      "repeats": 5,
+      "modes": {
+        "off": {
+          "application_seconds": [
+            4.214643599989358,
+            4.1615402000024915,
+            4.13239800001611,
+            4.163924399996176,
+            4.148637300007977
+          ],
+          "application_median_seconds": 4.1615402000024915,
+          "application_range_seconds": [
+            4.13239800001611,
+            4.214643599989358
+          ],
+          "intersection_ms_per_spp": [
+            50.76195639371872,
+            51.45676648244262,
+            51.61104602739215,
+            51.330458119511604,
+            51.15345646813512
+          ],
+          "intersection_median_ms_per_spp": 51.330458119511604,
+          "intersection_range_ms_per_spp": [
+            50.76195639371872,
+            51.61104602739215
+          ]
+        },
+        "on": {
+          "application_seconds": [
+            3.8560945999925025,
+            3.8244573999836575,
+            3.857455100020161,
+            3.7962872000061907,
+            3.81443730002502
+          ],
+          "application_median_seconds": 3.8244573999836575,
+          "application_range_seconds": [
+            3.7962872000061907,
+            3.857455100020161
+          ],
+          "intersection_ms_per_spp": [
+            46.23978504166007,
+            46.398415038362145,
+            46.500403985381126,
+            46.23766601830721,
+            46.10197453573346
+          ],
+          "intersection_median_ms_per_spp": 46.23978504166007,
+          "intersection_range_ms_per_spp": [
+            46.10197453573346,
+            46.500403985381126
+          ]
+        }
+      },
+      "aabb_rejection_fraction": 0.8728546779128089,
+      "triangle_test_reduction_fraction": 0.7649263524659903,
+      "counts_off": {
+        "aabb_rejected": 0,
+        "aabb_tests": 0,
+        "culling": false,
+        "depth": 8,
+        "gpu": "NVIDIA GeForce RTX 4070 Laptop GPU",
+        "intersection_kernel_calls": 512,
+        "intersection_ms_per_spp": 50.39571740850806,
+        "intersection_total_ms": 3225.325914144516,
+        "kind": "counts_only_not_for_timing",
+        "mesh_visits": 41245788,
+        "render_loop_seconds": 3.4966528,
+        "resolution": [
+          256,
+          256
+        ],
+        "spp": 64,
+        "triangle_tests": 84718848552,
+        "triangles": 4108,
+        "warmup_spp": 8
+      },
+      "counts_on": {
+        "aabb_rejected": 36001579,
+        "aabb_tests": 41245788,
+        "culling": true,
+        "depth": 8,
+        "gpu": "NVIDIA GeForce RTX 4070 Laptop GPU",
+        "intersection_kernel_calls": 512,
+        "intersection_ms_per_spp": 46.36665051989257,
+        "intersection_total_ms": 2967.4656332731247,
+        "kind": "counts_only_not_for_timing",
+        "mesh_visits": 41245788,
+        "render_loop_seconds": 3.2250453,
+        "resolution": [
+          256,
+          256
+        ],
+        "spp": 64,
+        "triangle_tests": 19915168744,
+        "triangles": 4108,
+        "warmup_spp": 8
+      },
+      "application_speedup": 1.0881387252529664,
+      "intersection_speedup": 1.1100929226479979
+    }
+  ]
+}

@@ -1,0 +1,518 @@
+{
+  "Materials": {
+    "floor": {
+      "TYPE": "CoatedDiffuse",
+      "RGB": [
+        1,
+        1,
+        1
+      ],
+      "COAT_WEIGHT": 0.045,
+      "BASE_COLOR_TEXTURE": "models/moonlit_hall/floor_stone.png"
+    },
+    "grout": {
+      "TYPE": "Diffuse",
+      "RGB": [
+        0.012,
+        0.014,
+        0.02
+      ]
+    },
+    "stone": {
+      "TYPE": "Diffuse",
+      "RGB": [
+        0.48,
+        0.45,
+        0.42
+      ],
+      "BASE_COLOR_TEXTURE": "models/moonlit_hall/wall_stone.png"
+    },
+    "trim": {
+      "TYPE": "Specular",
+      "RGB": [
+        0.44,
+        0.31,
+        0.12
+      ]
+    },
+    "blade": {
+      "TYPE": "Specular",
+      "RGB": [
+        0.86,
+        0.91,
+        0.98
+      ]
+    },
+    "edges": {
+      "TYPE": "Specular",
+      "RGB": [
+        0.5,
+        0.65,
+        0.85
+      ]
+    },
+    "weapon_gold": {
+      "TYPE": "Specular",
+      "RGB": [
+        1,
+        1,
+        1
+      ],
+      "BASE_COLOR_TEXTURE": "models/shatterseal_drakesnest/textures/baked/Metal_basecolor.png"
+    },
+    "night_exterior": {
+      "TYPE": "Emitting",
+      "RGB": [
+        0.78,
+        0.88,
+        1
+      ],
+      "EMITTANCE": 2.5,
+      "BASE_COLOR_TEXTURE": "models/moonlit_hall_refined/night_exterior.png"
+    },
+    "upper_sky": {
+      "TYPE": "Emitting",
+      "RGB": [
+        0.78,
+        0.88,
+        1
+      ],
+      "EMITTANCE": 2.5,
+      "BASE_COLOR_TEXTURE": "models/moonlit_hall_refined/night_exterior.png"
+    },
+    "moon": {
+      "TYPE": "Emitting",
+      "RGB": [
+        0.76,
+        0.86,
+        1
+      ],
+      "EMITTANCE": 1.8,
+      "BASE_COLOR_TEXTURE": "models/moonlit_hall_refined/moon_radiance.png"
+    },
+    "aged_brass": {
+      "TYPE": "CoatedDiffuse",
+      "RGB": [
+        0.36,
+        0.19,
+        0.058
+      ],
+      "COAT_WEIGHT": 0.18
+    },
+    "gold_trim": {
+      "TYPE": "Specular",
+      "RGB": [
+        0.72,
+        0.46,
+        0.16
+      ]
+    },
+    "wax": {
+      "TYPE": "Diffuse",
+      "RGB": [
+        0.76,
+        0.63,
+        0.43
+      ]
+    },
+    "wick": {
+      "TYPE": "Diffuse",
+      "RGB": [
+        0.012,
+        0.008,
+        0.004
+      ]
+    },
+    "flames": {
+      "TYPE": "Emitting",
+      "RGB": [
+        1,
+        1,
+        1
+      ],
+      "EMITTANCE": 52,
+      "BASE_COLOR_TEXTURE": "models/moonlit_hall_refined/flame_radiance.png"
+    },
+    "bounce_fill": {
+      "TYPE": "Emitting",
+      "RGB": [
+        1,
+        0.85,
+        0.65
+      ],
+      "EMITTANCE": 10,
+      "BASE_COLOR_TEXTURE": "models/moonlit_hall_refined/bounce_radiance.png"
+    }
+  },
+  "Objects": [
+    {
+      "TYPE": "mesh",
+      "FILE": "models/moonlit_hall/stone.obj",
+      "MATERIAL": "stone",
+      "TRANS": [
+        0,
+        0,
+        0
+      ],
+      "ROTAT": [
+        0,
+        0,
+        0
+      ],
+      "SCALE": [
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "TYPE": "mesh",
+      "FILE": "models/moonlit_hall/trim.obj",
+      "MATERIAL": "trim",
+      "TRANS": [
+        0,
+        0,
+        0
+      ],
+      "ROTAT": [
+        0,
+        0,
+        0
+      ],
+      "SCALE": [
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "TYPE": "mesh",
+      "FILE": "models/shatterseal_drakesnest/parts/mirror.obj",
+      "MATERIAL": "blade",
+      "TRANS": [
+        1.4145205014169548,
+        0.1386,
+        -0.5350015889623773
+      ],
+      "ROTAT": [
+        -90,
+        0,
+        -65
+      ],
+      "SCALE": [
+        1.8,
+        1.8,
+        1.8
+      ],
+      "SMOOTH_NORMALS": false
+    },
+    {
+      "TYPE": "mesh",
+      "FILE": "models/shatterseal_drakesnest/parts/edges.obj",
+      "MATERIAL": "edges",
+      "TRANS": [
+        1.4145205014169548,
+        0.1386,
+        -0.5350015889623773
+      ],
+      "ROTAT": [
+        -90,
+        0,
+        -65
+      ],
+      "SCALE": [
+        1.8,
+        1.8,
+        1.8
+      ],
+      "SMOOTH_NORMALS": true
+    },
+    {
+      "TYPE": "mesh",
+      "FILE": "models/shatterseal_drakesnest/parts/metal.obj",
+      "MATERIAL": "weapon_gold",
+      "TRANS": [
+        1.4145205014169548,
+        0.1386,
+        -0.5350015889623773
+      ],
+      "ROTAT": [
+        -90,
+        0,
+        -65
+      ],
+      "SCALE": [
+        1.8,
+        1.8,
+        1.8
+      ],
+      "SMOOTH_NORMALS": true
+    },
+    {
+      "TYPE": "mesh",
+      "FILE": "models/moonlit_hall_refined/floor.obj",
+      "MATERIAL": "floor",
+      "TRANS": [
+        0,
+        0,
+        0
+      ],
+      "ROTAT": [
+        0,
+        0,
+        0
+      ],
+      "SCALE": [
+        1,
+        1,
+        1
+      ],
+      "SMOOTH_NORMALS": false
+    },
+    {
+      "TYPE": "mesh",
+      "FILE": "models/moonlit_hall_refined/grout.obj",
+      "MATERIAL": "grout",
+      "TRANS": [
+        0,
+        0,
+        0
+      ],
+      "ROTAT": [
+        0,
+        0,
+        0
+      ],
+      "SCALE": [
+        1,
+        1,
+        1
+      ],
+      "SMOOTH_NORMALS": false
+    },
+    {
+      "TYPE": "mesh",
+      "FILE": "models/moonlit_hall_refined/night_exterior.obj",
+      "MATERIAL": "night_exterior",
+      "TRANS": [
+        0,
+        0,
+        0
+      ],
+      "ROTAT": [
+        0,
+        0,
+        0
+      ],
+      "SCALE": [
+        1,
+        1,
+        1
+      ],
+      "SMOOTH_NORMALS": false
+    },
+    {
+      "TYPE": "mesh",
+      "FILE": "models/moonlit_hall_refined/upper_sky.obj",
+      "MATERIAL": "upper_sky",
+      "TRANS": [
+        0,
+        0,
+        0
+      ],
+      "ROTAT": [
+        0,
+        0,
+        0
+      ],
+      "SCALE": [
+        1,
+        1,
+        1
+      ],
+      "SMOOTH_NORMALS": false
+    },
+    {
+      "TYPE": "mesh",
+      "FILE": "models/moonlit_hall_refined/moon.obj",
+      "MATERIAL": "moon",
+      "TRANS": [
+        0,
+        0,
+        0
+      ],
+      "ROTAT": [
+        0,
+        0,
+        0
+      ],
+      "SCALE": [
+        1,
+        1,
+        1
+      ],
+      "SMOOTH_NORMALS": false
+    },
+    {
+      "TYPE": "mesh",
+      "FILE": "models/moonlit_hall_refined/aged_brass.obj",
+      "MATERIAL": "aged_brass",
+      "TRANS": [
+        0,
+        0,
+        0
+      ],
+      "ROTAT": [
+        0,
+        0,
+        0
+      ],
+      "SCALE": [
+        1,
+        1,
+        1
+      ],
+      "SMOOTH_NORMALS": true
+    },
+    {
+      "TYPE": "mesh",
+      "FILE": "models/moonlit_hall_refined/gold_trim.obj",
+      "MATERIAL": "gold_trim",
+      "TRANS": [
+        0,
+        0,
+        0
+      ],
+      "ROTAT": [
+        0,
+        0,
+        0
+      ],
+      "SCALE": [
+        1,
+        1,
+        1
+      ],
+      "SMOOTH_NORMALS": true
+    },
+    {
+      "TYPE": "mesh",
+      "FILE": "models/moonlit_hall_refined/wax.obj",
+      "MATERIAL": "wax",
+      "TRANS": [
+        0,
+        0,
+        0
+      ],
+      "ROTAT": [
+        0,
+        0,
+        0
+      ],
+      "SCALE": [
+        1,
+        1,
+        1
+      ],
+      "SMOOTH_NORMALS": true
+    },
+    {
+      "TYPE": "mesh",
+      "FILE": "models/moonlit_hall_refined/wick.obj",
+      "MATERIAL": "wick",
+      "TRANS": [
+        0,
+        0,
+        0
+      ],
+      "ROTAT": [
+        0,
+        0,
+        0
+      ],
+      "SCALE": [
+        1,
+        1,
+        1
+      ],
+      "SMOOTH_NORMALS": true
+    },
+    {
+      "TYPE": "mesh",
+      "FILE": "models/moonlit_hall_refined/flames.obj",
+      "MATERIAL": "flames",
+      "TRANS": [
+        0,
+        0,
+        0
+      ],
+      "ROTAT": [
+        0,
+        0,
+        0
+      ],
+      "SCALE": [
+        1,
+        1,
+        1
+      ],
+      "SMOOTH_NORMALS": false
+    },
+    {
+      "TYPE": "mesh",
+      "FILE": "models/moonlit_hall_refined/bounce_fill.obj",
+      "MATERIAL": "bounce_fill",
+      "TRANS": [
+        0,
+        0,
+        0
+      ],
+      "ROTAT": [
+        0,
+        0,
+        0
+      ],
+      "SCALE": [
+        1,
+        1,
+        1
+      ],
+      "SMOOTH_NORMALS": false
+    }
+  ],
+  "Camera": {
+    "RES": [
+      1200,
+      800
+    ],
+    "FOVY": 23,
+    "ITERATIONS": 3072,
+    "DEPTH": 8,
+    "FILE": "shatterseal_moonlit_hall_refined",
+    "EYE": [
+      0,
+      3.1,
+      4.8
+    ],
+    "LOOKAT": [
+      0,
+      0.8,
+      -0.3
+    ],
+    "UP": [
+      0,
+      1,
+      0
+    ],
+    "ANTIALIASING": true,
+    "STREAM_COMPACTION": true,
+    "MATERIAL_SORTING": false,
+    "MESH_CULLING": true,
+    "BVH": true,
+    "DEPTH_OF_FIELD": true,
+    "LENS_RADIUS": 0.012,
+    "FOCAL_DISTANCE": 5.0,
+    "DISPLAY_TRANSFORM": true,
+    "EXPOSURE": 0.4
+  }
+}

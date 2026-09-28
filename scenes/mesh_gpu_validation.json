@@ -1,0 +1,50 @@
+{
+    "Materials": {
+        "light": {"TYPE": "Emitting", "RGB": [1.0, 1.0, 1.0], "EMITTANCE": 5.0},
+        "white": {"TYPE": "Diffuse", "RGB": [0.8, 0.8, 0.8]},
+        "red": {"TYPE": "Diffuse", "RGB": [0.85, 0.35, 0.35]},
+        "green": {"TYPE": "Diffuse", "RGB": [0.35, 0.85, 0.35]},
+        "mirror": {"TYPE": "Specular", "RGB": [0.98, 0.98, 0.98]}
+    },
+    "Camera": {
+        "RES": [400, 400], "FOVY": 35.0, "ITERATIONS": 512, "DEPTH": 8,
+        "FILE": "mesh_gpu_validation", "EYE": [0.0, 5.0, 10.5],
+        "LOOKAT": [0.0, 5.0, 0.0], "UP": [0.0, 1.0, 0.0],
+        "ANTIALIASING": true, "STREAM_COMPACTION": true,
+        "MATERIAL_SORTING": false, "MESH_CULLING": false
+    },
+    "Objects": [
+        {
+            "TYPE": "mesh", "FILE": "models/cpu_validation_cube.obj", "MATERIAL": "light",
+            "TRANS": [0.0, 9.8, 0.0], "ROTAT": [0.0, 0.0, 0.0], "SCALE": [1.5, 0.15, 1.5]
+        },
+        {
+            "TYPE": "cube", "MATERIAL": "white",
+            "TRANS": [0.0, 0.0, 0.0], "ROTAT": [0.0, 0.0, 0.0], "SCALE": [10.0, 0.01, 10.0]
+        },
+        {
+            "TYPE": "cube", "MATERIAL": "white",
+            "TRANS": [0.0, 10.0, 0.0], "ROTAT": [0.0, 0.0, 90.0], "SCALE": [0.01, 10.0, 10.0]
+        },
+        {
+            "TYPE": "cube", "MATERIAL": "white",
+            "TRANS": [0.0, 5.0, -5.0], "ROTAT": [0.0, 90.0, 0.0], "SCALE": [0.01, 10.0, 10.0]
+        },
+        {
+            "TYPE": "cube", "MATERIAL": "red",
+            "TRANS": [-5.0, 5.0, 0.0], "ROTAT": [0.0, 0.0, 0.0], "SCALE": [0.01, 10.0, 10.0]
+        },
+        {
+            "TYPE": "cube", "MATERIAL": "green",
+            "TRANS": [5.0, 5.0, 0.0], "ROTAT": [0.0, 0.0, 0.0], "SCALE": [0.01, 10.0, 10.0]
+        },
+        {
+            "TYPE": "mesh", "FILE": "models/cpu_validation_cube.obj", "MATERIAL": "white",
+            "TRANS": [-1.8, 2.005, -1.5], "ROTAT": [0.0, -20.0, 0.0], "SCALE": [1.2, 2.0, 1.2]
+        },
+        {
+            "TYPE": "mesh", "FILE": "models/cpu_validation_cube.obj", "MATERIAL": "mirror",
+            "TRANS": [1.6, 1.305, 0.3], "ROTAT": [0.0, 25.0, 0.0], "SCALE": [-1.2, 1.3, 1.2]
+        }
+    ]
+}

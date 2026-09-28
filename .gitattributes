@@ -1,0 +1,3 @@
+# Preserve archived evidence bytes so SHA-256 checks survive Git checkouts.
+/docs/data/** -text
+/docs/images/** -text

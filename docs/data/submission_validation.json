@@ -1,0 +1,37 @@
+{
+  "date": "2026-09-27",
+  "scope": "Clean Release build from tracked plus non-ignored candidate files; no stage archives or original extraction directory in the copy.",
+  "build": "passed; VS 2022 / CUDA 12.9.41",
+  "build_warning": "Bundled graphics libraries still produce the existing LNK4098 runtime-library warning; build and tests succeed.",
+  "ctest_passed": 9,
+  "ctest_failed": 0,
+  "validated_scene_count": 12,
+  "validated_scenes": [
+    "cornell.json",
+    "dof_gallery.json",
+    "dof_validation.json",
+    "mesh_aabb_torus_exterior.json",
+    "mesh_aabb_torus_interior.json",
+    "mesh_aabb_validation.json",
+    "mesh_cpu_validation.json",
+    "mesh_gpu_validation.json",
+    "shatterseal_moonlit_hall_refined.json",
+    "shatterseal_moonlit_hall_refined_detail.json",
+    "shatterseal_moonlit_hall_refined_preview.json",
+    "sphere.json"
+  ],
+  "showcase_smoke": {
+    "resolution": [
+      48,
+      32
+    ],
+    "spp": 4,
+    "depth": 8,
+    "dof": true,
+    "png_byte_identical": true,
+    "linear_rgb_byte_identical": true,
+    "png_sha256": "d840a2d63975d7bfecd1c4a9ac7eb8273f56d048eb4e6529af76517dff1352eb"
+  },
+  "source_and_tests_aggregate_sha256": "b0048d337da00d19fe91630cc06f443f9cc6f7dd1dd1e7d21f0e8efa902b0b2b",
+  "note": "The smoke capture is a portability/regression check, not a new performance measurement. Render kernels and scene assets were not changed during packaging."
+}

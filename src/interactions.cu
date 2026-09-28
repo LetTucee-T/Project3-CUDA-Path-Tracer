@@ -45,13 +45,45 @@ __host__ __device__ glm::vec3 calculateRandomDirectionInHemisphere(
 }
 
 __host__ __device__ void scatterRay(
-    PathSegment & pathSegment,
-    glm::vec3 intersect,
+    PathSegment& path,
+    glm::vec3 hitPoint,
     glm::vec3 normal,
-    const Material &m,
-    thrust::default_random_engine &rng)
+    const Material& material,
+    thrust::default_random_engine& rng, const glm::vec3* geometricNormal)
 {
-    // TODO: implement this.
-    // A basic implementation of pure-diffuse shading will just call the
-    // calculateRandomDirectionInHemisphere defined above.
+    glm::vec3 d = glm::normalize(path.ray.direction);
+    glm::vec3 n = glm::normalize(normal);
+
+    if (glm::dot(d, n) > 0.0f) {
+        n = -n;
+    }
+
+    glm::vec3 offsetNormal = n;
+    if (geometricNormal) {
+        offsetNormal = glm::normalize(*geometricNormal);
+        if (glm::dot(d, offsetNormal) > 0) offsetNormal = -offsetNormal;
+        if (glm::dot(n, offsetNormal) < 0) n = -n;
+        if (glm::dot(d, n) >= 0) n = offsetNormal;
+    }
+    glm::vec3 newDirection;
+    bool whiteCoat = false;
+    if (material.coatWeight > 0) {
+        thrust::uniform_real_distribution<float> u01(0,1);
+        whiteCoat = u01(rng) < material.coatWeight;
+    }
+
+    if (material.hasReflective > 0.0f || whiteCoat) {
+        newDirection = glm::reflect(d, n);
+    } else {
+        newDirection =
+            calculateRandomDirectionInHemisphere(n, rng);
+    }
+    // A normalized mixture q*white_delta + (1-q)*Lambertian. Sampling the
+    // corresponding mixture weight cancels q or 1-q from f*cos/pdf.
+    if (!whiteCoat) path.color *= material.color;
+    // A shading normal must not send reflection through the geometric surface.
+    if (geometricNormal && glm::dot(newDirection, offsetNormal) <= 0) path.color = glm::vec3(0);
+
+    path.ray.origin = hitPoint + 1e-4f * offsetNormal;
+    path.ray.direction = glm::normalize(newDirection);
 }

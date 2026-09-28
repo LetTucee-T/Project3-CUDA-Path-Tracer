@@ -1,0 +1,69 @@
+{
+  "consistency_cases": [
+    {
+      "name": "consistency_brute_0_0",
+      "maximum_linear_difference": 0.0,
+      "spp": 2
+    },
+    {
+      "name": "consistency_brute_0_1",
+      "maximum_linear_difference": 0.0,
+      "spp": 2
+    },
+    {
+      "name": "consistency_brute_1_0",
+      "maximum_linear_difference": 0.0,
+      "spp": 2
+    },
+    {
+      "name": "consistency_brute_1_1",
+      "maximum_linear_difference": 0.0,
+      "spp": 2
+    },
+    {
+      "name": "consistency_aabb_0_0",
+      "maximum_linear_difference": 0.0,
+      "spp": 2
+    },
+    {
+      "name": "consistency_aabb_0_1",
+      "maximum_linear_difference": 0.0,
+      "spp": 2
+    },
+    {
+      "name": "consistency_aabb_1_0",
+      "maximum_linear_difference": 0.0,
+      "spp": 2
+    },
+    {
+      "name": "consistency_aabb_1_1",
+      "maximum_linear_difference": 0.0,
+      "spp": 2
+    },
+    {
+      "name": "consistency_bvh_0_0",
+      "maximum_linear_difference": 0.0,
+      "spp": 2
+    },
+    {
+      "name": "consistency_bvh_0_1",
+      "maximum_linear_difference": 0.0,
+      "spp": 2
+    },
+    {
+      "name": "consistency_bvh_1_0",
+      "maximum_linear_difference": 0.0,
+      "spp": 2
+    },
+    {
+      "name": "consistency_bvh_1_1",
+      "maximum_linear_difference": 0.0,
+      "spp": 2
+    }
+  ],
+  "memcheck_errors": 0,
+  "memcheck_leaked_bytes": 0,
+  "legacy_png_maximum_difference": 0,
+  "app_driver_png_maximum_difference": 0,
+  "headless_executable_sha256": "74b4530f4b96b29a8a70c1c02f8315ee63db7a848909c996e5e61558acea50e4"
+}

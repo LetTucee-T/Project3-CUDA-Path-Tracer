@@ -1,6 +1,8 @@
+#include "cameraOrbit.h"
 #include "glslUtility.hpp"
 #include "image.h"
 #include "pathtrace.h"
+#include "renderControls.h"
 #include "scene.h"
 #include "sceneStructs.h"
 #include "utilities.h"
@@ -34,6 +36,7 @@ static double lastX;
 static double lastY;
 
 static bool camchanged = true;
+static bool accumulationChanged = false;
 static float dtheta = 0, dphi = 0;
 static glm::vec3 cammove;
 
@@ -154,6 +157,7 @@ void deletePBO(GLuint* pbo)
 void deleteTexture(GLuint* tex)
 {
     glDeleteTextures(1, tex);
+    *tex = 0;
     *tex = (GLuint)NULL;
 }
 
@@ -286,6 +290,8 @@ void RenderImGui()
     //ImGui::Text("counter = %d", counter);
     ImGui::Text("Traced Depth %d", imguiData->TracedDepth);
     ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+    if (drawRenderSettingsControls(*renderState))
+        accumulationChanged = true;
     ImGui::End();
 
 
@@ -326,12 +332,6 @@ void mainLoop()
         glfwSwapBuffers(window);
     }
 
-    ImGui_ImplOpenGL3_Shutdown();
-    ImGui_ImplGlfw_Shutdown();
-    ImGui::DestroyContext();
-
-    glfwDestroyWindow(window);
-    glfwTerminate();
 }
 
 //-------------------------------
@@ -342,16 +342,38 @@ int main(int argc, char** argv)
 {
     startTimeString = currentTimeString();
 
-    if (argc < 2)
-    {
-        printf("Usage: %s SCENEFILE.json\n", argv[0]);
-        return 1;
+    const bool validateOnly = argc == 3
+        && std::strcmp(argv[2], "--validate-scene") == 0;
+    if (argc < 2 || argc > 3 || (argc == 3 && !validateOnly)) {
+        std::cerr << "Usage: " << argv[0]
+            << " SCENEFILE.json [--validate-scene]\n";
+        return EXIT_FAILURE;
     }
 
-    const char* sceneFile = argv[1];
+    try {
+        scene = new Scene(argv[1]);
+    } catch (const std::exception& error) {
+        std::cerr << "Scene load failed: " << error.what() << '\n';
+        return EXIT_FAILURE;
+    }
 
-    // Load scene file
-    scene = new Scene(sceneFile);
+    if (validateOnly) {
+        std::cout << "Scene validation succeeded: " << scene->geoms.size()
+            << " geometries, " << scene->materials.size() << " materials, "
+            << scene->triangles.size() << " triangles.\n";
+        std::cout << "CPU BVH validation succeeded: " << scene->bvhNodes.size()
+            << " nodes, " << scene->bvhStats.leafCount << " leaves, "
+            << scene->bvhTriangleIndices.size() << " triangle indices, max depth "
+            << scene->bvhStats.maxDepth << ", max leaf triangles "
+            << scene->bvhStats.maxLeafTriangles << ".\n"
+            << "BVH array bytes: " << scene->bvhNodes.size() * sizeof(BVHNode)
+                + scene->bvhTriangleIndices.size() * sizeof(int)
+            << "; build " << scene->bvhStats.buildMilliseconds << " ms; validation "
+            << scene->bvhStats.validationMilliseconds << " ms.\n";
+        delete scene;
+        scene = nullptr;
+        return EXIT_SUCCESS;
+    }
 
     //Create Instance for ImGUIData
     guiData = new GuiDataContainer();
@@ -372,12 +394,8 @@ int main(int argc, char** argv)
 
     // compute phi (horizontal) and theta (vertical) relative 3D axis
     // so, (0 0 1) is forward, (0 1 0) is up
-    glm::vec3 viewXZ = glm::vec3(view.x, 0.0f, view.z);
-    glm::vec3 viewZY = glm::vec3(0.0f, view.y, view.z);
-    phi = glm::acos(glm::dot(glm::normalize(viewXZ), glm::vec3(0, 0, -1)));
-    theta = glm::acos(glm::dot(glm::normalize(viewZY), glm::vec3(0, 1, 0)));
+    cameraOrbit::angles(cam, phi, theta, zoom);
     ogLookAt = cam.lookAt;
-    zoom = glm::length(cam.position - ogLookAt);
 
     // Initialize CUDA and GL components
     init();
@@ -386,10 +404,27 @@ int main(int argc, char** argv)
     InitImguiData(guiData);
     InitDataContainer(guiData);
 
-    // GLFW main loop
-    mainLoop();
-
-    return 0;
+    // Normal completion, window close and camera errors share one cleanup path.
+    int exitCode = EXIT_SUCCESS;
+    try {
+        mainLoop();
+    } catch (const std::exception& error) {
+        std::cerr << "Rendering failed: " << error.what() << '\n';
+        exitCode = EXIT_FAILURE;
+    }
+    pathtraceFree();
+    // Unregister CUDA/GL resources while both contexts are still alive.
+    cleanupCuda();
+    cudaDeviceReset();
+    ImGui_ImplOpenGL3_Shutdown();
+    ImGui_ImplGlfw_Shutdown();
+    ImGui::DestroyContext();
+    glfwDestroyWindow(window);
+    window = nullptr;
+    glfwTerminate();
+    delete guiData;
+    delete scene;
+    return exitCode;
 }
 
 void saveImage()
@@ -414,30 +449,20 @@ void saveImage()
     filename = ss.str();
 
     // CHECKITOUT
-    img.savePNG(filename);
+    img.savePNG(filename, renderState->displayTransform, renderState->exposure);
     //img.saveHDR(filename);  // Save a Radiance HDR file
 }
 
 void runCuda()
 {
+    // Render settings invalidate samples without recomputing the camera pose.
+    if (camchanged || accumulationChanged) iteration = 0;
+    accumulationChanged = false;
     if (camchanged)
     {
-        iteration = 0;
         Camera& cam = renderState->camera;
-        cameraPosition.x = zoom * sin(phi) * sin(theta);
-        cameraPosition.y = zoom * cos(theta);
-        cameraPosition.z = zoom * cos(phi) * sin(theta);
-
-        cam.view = -glm::normalize(cameraPosition);
-        glm::vec3 v = cam.view;
-        glm::vec3 u = glm::vec3(0, 1, 0);//glm::normalize(cam.up);
-        glm::vec3 r = glm::cross(v, u);
-        cam.up = glm::cross(r, v);
-        cam.right = r;
-
-        cam.position = cameraPosition;
-        cameraPosition += cam.lookAt;
-        cam.position = cameraPosition;
+        cameraOrbit::apply(cam, phi, theta, zoom);
+        cameraPosition = cam.position;
         camchanged = false;
     }
 
@@ -458,7 +483,12 @@ void runCuda()
 
         // execute the kernel
         int frame = 0;
-        pathtrace(pbo_dptr, frame, iteration);
+        try {
+            pathtrace(pbo_dptr, frame, iteration);
+        } catch (...) {
+            cudaGLUnmapBufferObject(pbo);
+            throw;
+        }
 
         // unmap buffer object
         cudaGLUnmapBufferObject(pbo);
@@ -466,9 +496,7 @@ void runCuda()
     else
     {
         saveImage();
-        pathtraceFree();
-        cudaDeviceReset();
-        exit(EXIT_SUCCESS);
+        glfwSetWindowShouldClose(window, GL_TRUE);
     }
 }
 

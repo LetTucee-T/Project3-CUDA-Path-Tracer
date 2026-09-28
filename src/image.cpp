@@ -1,4 +1,5 @@
 #include "image.h"
+#include "appearance.h"
 
 #include <stb_image_write.h>
 
@@ -11,7 +12,7 @@ Image::Image(int x, int y)
 
 Image::~Image()
 {
-    delete pixels;
+    delete[] pixels;
 }
 
 void Image::setPixel(int x, int y, const glm::vec3 &pixel)
@@ -20,7 +21,7 @@ void Image::setPixel(int x, int y, const glm::vec3 &pixel)
     pixels[(y * xSize) + x] = pixel;
 }
 
-void Image::savePNG(const std::string &baseFilename)
+void Image::savePNG(const std::string &baseFilename, bool displayTransform, float exposure)
 {
     unsigned char *bytes = new unsigned char[3 * xSize * ySize];
     for (int y = 0; y < ySize; y++)
@@ -28,7 +29,7 @@ void Image::savePNG(const std::string &baseFilename)
         for (int x = 0; x < xSize; x++)
         {
             int i = y * xSize + x;
-            glm::vec3 pix = glm::clamp(pixels[i], glm::vec3(), glm::vec3(1)) * 255.f;
+            glm::vec3 pix = glm::clamp(displayColor(pixels[i], displayTransform, exposure), glm::vec3(), glm::vec3(1)) * 255.f;
             bytes[3 * i + 0] = (unsigned char) pix.x;
             bytes[3 * i + 1] = (unsigned char) pix.y;
             bytes[3 * i + 2] = (unsigned char) pix.z;

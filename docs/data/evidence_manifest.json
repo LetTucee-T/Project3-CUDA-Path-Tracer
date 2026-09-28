@@ -1,0 +1,239 @@
+{
+  "note": "Files are byte-identical copies. Archival paths identify local history; historical source/build snapshots and repeated raw images are intentionally not distributed. Paths embedded in original CSV/JSON records are capture-time locators, not links into this submission.",
+  "files": [
+    {
+      "file": "docs/images/showcase.png",
+      "archival_source": "readme_materials/weapon_showcase/renders/moonlit_hall_refined_final.png",
+      "bytes": 1812165,
+      "sha256": "03dff433c091ca5afb80ac446e549547fb0fd284906697d400017666aff40540"
+    },
+    {
+      "file": "docs/images/hall_before.png",
+      "archival_source": "readme_materials/weapon_showcase/renders/moonlit_hall_final.png",
+      "bytes": 1630370,
+      "sha256": "5d9f17aae99d2c04607567cfb81885a3227b0a74ecacc6f02a6a8f8902bf3f45"
+    },
+    {
+      "file": "docs/images/aa_edge_off.png",
+      "archival_source": "stage_records/03_stochastic_antialiasing_2026-09-24/images/02_edge_probe/edge_off_161x159_1000spp_depth1.png",
+      "bytes": 1188,
+      "sha256": "14bb66f77a12cb6516828bd52ea4c6f15d17c4350643314e439ed846fdaf4f03"
+    },
+    {
+      "file": "docs/images/aa_edge_on.png",
+      "archival_source": "stage_records/03_stochastic_antialiasing_2026-09-24/images/02_edge_probe/edge_on_161x159_1000spp_depth1.png",
+      "bytes": 2256,
+      "sha256": "5054a2aa2fa4f962da12a4cb4fbc076ae18c6453e6836bb5c4adcb0ec3b2642f"
+    },
+    {
+      "file": "docs/images/aa_cornell_off.png",
+      "archival_source": "stage_records/03_stochastic_antialiasing_2026-09-24/images/00_aa_off/aa_off_800x800_1000spp_depth8.png",
+      "bytes": 1385229,
+      "sha256": "331be38ef90690856c87210d7e24f82621f7dd588a9da4de668f2ec9b01c2820"
+    },
+    {
+      "file": "docs/images/aa_cornell_on.png",
+      "archival_source": "stage_records/03_stochastic_antialiasing_2026-09-24/images/01_aa_on/aa_on_800x800_1000spp_depth8.png",
+      "bytes": 1391276,
+      "sha256": "b461f9a38787fb9b401ccc481fe2b88579bd9d133532b865161b3e1bbb31b70b"
+    },
+    {
+      "file": "docs/images/compaction_open.png",
+      "archival_source": "stage_records/04_stream_compaction_2026-09-24/images/open/open_sc_on_800x800_1000spp_depth8.png",
+      "bytes": 1690652,
+      "sha256": "59c462b0cbe75fe5ea2d2fd96717b7dddbd5ed3ad6b712b4bf0bd6ed7f006398"
+    },
+    {
+      "file": "docs/images/compaction_closed.png",
+      "archival_source": "stage_records/04_stream_compaction_2026-09-24/images/closed/closed_sc_on_800x800_1000spp_depth8.png",
+      "bytes": 1777660,
+      "sha256": "84ce998f39867901e640d2334bf298653d98f7e9cb28b0ba1292b3ea003ecf9a"
+    },
+    {
+      "file": "docs/images/active_paths_by_bounce.png",
+      "archival_source": "stage_records/04_stream_compaction_2026-09-24/plots/active_paths_by_bounce.png",
+      "bytes": 133163,
+      "sha256": "5d8aee363a0102ada3ac0a1ff2f1deaf9240b049b35dfb760e5bea823959dcfc"
+    },
+    {
+      "file": "docs/images/sorting_phase_breakdown.png",
+      "archival_source": "stage_records/05_material_sorting_2026-09-24/plots/phase_breakdown.png",
+      "bytes": 111372,
+      "sha256": "54d6bc9966c19441d9b5dc61a4a62859ef77f9f0e3bcecfd4e31360154f5dcef"
+    },
+    {
+      "file": "docs/images/sorting_material_order.png",
+      "archival_source": "stage_records/05_material_sorting_2026-09-24/plots/material_order_strip.png",
+      "bytes": 84189,
+      "sha256": "447a1d09190293816633b47bbb1f9b6564c9ef627e82aa70305ce3d808d2e8ee"
+    },
+    {
+      "file": "docs/images/bvh_comparison.png",
+      "archival_source": "stage_records/11_bvh_benchmarks_2026-09-25/validated/plots/image_comparison.png",
+      "bytes": 798001,
+      "sha256": "73634b51ad69f104cdf10b32680fd361d5acddbc6521ce168bc5f3b35d2be817"
+    },
+    {
+      "file": "docs/images/bvh_performance.png",
+      "archival_source": "stage_records/11_bvh_benchmarks_2026-09-25/validated/plots/performance.png",
+      "bytes": 135014,
+      "sha256": "8e85346b249d894ad4e4d71cde8f38aa79530de26cbc4bcac0a4a9bc89858f66"
+    },
+    {
+      "file": "docs/images/mesh_import.png",
+      "archival_source": "stage_records/07_mesh_gpu_intersection_2026-09-24/images/mesh_gpu_validation_400x400_512spp.png",
+      "bytes": 431045,
+      "sha256": "50ef63dd55a98b6f9fe38b8fa1b7c5edb856bb2d0a900fd2ea9aeebae3307306"
+    },
+    {
+      "file": "docs/images/dof_aperture.png",
+      "archival_source": "readme_materials/depth_of_field/assets/aperture_comparison.png",
+      "bytes": 897809,
+      "sha256": "241024d1c9c446c5ceab1fca33ae40ab29fe79197c7d6e70e213f73c66e7f79f"
+    },
+    {
+      "file": "docs/images/dof_focus.png",
+      "archival_source": "readme_materials/depth_of_field/assets/focus_comparison.png",
+      "bytes": 938382,
+      "sha256": "1fcd057f9be04f67665bc05c1e0c317bf3d66b21c50e0fa3418f26205751f09a"
+    },
+    {
+      "file": "docs/images/dof_performance.png",
+      "archival_source": "readme_materials/depth_of_field/assets/performance.png",
+      "bytes": 143031,
+      "sha256": "1f6d67597a586da5ab08b7bfdcb39617f9a250892527f48b6a94b3c2eca0d2ec"
+    },
+    {
+      "file": "docs/images/dof_convergence.png",
+      "archival_source": "readme_materials/depth_of_field/assets/convergence.png",
+      "bytes": 129659,
+      "sha256": "272826e19ee629fb4d64865bb8901a507997b3d3e6dcf82528582f1540344aad"
+    },
+    {
+      "file": "docs/data/aa_timings.csv",
+      "archival_source": "stage_records/03_stochastic_antialiasing_2026-09-24/data/timings.csv",
+      "bytes": 2861,
+      "sha256": "eb10aeba95a5c4a58517d66d6d1d4e3619301f438776086d880cf00ec6cc0287"
+    },
+    {
+      "file": "docs/data/compaction_timings.csv",
+      "archival_source": "stage_records/04_stream_compaction_2026-09-24/data/timings.csv",
+      "bytes": 10938,
+      "sha256": "a474425a4dd9668e591a7dc4f781163aebd348f76c7e7d809c5a16f607188245"
+    },
+    {
+      "file": "docs/data/compaction_path_counts.csv",
+      "archival_source": "stage_records/04_stream_compaction_2026-09-24/data/path_counts.csv",
+      "bytes": 2329,
+      "sha256": "daefd5e42faab842efd2eec638c91d27ca85488841db502405b3772ca248ba69"
+    },
+    {
+      "file": "docs/data/sorting_timings.csv",
+      "archival_source": "stage_records/05_material_sorting_2026-09-24/data/timings.csv",
+      "bytes": 18806,
+      "sha256": "7cc132b9e01436e05ff9ed4d565c3a54f540914c4efc8fd55a503c4c77a4598b"
+    },
+    {
+      "file": "docs/data/sorting_summary.csv",
+      "archival_source": "stage_records/05_material_sorting_2026-09-24/data/performance_summary.csv",
+      "bytes": 793,
+      "sha256": "f07acf3e0e451dd550156ac3b412e375d18bf8e3c3c655d6bc59c57b5f0b66a3"
+    },
+    {
+      "file": "docs/data/sorting_phase_timings.csv",
+      "archival_source": "stage_records/05_material_sorting_2026-09-24/data/phase_timings.csv",
+      "bytes": 74154,
+      "sha256": "52fc1d555716a1656fac2de117b6d7e066daf5bd8bb0c81ce9a9d5ba27b71431"
+    },
+    {
+      "file": "docs/data/sorting_material_layout.csv",
+      "archival_source": "stage_records/05_material_sorting_2026-09-24/data/material_layout.csv",
+      "bytes": 10560,
+      "sha256": "afebd973def2c9426d3c3932f48a09e71aa8aeda2655159435171bec45942412"
+    },
+    {
+      "file": "docs/data/aabb_results.json",
+      "archival_source": "stage_records/08_mesh_aabb_culling_2026-09-24/benchmark_results.json",
+      "bytes": 105930,
+      "sha256": "3040e27b4252380f70d4e1169fd26250810b00711eb7109c0de7a9919c1d74b9"
+    },
+    {
+      "file": "docs/data/bvh_timings.csv",
+      "archival_source": "stage_records/11_bvh_benchmarks_2026-09-25/validated/timing_runs.csv",
+      "bytes": 12168,
+      "sha256": "92e9132d21eb93e82b96233574e811802e5ee332431521281051f3abd8000830"
+    },
+    {
+      "file": "docs/data/bvh_summary.csv",
+      "archival_source": "stage_records/11_bvh_benchmarks_2026-09-25/validated/benchmark_summary.csv",
+      "bytes": 1884,
+      "sha256": "8cbca5ea670babe48702d6900a180b32c81b614aec50954290790641d9fc85fc"
+    },
+    {
+      "file": "docs/data/bvh_verification.json",
+      "archival_source": "stage_records/11_bvh_benchmarks_2026-09-25/validated/verification.json",
+      "bytes": 798,
+      "sha256": "a0c0308c760cc2f1741dd4ee9aefd12f24750b2e0a384ecb6c30388bda6ab18b"
+    },
+    {
+      "file": "docs/data/dof_timings.csv",
+      "archival_source": "stage_records/14_dof_showcase_2026-09-25/timing_runs.csv",
+      "bytes": 18324,
+      "sha256": "a65351fbad78aa8c0ad8d3b0a2a67e027be40987948494c6959b9030fcefb92c"
+    },
+    {
+      "file": "docs/data/dof_summary.csv",
+      "archival_source": "stage_records/14_dof_showcase_2026-09-25/benchmark_summary.csv",
+      "bytes": 2304,
+      "sha256": "47a291090b7d699ba460f4648a927bac6d0408aca6c1b72d24017d47e7793c9a"
+    },
+    {
+      "file": "docs/data/dof_convergence.csv",
+      "archival_source": "stage_records/14_dof_showcase_2026-09-25/convergence.csv",
+      "bytes": 432,
+      "sha256": "2751e176994d04a3cc79d86c209cb4cc597771897adb548596e67a8d37a06ff2"
+    },
+    {
+      "file": "docs/data/dof_verification.json",
+      "archival_source": "stage_records/14_dof_showcase_2026-09-25/verification.json",
+      "bytes": 2277,
+      "sha256": "985110347e1153edcdd49f298242ac90ff7b946d5e77d67b50e2b93cb6e01458"
+    },
+    {
+      "file": "docs/data/host_environment.json",
+      "archival_source": "stage_records/14_dof_showcase_2026-09-25/logs/host_environment.json",
+      "bytes": 307,
+      "sha256": "eba48094ce4bd12c6dfe3b03ac1106c8807e7b8615528a1d199e7edce8f90e14"
+    },
+    {
+      "file": "docs/data/appearance_verification.json",
+      "archival_source": "stage_records/15_grounded_weapon_scene_2026-09-26/verification.json",
+      "bytes": 1605,
+      "sha256": "6cbbfd42e8cb1aa8d7b3b2523ff032f37634d9fb5ab8527459c89001b49fd8c8"
+    },
+    {
+      "file": "docs/data/ctest_archived.txt",
+      "archival_source": "stage_records/15_grounded_weapon_scene_2026-09-26/logs/ctest_final.txt",
+      "bytes": 1205,
+      "sha256": "dd93e1a4a4c4705f6c6fcbbd38ba47a7c5313ea5591c45f6f3517a0e3c8e529f"
+    },
+    {
+      "file": "docs/data/showcase_capture.json",
+      "archival_source": "stage_records/16_environment_refinement_2026-09-27/runs/moonlit_hall_refined_final.json",
+      "bytes": 522,
+      "sha256": "192036be3f029258fd7db8acc58039e2f7260d414ded596dbeca290777df1d96"
+    },
+    {
+      "file": "docs/data/showcase_verification.json",
+      "archival_source": "stage_records/16_environment_refinement_2026-09-27/results.json",
+      "bytes": 2403,
+      "sha256": "ba41cae8ee51ee2cc6b491320dc69624f0dd3ccbf326ce055dea94a7eca0e454"
+    },
+    {
+      "file": "docs/data/sky_prompt.txt",
+      "archival_source": "stage_records/16_environment_refinement_2026-09-27/design/sky_prompt.txt",
+      "bytes": 1308,
+      "sha256": "b9c881238afe40143b573e8c07c9b414df0a20702310ec545e9c2eca0fcceeab"
+    }
+  ]
+}

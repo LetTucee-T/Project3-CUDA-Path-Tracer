@@ -1,0 +1,66 @@
+{
+  "capture": {
+    "antialiasing": true,
+    "bvh": true,
+    "compaction": true,
+    "depth": 8,
+    "dof": true,
+    "first_iteration": 1,
+    "focus_distance": 5.0,
+    "gpu": "NVIDIA GeForce RTX 4070 Laptop GPU",
+    "initialization_ms": 16.7581,
+    "kind": "production_renderer_headless",
+    "lens_radius": 0.012000000104308128,
+    "objects": 16,
+    "render_loop_ms": 810480.8104,
+    "resolution": [
+      1200,
+      800
+    ],
+    "scene_load_ms": 771.8841,
+    "sorting": false,
+    "spp": 3072,
+    "triangles": 86355,
+    "warmup_spp": 8
+  },
+  "files": {
+    "png": {
+      "path": "stage_records/16_environment_refinement_2026-09-27/runs/moonlit_hall_refined_final.png",
+      "sha256": "03dff433c091ca5afb80ac446e549547fb0fd284906697d400017666aff40540"
+    },
+    "hdr": {
+      "path": "stage_records/16_environment_refinement_2026-09-27/runs/moonlit_hall_refined_final.hdr",
+      "sha256": "49f274b46331f1af665db0a74cc641ffc6f592b25f5507fff2fd312abebf7cab"
+    },
+    "f32": {
+      "path": "stage_records/16_environment_refinement_2026-09-27/runs/moonlit_hall_refined_final.f32",
+      "sha256": "d1c61c0768b89a19b93ed30153a642e5353489596e6d88e7a2f5034e86550597"
+    },
+    "json": {
+      "path": "stage_records/16_environment_refinement_2026-09-27/runs/moonlit_hall_refined_final.json",
+      "sha256": "192036be3f029258fd7db8acc58039e2f7260d414ded596dbeca290777df1d96"
+    }
+  },
+  "linear_rgb": {
+    "finite": true,
+    "nonnegative": true,
+    "min": 0.0,
+    "max": 51.19643783569336
+  },
+  "verification": {
+    "all_meshes_and_bvhs_loaded": true,
+    "bvh_max_depth": 13,
+    "skipped_degenerate_triangles": 0,
+    "renderer_source_and_binary_unchanged": true,
+    "project_readme_unchanged": true,
+    "previous_scene_configs_unchanged": true,
+    "weapon_materials_and_transforms_unchanged": true,
+    "floor_material_unchanged": true,
+    "capture_config_and_assets_match_portable_scene": true
+  },
+  "direct_light_sampling_added": false,
+  "postprocessing": "Renderer exposure/Reinhard/sRGB only; no bloom or denoising",
+  "sky_texture_source": "Built-in image_gen; design/sky_prompt.txt and design/sky_manifest.json",
+  "timing_scope": "Single capture render-loop wall time excluding scene load, initialization and 8 spp warmup; not a controlled performance benchmark",
+  "preview_variant_count": 5
+}
