@@ -1,0 +1,765 @@
+{
+  "date": "2026-09-29",
+  "scene": "scenes/shatterseal_moonlit_hall_refined.json",
+  "scene_sha256": "6a9cae8bf3994a8457cbb9ed8e2b4b3e6cd94ec53770e3b44453251c004e7393",
+  "implementation": {
+    "default": "16-bin SAH, leaf cap 1, compact GPU nodes; maximum depth remains 32.",
+    "representation": "32-byte aligned node: six unquantized float bounds, firstOrLeft int, countOrRight int. Negative countOrRight denotes a leaf; otherwise both integers are absolute child indices. Bounds, node order and primitive references are preserved for any fixed tree.",
+    "upload": "CPU nodes remain 40 bytes. Only the selected GPU node representation is uploaded, after structural validation. Both layouts share templated traversal and checked/stack-overflow fallback.",
+    "unchanged": "Triangle precision and arithmetic, conservative bounds, geometry, materials, UVs, camera, RNG, sample count and estimator.",
+    "switches": "--bvh-layout wide|compact --bvh-leaf-size N; --bvh-layout wide --bvh-leaf-size 2 restores the preceding policy.",
+    "large_leaves": "Counts retain 32-bit range, including depth-limited leaves larger than 65535 primitives; packing does not require adjacent children."
+  },
+  "benchmark": {
+    "gpu": "NVIDIA GeForce RTX 4070 Laptop GPU",
+    "build": "Release / CUDA 12.9",
+    "resolution": [
+      1200,
+      800
+    ],
+    "spp": 64,
+    "depth": 8,
+    "warmup_spp": 8,
+    "flags": {
+      "aa": true,
+      "compaction": true,
+      "bvh": true,
+      "dof": true,
+      "distance_pruning": true,
+      "sorting": false,
+      "profilers": false
+    },
+    "rounds": 5,
+    "order": "Cyclic rotation of previous, wide1, wide2, compact1, compact2. Each mode occupies each position once.",
+    "timing": "Render loop including GPU completion and final readback; excludes scene loading, tree build, upload, warmup and saving.",
+    "clocks_locked": false,
+    "range_note": "Ranges are min/max, not confidence intervals. All captures are retained, including the 6.299 s wide2 outlier; its cause was not established.",
+    "gpu_csv_fields": "temperature.gpu,clocks.current.graphics,clocks.current.memory,power.draw,utilization.gpu",
+    "leaf_sweep": {
+      "binary": "Frozen preceding robust renderer, 40-byte nodes",
+      "rounds": 4,
+      "order": "Rotated 1,2,4,8; each leaf size occupies each position once.",
+      "summary": {
+        "1": {
+          "runs": 4,
+          "median_ms": 5777.74735,
+          "min_ms": 5758.4579,
+          "max_ms": 5794.1472,
+          "node_count": 172694,
+          "node_bytes": 40,
+          "node_and_index_bytes": 7253180,
+          "median_build_ms": 108.60679999999999,
+          "median_initialization_ms": 20.64835,
+          "executable_sha256": "bbb3e03414deea02a31f8f98461b0ba8ed0e4b2b0b7494f03471d2ecf1cfbdea"
+        },
+        "2": {
+          "runs": 4,
+          "median_ms": 5883.0462,
+          "min_ms": 5869.8071,
+          "max_ms": 5900.6604,
+          "node_count": 96582,
+          "node_bytes": 40,
+          "node_and_index_bytes": 4208700,
+          "median_build_ms": 75.04785000000001,
+          "median_initialization_ms": 17.8876,
+          "executable_sha256": "bbb3e03414deea02a31f8f98461b0ba8ed0e4b2b0b7494f03471d2ecf1cfbdea"
+        },
+        "4": {
+          "runs": 4,
+          "median_ms": 7720.55205,
+          "min_ms": 7718.625,
+          "max_ms": 7737.0802,
+          "node_count": 55238,
+          "node_bytes": 40,
+          "node_and_index_bytes": 2554940,
+          "median_build_ms": 54.90690000000001,
+          "median_initialization_ms": 16.56825,
+          "executable_sha256": "bbb3e03414deea02a31f8f98461b0ba8ed0e4b2b0b7494f03471d2ecf1cfbdea"
+        },
+        "8": {
+          "runs": 4,
+          "median_ms": 10867.29905,
+          "min_ms": 10855.1488,
+          "max_ms": 10906.5707,
+          "node_count": 30012,
+          "node_bytes": 40,
+          "node_and_index_bytes": 1545900,
+          "median_build_ms": 39.05584999999999,
+          "median_initialization_ms": 15.467,
+          "executable_sha256": "bbb3e03414deea02a31f8f98461b0ba8ed0e4b2b0b7494f03471d2ecf1cfbdea"
+        }
+      }
+    },
+    "layout_screen": "One preliminary capture per wide/compact x leaf 1/2/4/8; recorded in the CSV, not treated as repeated benchmarks.",
+    "summary": {
+      "previous": {
+        "runs": 5,
+        "median_ms": 5890.4314,
+        "min_ms": 5857.1654,
+        "max_ms": 5929.8711,
+        "node_count": 96582,
+        "node_bytes": 40,
+        "node_and_index_bytes": 4208700,
+        "median_build_ms": 75.15299999999998,
+        "median_initialization_ms": 17.8889,
+        "executable_sha256": "bbb3e03414deea02a31f8f98461b0ba8ed0e4b2b0b7494f03471d2ecf1cfbdea"
+      },
+      "wide1": {
+        "runs": 5,
+        "median_ms": 5778.0721,
+        "min_ms": 5758.2801,
+        "max_ms": 5801.0508,
+        "node_count": 172694,
+        "node_bytes": 40,
+        "node_and_index_bytes": 7253180,
+        "median_build_ms": 108.45379999999997,
+        "median_initialization_ms": 20.5493,
+        "executable_sha256": "1b91818c5820c05cade277ce4e3d14e056abcb12058d9fc0045e59bde88829f1"
+      },
+      "wide2": {
+        "runs": 5,
+        "median_ms": 5887.38,
+        "min_ms": 5858.8578,
+        "max_ms": 6298.7944,
+        "node_count": 96582,
+        "node_bytes": 40,
+        "node_and_index_bytes": 4208700,
+        "median_build_ms": 74.68340000000002,
+        "median_initialization_ms": 18.2395,
+        "executable_sha256": "1b91818c5820c05cade277ce4e3d14e056abcb12058d9fc0045e59bde88829f1"
+      },
+      "compact1": {
+        "runs": 5,
+        "median_ms": 5577.8134,
+        "min_ms": 5556.3624,
+        "max_ms": 5717.0756,
+        "node_count": 172694,
+        "node_bytes": 32,
+        "node_and_index_bytes": 5871628,
+        "median_build_ms": 109.41,
+        "median_initialization_ms": 25.0359,
+        "executable_sha256": "1b91818c5820c05cade277ce4e3d14e056abcb12058d9fc0045e59bde88829f1"
+      },
+      "compact2": {
+        "runs": 5,
+        "median_ms": 5736.8566,
+        "min_ms": 5720.6469,
+        "max_ms": 5750.8843,
+        "node_count": 96582,
+        "node_bytes": 32,
+        "node_and_index_bytes": 3436044,
+        "median_build_ms": 75.1873,
+        "median_initialization_ms": 19.5644,
+        "executable_sha256": "1b91818c5820c05cade277ce4e3d14e056abcb12058d9fc0045e59bde88829f1"
+      }
+    },
+    "speedup_vs_previous": 1.0560466938531863,
+    "time_reduction_vs_previous_percent": 5.30721739667489,
+    "layout_time_reduction_at_leaf1_percent": 3.4658394103458834,
+    "leaf1_time_reduction_in_wide_layout_percent": 1.8566476089533879,
+    "tradeoff": "Smaller leaves increase node/index storage from 4.209 to 5.872 MB versus the preceding default, and one-time CPU construction from about 75 to 109 ms. A compact node itself is 20% smaller; this is not a claim of 20% lower total scene memory.",
+    "reproduction": "Copy the final scene with Camera.ITERATIONS=64, preserving asset paths; run scene_render with each leaf/layout combination in rotated order. Candidate/final differ only in default choices and a comment. Historical binaries/source remain local.",
+    "final_default_checks": {
+      "runs": 3,
+      "median_ms": 5562.7299,
+      "min_ms": 5559.7949,
+      "max_ms": 5564.0625,
+      "node_count": 172694,
+      "node_bytes": 32,
+      "node_and_index_bytes": 5871628,
+      "median_build_ms": 110.20540000000001,
+      "median_initialization_ms": 23.6616,
+      "executable_sha256": "535d0bdb027aac32734510cf62cb00bb465eb322dcc8ccbc5d968392713bfa18"
+    }
+  },
+  "diagnostics": {
+    "phase_profiles": {
+      "phase_n1_wide": {
+        "camera": {
+          "calls": 64,
+          "gpu_stream_ms": 43.73747247457504,
+          "host_section_ms": 0.3637
+        },
+        "compaction": {
+          "calls": 512,
+          "gpu_stream_ms": 93.75289596989751,
+          "host_section_ms": 5726.6905000000015
+        },
+        "display": {
+          "calls": 0,
+          "gpu_stream_ms": 0.0,
+          "host_section_ms": 0.0
+        },
+        "gather": {
+          "calls": 64,
+          "gpu_stream_ms": 9.819743916392326,
+          "host_section_ms": 0.7015000000000001
+        },
+        "intersection": {
+          "calls": 512,
+          "gpu_stream_ms": 5461.410943746567,
+          "host_section_ms": 7.128800000000001
+        },
+        "prepare": {
+          "calls": 64,
+          "gpu_stream_ms": 1.9660480059683323,
+          "host_section_ms": 0.6930000000000001
+        },
+        "readback": {
+          "calls": 3,
+          "gpu_stream_ms": 1.6056640297174454,
+          "host_section_ms": 2.9455999999999998
+        },
+        "shading": {
+          "calls": 512,
+          "gpu_stream_ms": 150.14646451547742,
+          "host_section_ms": 2.6806000000000005
+        },
+        "sorting": {
+          "calls": 0,
+          "gpu_stream_ms": 0.0,
+          "host_section_ms": 0.0
+        }
+      },
+      "phase_n1_compact": {
+        "camera": {
+          "calls": 64,
+          "gpu_stream_ms": 43.54566425085068,
+          "host_section_ms": 0.3726999999999999
+        },
+        "compaction": {
+          "calls": 512,
+          "gpu_stream_ms": 97.53929590433836,
+          "host_section_ms": 5529.675299999997
+        },
+        "display": {
+          "calls": 0,
+          "gpu_stream_ms": 0.0,
+          "host_section_ms": 0.0
+        },
+        "gather": {
+          "calls": 64,
+          "gpu_stream_ms": 9.65708801150322,
+          "host_section_ms": 1.1346
+        },
+        "intersection": {
+          "calls": 512,
+          "gpu_stream_ms": 5260.899617910385,
+          "host_section_ms": 8.4532
+        },
+        "prepare": {
+          "calls": 64,
+          "gpu_stream_ms": 2.1752000022679567,
+          "host_section_ms": 0.9474000000000001
+        },
+        "readback": {
+          "calls": 3,
+          "gpu_stream_ms": 1.159103948622942,
+          "host_section_ms": 2.5224
+        },
+        "shading": {
+          "calls": 512,
+          "gpu_stream_ms": 152.2024001814425,
+          "host_section_ms": 2.6859999999999995
+        },
+        "sorting": {
+          "calls": 0,
+          "gpu_stream_ms": 0.0,
+          "host_section_ms": 0.0
+        }
+      },
+      "phase_n2_wide": {
+        "camera": {
+          "calls": 64,
+          "gpu_stream_ms": 43.513920068740845,
+          "host_section_ms": 0.4286
+        },
+        "compaction": {
+          "calls": 512,
+          "gpu_stream_ms": 99.77497616782784,
+          "host_section_ms": 5827.019800000001
+        },
+        "display": {
+          "calls": 0,
+          "gpu_stream_ms": 0.0,
+          "host_section_ms": 0.0
+        },
+        "gather": {
+          "calls": 64,
+          "gpu_stream_ms": 9.86630393564701,
+          "host_section_ms": 1.0213999999999999
+        },
+        "intersection": {
+          "calls": 512,
+          "gpu_stream_ms": 5557.334616422653,
+          "host_section_ms": 8.712800000000001
+        },
+        "prepare": {
+          "calls": 64,
+          "gpu_stream_ms": 2.1074240058660507,
+          "host_section_ms": 0.9427000000000001
+        },
+        "readback": {
+          "calls": 3,
+          "gpu_stream_ms": 1.2678400464355946,
+          "host_section_ms": 2.6094
+        },
+        "shading": {
+          "calls": 512,
+          "gpu_stream_ms": 151.079680159688,
+          "host_section_ms": 2.7255999999999996
+        },
+        "sorting": {
+          "calls": 0,
+          "gpu_stream_ms": 0.0,
+          "host_section_ms": 0.0
+        }
+      },
+      "phase_n2_compact": {
+        "camera": {
+          "calls": 64,
+          "gpu_stream_ms": 44.21363228559494,
+          "host_section_ms": 0.4118000000000001
+        },
+        "compaction": {
+          "calls": 512,
+          "gpu_stream_ms": 98.28790384158492,
+          "host_section_ms": 5711.559700000001
+        },
+        "display": {
+          "calls": 0,
+          "gpu_stream_ms": 0.0,
+          "host_section_ms": 0.0
+        },
+        "gather": {
+          "calls": 64,
+          "gpu_stream_ms": 9.67289599776268,
+          "host_section_ms": 1.0791
+        },
+        "intersection": {
+          "calls": 512,
+          "gpu_stream_ms": 5441.5345187187195,
+          "host_section_ms": 8.307699999999999
+        },
+        "prepare": {
+          "calls": 64,
+          "gpu_stream_ms": 2.0584959872066975,
+          "host_section_ms": 0.7801
+        },
+        "readback": {
+          "calls": 3,
+          "gpu_stream_ms": 1.2265599817037582,
+          "host_section_ms": 2.5572
+        },
+        "shading": {
+          "calls": 512,
+          "gpu_stream_ms": 151.71424052864313,
+          "host_section_ms": 2.6561000000000003
+        },
+        "sorting": {
+          "calls": 0,
+          "gpu_stream_ms": 0.0,
+          "host_section_ms": 0.0
+        }
+      }
+    },
+    "sampled_work": {
+      "spp": 4,
+      "pixel_stride": 64,
+      "totals": {
+        "1": {
+          "node_visits": 4980691,
+          "aabb_tests": 11474802,
+          "triangle_tests": 586130,
+          "fallbacks": 0,
+          "sampled_rays": 167855,
+          "mismatches": 0,
+          "max_stack": 14
+        },
+        "2": {
+          "node_visits": 4447393,
+          "aabb_tests": 10886364,
+          "triangle_tests": 641270,
+          "fallbacks": 0,
+          "sampled_rays": 167855,
+          "mismatches": 0,
+          "max_stack": 13
+        }
+      },
+      "layout_counts_exactly_equal": true,
+      "note": "Separate replays of the same incoming rays, not full-image totals. Instrumented runs are excluded from speed medians."
+    },
+    "interpretation": "Leaf 1 trades extra node visits for fewer expensive robust triangle tests. Layout changes preserve all work counts; they reduce per-query cost. No hardware cache/stall counters were available, so cache behavior is not directly measured."
+  },
+  "validation": {
+    "ctest": {
+      "passed": 10,
+      "failed": 0,
+      "log": "stage_records/20_compact_bvh_2026-09-29/logs/ctest_final.log",
+      "sha256": "d25d1ffd1e196f44185438afdce60d0d159da0d7058813ba111896f47df594d9"
+    },
+    "gpu_test_cases": {
+      "mesh_intersection_tests": 156,
+      "thin_lens_render_tests": 47
+    },
+    "compute_sanitizer": {
+      "mesh_intersection_tests": {
+        "errors": 0,
+        "leaked_bytes": 0,
+        "log": "stage_records/20_compact_bvh_2026-09-29/logs/memcheck_mesh_intersection_tests.log",
+        "sha256": "ceddbc737958660cf732abac6af08b73c5e5db132bbb253ae2a45d6e6523c1aa"
+      },
+      "thin_lens_render_tests": {
+        "errors": 0,
+        "leaked_bytes": 0,
+        "log": "stage_records/20_compact_bvh_2026-09-29/logs/memcheck_thin_lens_render_tests.log",
+        "sha256": "a6cee224b7a74a6c90c05b967341460b5c928c76a6e7e0b940528113d092750c"
+      }
+    },
+    "coverage": [
+      "Bit-preserving CPU packing; two meshes with absolute offsets; reversed child order; depth-limited leaf with 65537 primitives.",
+      "Actual GPU upload and independent decode of all fields in both layouts; empty arrays, repeated free, stale-tree rejection.",
+      "Eleven corrupt compact layouts/views fall back safely, including INT_MIN tag and cycles.",
+      "Both layouts through checked/reference/validated traversal; deep stack and overflow; existing thin-triangle and equal-distance regressions.",
+      "End-to-end cross-product of two builders, four leaf caps, two layouts, three replay strides and two distance-pruning settings."
+    ],
+    "all_captures": {
+      "count": 75,
+      "png_hdr_f32_byte_identical_to_previous_robust_renderer": true
+    },
+    "regression": [
+      {
+        "name": "regression_cornell",
+        "resolution": [
+          240,
+          240
+        ],
+        "spp": 32,
+        "byte_identical": {
+          "png": true,
+          "hdr": true,
+          "f32": true
+        },
+        "sha256": {
+          "png": "b8dc16d8050b1504e54ea033db6f0352d2d0fff95280d15e8a2ffc7be8736811",
+          "hdr": "211afd860bd863724aac5596dd83bcc733e4e35387ea8a8736a309b175c9c151",
+          "f32": "a23421db9541b7155ffbfb62f34bd76e8467212bdf6ef7e6fa2c23804681f53f"
+        }
+      },
+      {
+        "name": "regression_dof_gallery",
+        "resolution": [
+          240,
+          150
+        ],
+        "spp": 32,
+        "byte_identical": {
+          "png": true,
+          "hdr": true,
+          "f32": true
+        },
+        "sha256": {
+          "png": "508cbd5729781b49bac70f21ec2ae3c04c0639878d9464a5a7bafe7c11bffd15",
+          "hdr": "9741c100a576ee73b3d186ca22fdca5c7171ff08bad5f1bd66bfc1d211b34a6b",
+          "f32": "544a3d20308ed690ea76904aac93d68a52b2b31bb55643cab849c7eb62c44560"
+        }
+      },
+      {
+        "name": "regression_dof_validation",
+        "resolution": [
+          240,
+          122
+        ],
+        "spp": 32,
+        "byte_identical": {
+          "png": true,
+          "hdr": true,
+          "f32": true
+        },
+        "sha256": {
+          "png": "54fe8fdc03e4cbfc9468b0bdf3480fc2ff50c95b4d2f6c7ca29099659b5bae25",
+          "hdr": "54c182527a8d2eb3f3ce59e4d9120563af074cb39576b06c809852e78c5e4161",
+          "f32": "0718f41f144772932cb934a997de06e55466a70ce2df6fd4e4f9419d2d13601d"
+        }
+      },
+      {
+        "name": "regression_mesh_aabb_torus_exterior",
+        "resolution": [
+          240,
+          240
+        ],
+        "spp": 32,
+        "byte_identical": {
+          "png": true,
+          "hdr": true,
+          "f32": true
+        },
+        "sha256": {
+          "png": "836c7f6facfa2e4696d75f21b72d7ca10e6e52e3d74607d5867f632969ed525c",
+          "hdr": "6b850a7f5228ee043c992cf42bf62e348d4b32c61ea48525c03cdf8d45c98467",
+          "f32": "189ab201fda190a2af8a536621cc442e6ef3bb24d68063d8ccb7a811d3b5fc7d"
+        }
+      },
+      {
+        "name": "regression_mesh_aabb_torus_interior",
+        "resolution": [
+          240,
+          240
+        ],
+        "spp": 32,
+        "byte_identical": {
+          "png": true,
+          "hdr": true,
+          "f32": true
+        },
+        "sha256": {
+          "png": "ce8e265cf066f355fbd17424331750f9504def4ad47397a0d7bcb57cafb50309",
+          "hdr": "3cf7c9f196eacaec9040fd6a5df787d2de132271e711aaa952a5bb246eb27c45",
+          "f32": "ab134304f3da257d4d132251613a99f17f2f09c920cfb32fdca85a6dbe21d918"
+        }
+      },
+      {
+        "name": "regression_mesh_aabb_validation",
+        "resolution": [
+          240,
+          240
+        ],
+        "spp": 32,
+        "byte_identical": {
+          "png": true,
+          "hdr": true,
+          "f32": true
+        },
+        "sha256": {
+          "png": "bd39bd44ba968d00d41e9079d361dc6a67ecb19b50dd3b7000dbde5871808e98",
+          "hdr": "b18b28c57b7fb92041e08c08ceb0cd411fd4e49bbf053814e53936fbf519ef20",
+          "f32": "e1eecae009e7bee6c2ef10a8e0972f111e45081c1c13a1e363139eb37a81869e"
+        }
+      },
+      {
+        "name": "regression_mesh_cpu_validation",
+        "resolution": [
+          64,
+          64
+        ],
+        "spp": 32,
+        "byte_identical": {
+          "png": true,
+          "hdr": true,
+          "f32": true
+        },
+        "sha256": {
+          "png": "1f8e7a4915de91f69c595318150046237138b00fd30bd0e8aec55c0b52c8c048",
+          "hdr": "5e4ca599c8fe0dcfb12ea3b84e2d2ec1e68268b612dd0cb7522bde87e877ac47",
+          "f32": "0b7ada0a6c12fbdc237309496a86a10260d0c45d21956432b66d72b02b39a4d6"
+        }
+      },
+      {
+        "name": "regression_mesh_gpu_validation",
+        "resolution": [
+          240,
+          240
+        ],
+        "spp": 32,
+        "byte_identical": {
+          "png": true,
+          "hdr": true,
+          "f32": true
+        },
+        "sha256": {
+          "png": "bd39bd44ba968d00d41e9079d361dc6a67ecb19b50dd3b7000dbde5871808e98",
+          "hdr": "b18b28c57b7fb92041e08c08ceb0cd411fd4e49bbf053814e53936fbf519ef20",
+          "f32": "e1eecae009e7bee6c2ef10a8e0972f111e45081c1c13a1e363139eb37a81869e"
+        }
+      },
+      {
+        "name": "regression_shatterseal_moonlit_hall_refined",
+        "resolution": [
+          240,
+          160
+        ],
+        "spp": 32,
+        "byte_identical": {
+          "png": true,
+          "hdr": true,
+          "f32": true
+        },
+        "sha256": {
+          "png": "e215edb6abb65e60134910a3d722dd507d12fcdc7659c04d52840656735bdf39",
+          "hdr": "2f30d2237c60a1b6ea0b6d582cdf79b2d860ebebd37c1087de9640b1e24f8e7f",
+          "f32": "bf81c7ab709dcff116b2d3e87d19e321fd63ea19b4ae66b80fc28740458660e1"
+        }
+      },
+      {
+        "name": "regression_shatterseal_moonlit_hall_refined_detail",
+        "resolution": [
+          240,
+          160
+        ],
+        "spp": 32,
+        "byte_identical": {
+          "png": true,
+          "hdr": true,
+          "f32": true
+        },
+        "sha256": {
+          "png": "5010742e78d87f4de274b7ad64382974538b4361bec554ae098a02dae17128c1",
+          "hdr": "0331f98b254b60e3a46a40c2e3209b504315592036962bc8b81e9009c68a95cb",
+          "f32": "26524e0e26a6dd59875ffc4273f819a5ed79d2ccaef8a224c772a814dc324c43"
+        }
+      },
+      {
+        "name": "regression_shatterseal_moonlit_hall_refined_preview",
+        "resolution": [
+          240,
+          160
+        ],
+        "spp": 32,
+        "byte_identical": {
+          "png": true,
+          "hdr": true,
+          "f32": true
+        },
+        "sha256": {
+          "png": "99fef82194f844503e152b484658754560f2ea52fb86a44c023b26c61297982f",
+          "hdr": "7d4ee8f88c1defbf031effc85264707c54573a5d6927d63e8ce80b50a6c06349",
+          "f32": "d0ba9d92fca16a8f1f48c853c7082bb69601f5ffcd96a8f41bb94b3840bed531"
+        }
+      },
+      {
+        "name": "regression_sphere",
+        "resolution": [
+          240,
+          240
+        ],
+        "spp": 32,
+        "byte_identical": {
+          "png": true,
+          "hdr": true,
+          "f32": true
+        },
+        "sha256": {
+          "png": "f57f0dfb0f0312f992efa3b52bab1405d453b0647089518a21e20edefd6ab5dc",
+          "hdr": "1418275f22219109297927467d6b187d7126bd9e5df1cae563c872e24ca17fac",
+          "f32": "7bba96823a46c3379977198d6401044695d76929ffaac7040ca19e9824e8932d"
+        }
+      }
+    ],
+    "full_showcase": {
+      "capture": {
+        "antialiasing": true,
+        "bvh": true,
+        "bvh_bins": 16,
+        "bvh_build_ms": 109.09550000000002,
+        "bvh_builder": "sah",
+        "bvh_layout": "compact",
+        "bvh_leaf_size": 1,
+        "bvh_leaves": 86355,
+        "bvh_max_depth": 23,
+        "bvh_node_and_index_bytes": 5871628,
+        "bvh_node_bytes": 32,
+        "bvh_nodes": 172694,
+        "bvh_validation_ms": 7.781500000000001,
+        "cached_bvh_bounds": true,
+        "compaction": true,
+        "cross_mesh_pruning": true,
+        "depth": 8,
+        "display_every_sample": false,
+        "dof": true,
+        "first_iteration": 1,
+        "focus_distance": 5.0,
+        "gpu": "NVIDIA GeForce RTX 4070 Laptop GPU",
+        "image_readback_bytes": 11520000,
+        "image_readbacks": 1,
+        "initialization_ms": 24.0405,
+        "kind": "production_renderer_headless",
+        "lens_radius": 0.012000000104308128,
+        "objects": 16,
+        "readback_every_sample": false,
+        "render_loop_ms": 267497.8061,
+        "resolution": [
+          1200,
+          800
+        ],
+        "scene_load_ms": 837.6186,
+        "sorting": false,
+        "spp": 3072,
+        "stage_synchronizations": 0,
+        "synchronize_each_stage": false,
+        "triangles": 86355,
+        "validated_bvh_traversal": true,
+        "warmup_spp": 8
+      },
+      "sha256": {
+        "png": "96b0ffb7b96c819027c0a38a626334dc2a35e947a8af992316dab2288e848158",
+        "hdr": "b9a6c027a538432adb6f3af3d01b124f851d0ba11b22bc79cf64417367e822d4",
+        "f32": "a37244254f1ef92143a0d37166fd515d246684fc61f4fd97bdab5b9dda311e47"
+      },
+      "byte_identical": {
+        "png": true,
+        "hdr": true,
+        "f32": true
+      },
+      "reference": "stage_records/19_robust_traversal_2026-09-29/runs/full_optimized",
+      "note": "Default settings, 3072 spp; exact PNG/HDR/float32 match. Full-frame time is one capture, not a repeated benchmark."
+    }
+  },
+  "provenance": {
+    "archive": "stage_records/20_compact_bvh_2026-09-29",
+    "final_executable_sha256": "535d0bdb027aac32734510cf62cb00bb465eb322dcc8ccbc5d968392713bfa18",
+    "candidate_executable_sha256": "1b91818c5820c05cade277ce4e3d14e056abcb12058d9fc0045e59bde88829f1",
+    "previous_executable_sha256": "bbb3e03414deea02a31f8f98461b0ba8ed0e4b2b0b7494f03471d2ecf1cfbdea",
+    "candidate_to_final_changes": [
+      "src/bvh.h",
+      "src/pathtrace.h",
+      "src/sceneStructs.h"
+    ],
+    "final_source_sha256": {
+      "src/appearance.h": "0859907445d3e205aac590d845fd4159ffc7caadce0614671c944955376acded",
+      "src/bvh.cpp": "2c8e10e49b4d1eadc1bd173bc89159d857fae705b602f81916527aacdbb70de5",
+      "src/bvh.h": "c0c71ba7e3d14295d01f1ef5249587efa213cce286d9ef369820079200e4269b",
+      "src/cameraOrbit.h": "e9bde0f3133a8193434879ad3e798539054302e2dde183c0f4ea2fe78bcded8d",
+      "src/cameraSampling.h": "7eea630a532f2d821b4ba4cd09d49ccf19908069676ec5ad8aeb9cd4ca6671f3",
+      "src/glslUtility.cpp": "6d1f638fdc3107b18c7c1acb7cb676629b37b05703752850414bd1c5cbed806b",
+      "src/glslUtility.hpp": "d78bc61c3cbc967c15173f5d78afddcb0a7230c538e624df529051e3561e58c8",
+      "src/image.cpp": "da6c672d1dffd3f4af7eb0c88c9924856a2caa1fcc4b3a744f4d58645270456c",
+      "src/image.h": "407772593373d2267f54785eb18a62d17a4a6d9ebcf923ffa05552a6da862057",
+      "src/interactions.cu": "6bbcf4c2c3bbbd0926537c203092b6cadf26a39f91865290cc131668e615e386",
+      "src/interactions.h": "2f158bd94244e764dc0841fb4861ddfadffa60b476c71f6254d508c7fdf45149",
+      "src/intersectionProfile.cu": "e81be3b66e67ca41cbbe76049995e15b47c2febb91e148c2422b8900a25dd8a8",
+      "src/intersectionProfile.h": "e5cfeca1fd82f3244d0b5a6a0a151537ece025b282d4c40b43cd8bf2716fe575",
+      "src/intersections.cu": "6edc5d139258ff4604779c52df5de1151a6cbfba807465121bd2026e96503bdb",
+      "src/intersections.h": "dcca867a1c2211132ebaf48722dfc77443e8879a6d75989228a4c468112b0a97",
+      "src/main.cpp": "f83ed82195c1d416c911fd41a1e794f5c5e58c8bb6297e83f3115810f51fc90c",
+      "src/objLoader.cpp": "ca801cc0cbe5fbe882c67efac96ab2bf077cefc605642c940c140661777c971a",
+      "src/objLoader.h": "ad54e5c04593be057a13fe3af3d164f85ef37103adbc1ffef49d24397a3ba988",
+      "src/pathtrace.cu": "38380e1f84ce4ad64969c3bbf7e6682e765662db311948ac6b7d80787c8429c5",
+      "src/pathtrace.h": "1430b4fe3b830e58979b629b37e476a5210feee892dd59940dc0fb52a7cc7353",
+      "src/renderControls.cpp": "3645cf25af6b944be6679e53856c2eeb8a1f735eb63d4a914436520adf225cd1",
+      "src/renderControls.h": "8840cca4065c36069cb893a45ee63d9fa17368d73c8ae3ab97eeb01c9038fe2b",
+      "src/scene.cpp": "fdd42aea4a87b1d75c4493e7b7690b18d7e808fb88c7caff6eed424ce985366c",
+      "src/scene.h": "df7ac55d2535543bd435303dbda3030ba972e091280f3858a1e70b23da5bfede",
+      "src/sceneStructs.h": "2444858a65f14f3698098b4095d04a1d5482c51d0c75138d77f8fe756a7dec67",
+      "src/stb.cpp": "5f55c259adf181d8b26f61b5445c3ec699635b8c71e05d3287a0fc29d79f5a79",
+      "src/utilities.cpp": "d2a041bd248b534d54c058488215eb90da76f32c40d1c5a4a69e93658874770e",
+      "src/utilities.h": "2a3df0ccdf0b6944ec0dd276d463d6cebc465904129a23065627f1e4826c75ef",
+      "tests/appearance_tests.cpp": "f06fbc2988a5c7138c71faa5f6ea40216dc380f367dca9e04f968f00df6f186b",
+      "tests/bvh_builder_tests.cpp": "32b1b37063071ae425d3723bcb69a0df908f0f8386d4b636cf869dcf6eeb8c3b",
+      "tests/bvh_gpu_test_cases.h": "779e42f17f6d194cfbc06e4e7f781fbdf789f756feda2a17c93a5667b0e0ea93",
+      "tests/camera_sampling_gpu_tests.cu": "9c03428d36602fe96fb29e29ae2b127f6d075f1b2ee2975147e6567619e37c3f",
+      "tests/camera_sampling_tests.cpp": "585d80de37c982aa421a1b80912304c1c9fd40fef31ef104ad3dc891e639ea92",
+      "tests/camera_sampling_test_cases.h": "19f8e986f19a8353b95ade867146864539738e7d251bbb6a57bd3291b9799718",
+      "tests/mesh_intersection_tests.cu": "0df9b97c8d7715e254962ee21ae94d0ca380c8a4865f37fbae10711a8163bbac",
+      "tests/obj_loader_tests.cpp": "828da81f21a0c1de5484114bf7e7dfc8ad312116bf235d86228dc3cd9a84143a",
+      "tests/render_controls_tests.cpp": "f4537595b7685f4a3462355f3f1a3a8aebebb7643c3b0382007eee1f2b8d7a9c",
+      "tests/scene_loader_tests.cpp": "3bd93f8653f148ee92881aefc81ba008bfd36c95ef4fa9e2537def95f45c837e",
+      "tests/thin_lens_render_tests.cu": "46693c5433cd2804f6e1fdc67fb64bde69d88b25421204424d80d1ae41531018",
+      "tests/triangle_precision_cases.h": "b3b9414f0a566e3854245a9909a4052017a87da31345847f2b40302f37b0daa8",
+      "tests/verify_triangle_oracle.py": "ec58586ebe59984dda14598f7b89dd9ad7d6b2d536fa1daacd53825bb11ce1f9",
+      "tests/data/thin_triangle_regressions.json": "d5d265c7fafb40e78178d45da3a3c1d275a237176d07fb884224f2c0bc1a81c8",
+      "CMakeLists.txt": "31ee2fe20036e92e77550ce3e3421a621a8d2394a017970eadae00ccfaaf8e89",
+      "tools/render_scene.cpp": "49b370b4146f43d6a445a98048ca11e6732eae3f83a5e2d3305c0bb1aa92a976"
+    },
+    "note": "Only final source, selected data and figure are distributed. Raw captures, build products and historical source snapshots stay local."
+  }
+}

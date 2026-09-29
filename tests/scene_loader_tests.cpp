@@ -291,7 +291,7 @@ int main(int argc, char** argv) {
                 "Culling flag changed loading");
     });
     test("sample_cube", [&](const fs::path&) {
-        Scene scene((source / "scenes/mesh_cpu_validation.json").string());
+        Scene scene((source / "scenes/mesh_cpu_validation.json").string(), {4,32,BVHSplitMethod::Median,16});
         require(scene.geoms.size() == 3 && scene.triangles.size() == 12, "Sample cube load failed");
         double area = 0;
         for (const auto& triangle : scene.triangles) {
@@ -304,7 +304,7 @@ int main(int argc, char** argv) {
     });
 
     test("bvh_real_torus_topology", [&](const fs::path&) {
-        Scene scene((source / "scenes/mesh_aabb_torus_exterior.json").string());
+        Scene scene((source / "scenes/mesh_aabb_torus_exterior.json").string(), {4,32,BVHSplitMethod::Median,16});
         checkBoundsAndNormals(scene);
         require(scene.bvhStats.nodeCount == 2054 && scene.bvhStats.leafCount == 1028
             && scene.bvhStats.maxDepth == 10 && scene.bvhTriangleIndices.size() == 4108,

@@ -1,0 +1,95 @@
+{
+  "documentation_updated": "2026-09-29",
+  "kind": "summary_of_existing_measurements_no_new_render",
+  "scene": "scenes/shatterseal_moonlit_hall_refined.json",
+  "scene_sha256": "6a9cae8bf3994a8457cbb9ed8e2b4b3e6cd94ec53770e3b44453251c004e7393",
+  "conditions": {
+    "gpu": "NVIDIA GeForce RTX 4070 Laptop GPU",
+    "build": "Release / CUDA 12.9",
+    "resolution": [
+      1200,
+      800
+    ],
+    "depth": 8,
+    "warmup_spp": 8,
+    "triangles": 86355,
+    "meshes": 16,
+    "aa": true,
+    "compaction": true,
+    "bvh": true,
+    "dof": true,
+    "sorting": false,
+    "profilers": false,
+    "focus_distance": 5.0,
+    "lens_radius": 0.012000000104308128,
+    "timing": "Render-loop wall time including GPU completion and image readback; excludes loading, initialization, warmup, and image saving."
+  },
+  "current_configuration": {
+    "mesh_bvh_builder": "16-bin SAH on the CPU",
+    "max_leaf_triangles": 1,
+    "gpu_node_bytes": 32,
+    "triangle_intersection": "Double-precision ray-aligned edge functions; consistent barycentric UV/normal interpolation.",
+    "traversal": "Cached reciprocals, validated fast traversal, active near child/deferred far siblings, cross-mesh closest-distance pruning.",
+    "release_scheduling": "No forced per-stage synchronization; headless rendering defers readback until capture and skips preview conversion.",
+    "object_acceleration": "World-space object AABB and TLAS candidates rejected and rolled back; current source retains mesh BVHs."
+  },
+  "comparisons": [
+    {
+      "spp": 64,
+      "statistic": "median",
+      "original": {
+        "render_loop_ms": 16873.1056,
+        "runs": 5,
+        "source": "docs/data/render_optimization.json",
+        "json_pointer": "/benchmark/summary/original/median_ms"
+      },
+      "current": {
+        "render_loop_ms": 5570.7432,
+        "runs": 8,
+        "source": "docs/data/object_acceleration_verification.json",
+        "json_pointer": "/benchmark/summary/previous/median_ms"
+      },
+      "approximate_speedup": 3.0288787320155053,
+      "approximate_time_reduction_percent": 66.98448209794883,
+      "seconds_saved": 11.302362399999998
+    },
+    {
+      "spp": 3072,
+      "statistic": "single_capture",
+      "original": {
+        "render_loop_ms": 810480.8104,
+        "runs": 1,
+        "source": "docs/data/showcase_capture.json",
+        "json_pointer": "/render_loop_ms"
+      },
+      "current": {
+        "render_loop_ms": 267497.8061,
+        "runs": 1,
+        "source": "docs/data/compact_bvh_verification.json",
+        "json_pointer": "/validation/full_showcase/capture/render_loop_ms"
+      },
+      "approximate_speedup": 3.029859654613444,
+      "approximate_time_reduction_percent": 66.99517093218029,
+      "seconds_saved": 542.9830043
+    }
+  ],
+  "interpretation": {
+    "headline": "About 3.03x the original speed, or about 67% less render-loop time for this showcase.",
+    "comparison_scope": "Matched scene/resolution/sample count/depth and display/camera settings, recorded in separate development stages. This is an approximate historical comparison, not a new simultaneous old/current A/B benchmark; GPU clocks were not locked.",
+    "do_not_multiply": "Per-stage speedup factors use different baselines and must not be multiplied to obtain the overall result.",
+    "latest_record_selector": "The current 64-spp row uses the previous entry in the object-acceleration experiment: that entry is the frozen, preserved production renderer. Neither experimental AABB nor TLAS is included.",
+    "numerical_scope": "The current renderer includes thin-triangle precision corrections. Some pixels intentionally differ from the original float renderer; see robust_traversal_verification.json. Geometry and camera settings are unchanged.",
+    "full_capture_scope": "The 3072-spp values are one measured full capture each, not extrapolations from the 64-spp benchmark.",
+    "validation_sources": [
+      "docs/data/compact_bvh_verification.json",
+      "docs/data/object_acceleration_verification.json",
+      "docs/data/robust_traversal_verification.json"
+    ]
+  },
+  "source_sha256": {
+    "docs/data/render_optimization.json": "510777650538a8c705040d51333e17a2fd83feb0fb05ffde3db19f24de338147",
+    "docs/data/object_acceleration_verification.json": "3bedf8a2dbf7bdc9fc97e50762dd59d3649f620b74d0fd1ce4410338d0f8aed1",
+    "docs/data/showcase_capture.json": "192036be3f029258fd7db8acc58039e2f7260d414ded596dbeca290777df1d96",
+    "docs/data/compact_bvh_verification.json": "5200c20a3ed5d4f824ac4d41898f64c25e757ed241a466bc24525a307f1bf01c"
+  }
+}

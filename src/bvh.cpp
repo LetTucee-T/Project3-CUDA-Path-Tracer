@@ -1,7 +1,9 @@
 #include "bvh.h"
 
 #include <algorithm>
+#include <array>
 #include <chrono>
+#include <climits>
 #include <cmath>
 #include <limits>
 #include <stdexcept>
@@ -11,6 +13,8 @@
 
 static_assert(std::is_trivially_copyable<BVHNode>::value,
     "BVH nodes must support direct host-to-device copies");
+static_assert(std::is_trivially_copyable<CompactBVHNode>::value,
+    "Compact BVH nodes must support direct host-to-device copies");
 
 namespace {
 using Clock = std::chrono::steady_clock;
@@ -125,13 +129,19 @@ public:
         int axis = 0; // X, then Y, then Z resolves equal extents deterministically.
         if (extent.y > extent[axis]) axis = 1;
         if (extent.z > extent[axis]) axis = 2;
-        const std::size_t middle = first + count / 2;
-        std::nth_element(primitives.begin() + first, primitives.begin() + middle,
-            primitives.begin() + end, [axis](const PrimitiveInfo& a, const PrimitiveInfo& b) {
-                if (a.centroid[axis] != b.centroid[axis])
-                    return a.centroid[axis] < b.centroid[axis];
-                return a.triangleIndex < b.triangleIndex;
-            });
+        std::size_t middle = first;
+        if (options.splitMethod == BVHSplitMethod::BinnedSAH)
+            middle = partitionSAH(first, end, centroidMin, extent);
+        // Empty/degenerate bins fall back to a balanced, deterministic split.
+        if (middle == first || middle == end) {
+            middle = first + count / 2;
+            std::nth_element(primitives.begin() + first, primitives.begin() + middle,
+                primitives.begin() + end, [axis](const PrimitiveInfo& a, const PrimitiveInfo& b) {
+                    if (a.centroid[axis] != b.centroid[axis])
+                        return a.centroid[axis] < b.centroid[axis];
+                    return a.triangleIndex < b.triangleIndex;
+                });
+        }
         const int left = build(first, middle, depth + 1);
         const int right = build(middle, end, depth + 1);
         // Recursive appends may reallocate nodes: acquire the reference afterwards.
@@ -148,6 +158,58 @@ public:
     BVHStats stats;
 
 private:
+    struct Bin {
+        glm::vec3 lo = glm::vec3((std::numeric_limits<float>::max)());
+        glm::vec3 hi = -lo;
+        std::size_t count = 0;
+        void add(const Bin& other) {
+            if (!other.count) return;
+            lo = glm::min(lo, other.lo); hi = glm::max(hi, other.hi);
+            count += other.count;
+        }
+        double weightedArea() const {
+            if (!count) return 0;
+            // Double avoids overflow/underflow for extreme finite float vertices.
+            const glm::dvec3 d = glm::dvec3(hi) - glm::dvec3(lo);
+            return 2.0 * (d.x*d.y + d.x*d.z + d.y*d.z) * double(count);
+        }
+    };
+    int binIndex(const PrimitiveInfo& p, int axis, const glm::dvec3& lo,
+                 const glm::dvec3& extent) const {
+        const int index = int(((p.centroid[axis] - lo[axis]) / extent[axis]) * options.binCount);
+        return (std::max)(0, (std::min)(options.binCount - 1, index));
+    }
+    std::size_t partitionSAH(std::size_t first, std::size_t end,
+                            const glm::dvec3& lo, const glm::dvec3& extent) {
+        double bestCost = std::numeric_limits<double>::infinity();
+        int bestAxis = -1, bestBin = -1;
+        for (int axis = 0; axis < 3; ++axis) {
+            if (!(extent[axis] > 0)) continue;
+            std::array<Bin, 64> bins{}, prefix{}, suffix{};
+            for (std::size_t i = first; i < end; ++i) {
+                const auto& p = primitives[i];
+                Bin& b = bins[binIndex(p, axis, lo, extent)];
+                b.lo = glm::min(b.lo, p.boundsMin); b.hi = glm::max(b.hi, p.boundsMax); ++b.count;
+            }
+            Bin left, right;
+            for (int i = 0; i < options.binCount; ++i) {
+                left.add(bins[i]); prefix[i] = left;
+                const int j = options.binCount - 1 - i;
+                right.add(bins[j]); suffix[j] = right;
+            }
+            for (int i = 0; i + 1 < options.binCount; ++i) {
+                if (!prefix[i].count || !suffix[i+1].count) continue;
+                // Parent area and traversal cost are constant across candidates.
+                // SAH selects the split; the fixed leaf/depth limits stop recursion.
+                const double cost = prefix[i].weightedArea() + suffix[i+1].weightedArea();
+                if (cost < bestCost) { bestCost = cost; bestAxis = axis; bestBin = i; }
+            }
+        }
+        if (bestAxis < 0) return first;
+        const auto middle = std::stable_partition(primitives.begin() + first, primitives.begin() + end,
+            [&](const PrimitiveInfo& p) { return binIndex(p, bestAxis, lo, extent) <= bestBin; });
+        return std::size_t(middle - primitives.begin());
+    }
     std::vector<PrimitiveInfo>& primitives;
     std::vector<BVHNode>& nodes;
     std::vector<int>& indices;
@@ -163,6 +225,9 @@ BVHBuildResult buildMeshBVH(const std::vector<Triangle>& triangles,
     if (options.maxLeafTriangles < 1 || options.maxDepth < 0 || options.maxDepth > BVH_MAX_DEPTH) {
         throw std::runtime_error("BVH build: invalid leaf size or depth limit");
     }
+    if ((options.splitMethod != BVHSplitMethod::Median && options.splitMethod != BVHSplitMethod::BinnedSAH)
+        || options.binCount < 2 || options.binCount > 64)
+        throw std::runtime_error("BVH build: invalid split method or bin count (expected 2..64)");
     checkRange(triangleStart, triangleCount, triangles.size(), "BVH triangle");
     const std::size_t indexLimit = std::size_t((std::numeric_limits<int>::max)());
     if (nodes.size() > indexLimit || triangleIndices.size() > indexLimit
@@ -195,6 +260,34 @@ BVHBuildResult buildMeshBVH(const std::vector<Triangle>& triangles,
         triangleIndices.resize(oldIndexCount);
         throw;
     }
+}
+
+std::vector<CompactBVHNode> packBVHNodes(const std::vector<BVHNode>& nodes)
+{
+    std::vector<CompactBVHNode> packed(nodes.size());
+    for (std::size_t i = 0; i < nodes.size(); ++i) {
+        const auto& source = nodes[i];
+        auto& destination = packed[i];
+        if (source.indexCount < 0
+            || (source.indexCount > 0 && (source.leftChild != -1 || source.rightChild != -1
+                || source.firstIndex < 0 || source.indexCount > INT_MAX - source.firstIndex))
+            || (source.indexCount == 0 && (source.firstIndex != -1
+                || source.leftChild < 0 || source.rightChild < 0
+                || std::size_t(source.leftChild) >= nodes.size() || std::size_t(source.rightChild) >= nodes.size()
+                || source.leftChild == source.rightChild
+                || std::size_t(source.leftChild) == i || std::size_t(source.rightChild) == i)))
+            throw std::runtime_error("Compact BVH: invalid node metadata at " + std::to_string(i));
+        for (int axis = 0; axis < 3; ++axis) {
+            if (!std::isfinite(source.boundsMin[axis]) || !std::isfinite(source.boundsMax[axis])
+                || source.boundsMin[axis] > source.boundsMax[axis])
+                throw std::runtime_error("Compact BVH: invalid bounds at " + std::to_string(i));
+            destination.boundsMin[axis] = source.boundsMin[axis];
+            destination.boundsMax[axis] = source.boundsMax[axis];
+        }
+        destination.firstOrLeft = source.indexCount > 0 ? source.firstIndex : source.leftChild;
+        destination.countOrRight = source.indexCount > 0 ? -source.indexCount : source.rightChild;
+    }
+    return packed;
 }
 
 BVHStats validateMeshBVH(const std::vector<Triangle>& triangles, const Geom& mesh,

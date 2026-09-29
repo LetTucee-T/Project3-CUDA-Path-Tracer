@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <cmath>
+#include <cstring>
 #include <functional>
 #include <iostream>
 #include <limits>
@@ -68,7 +69,8 @@ struct Fixture
     Geom mesh{};
     BVHBuildResult built;
 
-    explicit Fixture(std::vector<Triangle> data, BVHBuildOptions options = {})
+    explicit Fixture(std::vector<Triangle> data,
+        BVHBuildOptions options = {4, BVH_MAX_DEPTH, BVHSplitMethod::Median, 16})
         : triangles(std::move(data))
     {
         mesh.type = MESH;
@@ -97,7 +99,7 @@ int main()
     };
 
     for (int count : {0, 1, 4, 5, 7, 12, 13, 257, 4096}) {
-        test("coverage and leaf threshold: " + std::to_string(count), [=] {
+        test("median coverage and leaf threshold: " + std::to_string(count), [=] {
             const auto original = makeTriangles(count);
             Fixture f(original);
             const auto stats = f.validate();
@@ -139,7 +141,7 @@ int main()
         require(f.indices.size() == 33 && f.built.stats.maxDepth == 4, "Duplicates lost or bad depth");
     });
     test("depth cap permits large leaves without losing triangles", [&] {
-        Fixture f(makeTriangles(257), {4, 1});
+        Fixture f(makeTriangles(257), {4, 1, BVHSplitMethod::Median, 16});
         const auto stats = f.validate(1);
         require(stats.maxDepth == 1 && stats.nodeCount == 3 && stats.maxLeafTriangles == 129,
             "Depth cap did not terminate splitting");
@@ -225,6 +227,93 @@ int main()
         });
     }
 
+    test("binned SAH separates a distant outlier instead of splitting by count", [&] {
+        auto ts = std::vector<Triangle>(32, makeTriangles(1)[0]);
+        auto far = ts[0]; far.v0.x += 100; far.v1.x += 100; far.v2.x += 100; ts.push_back(far);
+        Fixture f(ts, {4, BVH_MAX_DEPTH, BVHSplitMethod::BinnedSAH, 16});
+        f.validate();
+        const auto& root = f.nodes[0];
+        require(f.nodes[root.leftChild].boundsMax[0] < 1 && f.nodes[root.rightChild].boundsMin[0] > 99,
+            "SAH failed to isolate the outlier");
+        require(f.nodes[root.rightChild].indexCount == 1, "Outlier leaf contains other triangles");
+    });
+    for (int bins : {2, 16, 64}) for (int leaf : {2, 4, 8}) {
+        test("SAH coverage, determinism, leaf/depth limits", [=] {
+            BVHBuildOptions options{leaf, BVH_MAX_DEPTH, BVHSplitMethod::BinnedSAH, bins};
+            for (auto ts : {makeTriangles(257), std::vector<Triangle>(65, makeTriangles(1)[0])}) {
+                Fixture a(ts, options), b(ts, options);
+                require(a.validate().maxLeafTriangles <= leaf, "SAH exceeded leaf cap");
+                require(a.indices == b.indices && sameNodes(a.nodes, b.nodes), "SAH rebuild differs");
+                auto ids = a.indices; std::sort(ids.begin(), ids.end());
+                for (size_t i=0;i<ids.size();++i) require(ids[i]==int(i), "SAH lost/duplicated a primitive");
+            }
+            options.maxDepth=1; Fixture shallow(makeTriangles(257),options);
+            require(shallow.validate(1).maxDepth<=1, "SAH exceeded depth cap");
+        });
+    }
+    test("SAH finite arithmetic at extreme scales", [&] {
+        for(float scale : {1e-30f, 1e30f}) {
+            auto ts=makeTriangles(65);
+            for(auto& t:ts) { t.v0*=scale; t.v1*=scale; t.v2*=scale; }
+            Fixture f(ts,{4,BVH_MAX_DEPTH,BVHSplitMethod::BinnedSAH,16}); f.validate();
+        }
+    });
+    for (int bins : {0, 1, 65}) test("reject invalid SAH bin count", [=] {
+        expectFailure([&] { Fixture f(makeTriangles(5),{4,32,BVHSplitMethod::BinnedSAH,bins}); }, "bin count");
+    });
+    test("compact nodes preserve bounds, arbitrary child order and global offsets", [&] {
+        for (auto method : {BVHSplitMethod::Median, BVHSplitMethod::BinnedSAH})
+        for (int leaf : {1, 2, 4, 8}) {
+            const auto triangles = makeTriangles(514);
+            std::vector<BVHNode> nodes; std::vector<int> indices;
+            for (int start : {0, 257}) {
+                const auto built = buildMeshBVH(triangles, start, 257, nodes, indices,
+                    {leaf, BVH_MAX_DEPTH, method, 16});
+                // Compact encoding must not assume left == parent + 1.
+                std::swap(nodes[built.root].leftChild, nodes[built.root].rightChild);
+                Geom mesh{}; mesh.type = MESH; mesh.triangleStart = start; mesh.triangleCount = 257;
+                mesh.bvhRoot = built.root; mesh.bvhNodeCount = built.nodeCount; mesh.bvhIndexStart = built.indexStart;
+                validateMeshBVH(triangles, mesh, nodes, indices);
+            }
+            const auto compact = packBVHNodes(nodes);
+            require(compact.size() == nodes.size(), "Packing changed node count");
+            for (std::size_t i = 0; i < nodes.size(); ++i) {
+                const auto& a = nodes[i]; const auto& b = compact[i];
+                require(std::memcmp(a.boundsMin, b.boundsMin, sizeof(a.boundsMin)) == 0
+                    && std::memcmp(a.boundsMax, b.boundsMax, sizeof(a.boundsMax)) == 0,
+                    "Packing changed bounds bits");
+                require(b.firstOrLeft == (a.indexCount ? a.firstIndex : a.leftChild)
+                    && b.countOrRight == (a.indexCount ? -a.indexCount : a.rightChild),
+                    "Packing changed global indices/counts");
+            }
+        }
+        require(packBVHNodes({}).empty(), "Empty tree produced compact nodes");
+    });
+    test("compact leaves preserve counts larger than 16 bits", [&] {
+        Fixture f(makeTriangles(65537), {1, 0, BVHSplitMethod::BinnedSAH, 16});
+        f.validate();
+        const auto packed = packBVHNodes(f.nodes);
+        require(packed.size() == 1 && packed[0].firstOrLeft == 0
+            && packed[0].countOrRight == -65537, "Large depth-limited leaf was truncated");
+    });
+    test("compact packing rejects invalid local metadata and bounds", [&] {
+        using Change = std::function<void(std::vector<BVHNode>&)>;
+        const std::vector<Change> changes = {
+            [](auto& n) { n.back().indexCount = -1; },
+            [](auto& n) { n.back().firstIndex = (std::numeric_limits<int>::max)(); },
+            [](auto& n) { n.back().leftChild = 0; },
+            [](auto& n) { n[0].firstIndex = 0; },
+            [](auto& n) { n[0].leftChild = 0; },
+            [](auto& n) { n[0].rightChild = int(n.size()); },
+            [](auto& n) { n[0].leftChild = n[0].rightChild; },
+            [](auto& n) { n[0].boundsMin[0] = n[0].boundsMax[0] + 1; },
+            [](auto& n) { n[0].boundsMin[0] = std::numeric_limits<float>::quiet_NaN(); }
+        };
+        for (const auto& change : changes) {
+            Fixture f(makeTriangles(13)); change(f.nodes);
+            expectFailure([&] { packBVHNodes(f.nodes); }, "Compact BVH: invalid");
+        }
+    });
     // Mutation tests prove that validation rejects corrupt data, not just that
     // a builder and validator agree on well-formed trees.
     using Mutator = std::function<void(Fixture&)>;

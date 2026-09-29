@@ -429,6 +429,8 @@ int main(int argc, char** argv)
 
 void saveImage()
 {
+    if (iteration <= 0) return;
+    pathtraceReadback();
     float samples = iteration;
     // output image file
     Image img(width, height);

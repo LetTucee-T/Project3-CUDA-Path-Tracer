@@ -10,7 +10,7 @@ private:
     void loadFromJSON(const std::string& jsonName);
     void loadObjMesh(const std::string& filename, Geom& geom);
 public:
-    Scene(std::string filename);
+    Scene(std::string filename, const BVHBuildOptions& options = {});
     // Rebuild after replacing triangle/mesh data; construction and validation are CPU-only.
     // Successful rebuilds replace the old arrays; failed rebuilds do not commit partial data.
     void rebuildMeshBVHs(const BVHBuildOptions& options = BVHBuildOptions{});
@@ -25,5 +25,6 @@ public:
     std::vector<BVHNode> bvhNodes;
     std::vector<int> bvhTriangleIndices;
     BVHStats bvhStats;
+    BVHBuildOptions bvhBuildOptions;
     RenderState state;
 };

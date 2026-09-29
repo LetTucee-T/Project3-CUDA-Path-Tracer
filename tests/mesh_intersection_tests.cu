@@ -2,6 +2,8 @@
 #include "appearance.h"
 #include "interactions.h"
 #include "pathtrace.h"
+#include "json.hpp"
+#include <fstream>
 
 #include <glm/gtc/matrix_inverse.hpp>
 #include <algorithm>
@@ -21,7 +23,8 @@ __global__ void computeIntersections(int depth, int num_paths,
     PathSegment* paths, Geom* geoms, int geoms_size,
     const Triangle* triangles, BVHDeviceView bvh, bool enableBVH,
     bool enableMeshCulling, ShadeableIntersection* intersections,
-    BVHTraversalStats* diagnostics = nullptr, const TriangleSurface* surfaces = nullptr);
+    BVHTraversalStats* diagnostics = nullptr, const TriangleSurface* surfaces = nullptr,
+    bool enableDistancePruning = true);
 
 namespace {
 void require(bool condition, const std::string& message)
@@ -138,7 +141,8 @@ void setFixtureBounds(std::vector<Geom>& geoms, const std::vector<Triangle>& tri
 }
 
 std::vector<ShadeableIntersection> intersect(const std::vector<Geom>& geoms,
-    const std::vector<Triangle>& triangles, const std::vector<PathSegment>& paths)
+    const std::vector<Triangle>& triangles, const std::vector<PathSegment>& paths,
+    const BVHBuildOptions& options = {})
 {
     auto boundedGeoms = geoms;
     setFixtureBounds(boundedGeoms, triangles);
@@ -146,7 +150,7 @@ std::vector<ShadeableIntersection> intersect(const std::vector<Geom>& geoms,
     std::vector<int> indices;
     for (Geom& g : boundedGeoms) {
         if (g.type != MESH || g.triangleCount <= 0 || triangles.empty()) continue;
-        const auto built = buildMeshBVH(triangles, g.triangleStart, g.triangleCount, nodes, indices);
+        const auto built = buildMeshBVH(triangles, g.triangleStart, g.triangleCount, nodes, indices, options);
         g.bvhRoot = built.root; g.bvhNodeCount = built.nodeCount; g.bvhIndexStart = built.indexStart;
         validateMeshBVH(triangles, g, nodes, indices);
     }
@@ -162,14 +166,15 @@ std::vector<ShadeableIntersection> intersect(const std::vector<Geom>& geoms,
     const int count = static_cast<int>(paths.size());
     std::vector<ShadeableIntersection> hits, reference;
     const std::vector<ShadeableIntersection> initial(paths.size() + 3, sentinel());
-    for (int mode = 0; mode < 4; ++mode) {
+    for (int mode = 0; mode < 16; ++mode) {
         const bool culling = (mode & 1) != 0;
         const bool useBVH = (mode & 2) != 0;
+        bvh.cachedBounds = (mode & 8) != 0;
         cudaCheck(cudaMemset(gpuStats.data, 0, gpuStats.count * sizeof(BVHTraversalStats)));
         cudaCheck(cudaMemcpy(gpuHits.data, initial.data(), initial.size() * sizeof(ShadeableIntersection), cudaMemcpyHostToDevice));
         computeIntersections<<<(count + 127) / 128, 128>>>(0, count, gpuPaths.data,
             gpuGeoms.data, static_cast<int>(geoms.size()), gpuTriangles.data, bvh, useBVH,
-            culling, gpuHits.data, gpuStats.data);
+            culling, gpuHits.data, gpuStats.data, nullptr, (mode & 4) != 0);
         cudaCheck(cudaGetLastError());
         cudaCheck(cudaDeviceSynchronize());
         hits = gpuHits.read();
@@ -235,7 +240,7 @@ __global__ void inspectUpload(const Triangle* triangles, const Geom* geoms,
 
 class RenderSession {
 public:
-    explicit RenderSession(Scene& scene) { pathtraceInit(&scene); }
+    explicit RenderSession(Scene& scene, const PathtraceOptions& options = {}) { pathtraceInit(&scene, options); }
     ~RenderSession() { pathtraceFree(); }
     RenderSession(const RenderSession&) = delete;
     RenderSession& operator=(const RenderSession&) = delete;
@@ -247,6 +252,7 @@ std::vector<glm::vec3> render(Scene& scene, int samples)
     DeviceArray<uchar4> pbo(size_t(resolution.x) * resolution.y);
     RenderSession session(scene);
     for (int sample = 1; sample <= samples; ++sample) pathtrace(pbo.data, 0, sample);
+    pathtraceReadback();
     cudaCheck(cudaDeviceSynchronize());
     for (const auto& pixel : scene.state.image) {
         require(std::isfinite(pixel.x) && std::isfinite(pixel.y) && std::isfinite(pixel.z),
@@ -258,6 +264,7 @@ std::vector<glm::vec3> render(Scene& scene, int samples)
 }
 
 #include "bvh_gpu_test_cases.h"
+#include "triangle_precision_cases.h"
 
 int main(int argc, char** argv)
 {
@@ -627,6 +634,50 @@ int main(int argc, char** argv)
             });
         }
     }
+    test("cross-mesh pruning preserves nearest material and equal-distance order", [&] {
+        const std::vector<Triangle> ts{triangle(), triangle(), triangle(-6)};
+        const auto far = geometry(MESH, {0,0,0}, {0,0,0}, {1,1,1}, 7, 2, 1);
+        const auto first = geometry(MESH, {0,0,0}, {0,0,0}, {1,1,1}, 8, 0, 1);
+        const auto tied = geometry(MESH, {0,0,0}, {0,0,0}, {1,1,1}, 9, 1, 1);
+        for (const auto& gs : {std::vector<Geom>{far,first,tied}, std::vector<Geom>{first,far,tied}}) {
+            const auto hit = intersect(gs, ts, {path()})[0];
+            near(hit.t, 5, 0);
+            require(hit.materialId == 8, "Cross-mesh pruning changed first equal-distance hit");
+        }
+    });
+    test("intersection replay counts known hits, misses and bounded root rejections", [&] {
+        const std::vector<Triangle> ts{triangle(), triangle(-2)};
+        std::vector<Geom> gs{geometry(MESH,{0,0,0},{0,0,0},{1,1,1},7,0,1),
+                             geometry(MESH,{0,0,0},{0,0,0},{1,1,1},8,1,1)};
+        std::vector<BVHNode> nodes; std::vector<int> indices;
+        for(auto& g:gs) {
+            const auto built=buildMeshBVH(ts,g.triangleStart,g.triangleCount,nodes,indices);
+            g.bvhRoot=built.root; g.bvhNodeCount=built.nodeCount; g.bvhIndexStart=built.indexStart;
+        }
+        std::vector<PathSegment> rays(5,path());
+        for(int i=0;i<5;++i) rays[i].pixelIndex=i;
+        rays[2].ray.origin.x=99;
+        const auto expected=intersect(gs,ts,rays);
+        DeviceArray<PathSegment> dp(rays); DeviceArray<Geom> dg(gs); DeviceArray<Triangle> dt(ts);
+        DeviceArray<BVHNode> dn(nodes); DeviceArray<int> di(indices);
+        DeviceArray<ShadeableIntersection> dh(expected);
+        const BVHDeviceView view{dn.data,di.data,int(nodes.size()),int(indices.size()),int(ts.size())};
+        struct Cleanup { ~Cleanup() { intersectionProfile::free(); } } cleanup;
+        intersectionProfile::init(5,2,2);
+        for(bool bounded:{false,true}) {
+            const auto p=intersectionProfile::collect(dp.data,5,dg.data,dt.data,view,dh.data,bounded);
+            require(p.sampledRays==3 && p.mismatches==0,"Wrong replay population");
+            const auto& near=p.perGeometry[0]; const auto& far=p.perGeometry[1];
+            require(near.queries==3 && near.hits==2 && near.rootRejects==1 && near.aabbTests==3
+                && near.nodeVisits==2 && near.triangleTests==2 && near.maxStack==1 && near.fallbacks==0,
+                "Near-mesh counters disagree with the known ray set");
+            require(far.queries==3 && far.aabbTests==3 && far.fallbacks==0,"Wrong far query count");
+            require(far.boundedQueries==(bounded?2:0) && far.rootRejects==(bounded?3:1)
+                && far.hits==(bounded?0:2) && far.nodeVisits==(bounded?0:2)
+                && far.triangleTests==(bounded?0:2),"Wrong bounded far-mesh counters");
+        }
+    });
+    runTrianglePrecisionTests(test, root);
     runBVHGPUTests(test, sampleScene);
     std::cout << "GPU RESULT: " << passed << " passed, " << failed << " failed\n";
     return failed == 0 ? 0 : 1;

@@ -3,9 +3,9 @@
   "files": [
     {
       "file": "docs/images/showcase.png",
-      "archival_source": "readme_materials/weapon_showcase/renders/moonlit_hall_refined_final.png",
-      "bytes": 1812165,
-      "sha256": "03dff433c091ca5afb80ac446e549547fb0fd284906697d400017666aff40540"
+      "archival_source": "stage_records/19_robust_traversal_2026-09-29/runs/full_optimized.png",
+      "bytes": 1812710,
+      "sha256": "96b0ffb7b96c819027c0a38a626334dc2a35e947a8af992316dab2288e848158"
     },
     {
       "file": "docs/images/hall_before.png",
@@ -234,6 +234,114 @@
       "archival_source": "stage_records/16_environment_refinement_2026-09-27/design/sky_prompt.txt",
       "bytes": 1308,
       "sha256": "b9c881238afe40143b573e8c07c9b414df0a20702310ec545e9c2eca0fcceeab"
+    },
+    {
+      "file": "docs/data/render_optimization.json",
+      "archival_source": "stage_records/17_render_performance_2026-09-29/published_docs/docs/data/render_optimization.json",
+      "bytes": 27124,
+      "sha256": "510777650538a8c705040d51333e17a2fd83feb0fb05ffde3db19f24de338147"
+    },
+    {
+      "file": "docs/data/render_optimization_timings.csv",
+      "archival_source": "stage_records/17_render_performance_2026-09-29/published_docs/docs/data/render_optimization_timings.csv",
+      "bytes": 3358,
+      "sha256": "741272469b2125542c6c6aeb444e9e2091ff69b973b8868790b18795347e5f09"
+    },
+    {
+      "file": "docs/images/render_optimization.png",
+      "archival_source": "stage_records/17_render_performance_2026-09-29/published_docs/docs/images/render_optimization.png",
+      "bytes": 165568,
+      "sha256": "29dfa2301c878bc0e1b1d95070fc47f5e90b904cc1e699f43830bb761518e01d"
+    },
+    {
+      "file": "docs/data/bvh_sah_timings.csv",
+      "archival_source": "stage_records/18_binned_sah_2026-09-29/published_docs/docs/data/bvh_sah_timings.csv",
+      "bytes": 5386,
+      "sha256": "08b76b811f4388173d5f85558f09d2ae2188351c3d7c005fbf058ef9c9baf739"
+    },
+    {
+      "file": "docs/data/bvh_sah_work.csv",
+      "archival_source": "stage_records/18_binned_sah_2026-09-29/published_docs/docs/data/bvh_sah_work.csv",
+      "bytes": 32734,
+      "sha256": "869ee7da9e3d360e360f175352546d7bb8ee446e0dcaab0f0c1a6d26309cf5b8"
+    },
+    {
+      "file": "docs/data/bvh_sah_verification.json",
+      "archival_source": "stage_records/18_binned_sah_2026-09-29/published_docs/docs/data/bvh_sah_verification.json",
+      "bytes": 64368,
+      "sha256": "62953f3cf59d675b1cb30eb2f111c24a782cb8cd32a2ac01f700ad76aa40a8b1"
+    },
+    {
+      "file": "docs/images/bvh_sah_performance.png",
+      "archival_source": "stage_records/18_binned_sah_2026-09-29/published_docs/docs/images/bvh_sah_performance.png",
+      "bytes": 156023,
+      "sha256": "7952cd47848d6142bc053640a16b1b2023100d8e5bbbfabe4bef22dd01ce896c"
+    },
+    {
+      "file": "docs/data/robust_traversal_timings.csv",
+      "archival_source": "stage_records/19_robust_traversal_2026-09-29/published/robust_traversal_timings.csv",
+      "bytes": 2614,
+      "sha256": "6dab3b9294c148579c76ef683396c5a329943fc637f6dadd7d1e90f8440f7528"
+    },
+    {
+      "file": "docs/data/robust_traversal_verification.json",
+      "archival_source": "stage_records/19_robust_traversal_2026-09-29/published/robust_traversal_verification.json",
+      "bytes": 28469,
+      "sha256": "59d4728522778a6e73663f1862b8bf27a9242ed29cfa0fbbb6dd8310e8fa885d"
+    },
+    {
+      "file": "docs/images/robust_traversal_performance.png",
+      "archival_source": "stage_records/19_robust_traversal_2026-09-29/published/robust_traversal_performance.png",
+      "bytes": 97403,
+      "sha256": "7cfb9361f1c7088f0ff4d23f169eff6cde451bb2287b5a721efbe639a8829934"
+    },
+    {
+      "file": "docs/data/compact_bvh_timings.csv",
+      "archival_source": "stage_records/20_compact_bvh_2026-09-29/published/docs/data/compact_bvh_timings.csv",
+      "bytes": 9040,
+      "sha256": "8ed9a0157e3d2b0f2931c37deb1da2da282453b32e807111d5ad27181f59c30a"
+    },
+    {
+      "file": "docs/data/compact_bvh_work.csv",
+      "archival_source": "stage_records/20_compact_bvh_2026-09-29/published/docs/data/compact_bvh_work.csv",
+      "bytes": 13481,
+      "sha256": "e00865005291f81993799303502df12264e58b0699a92b8e5a676b67bd671b44"
+    },
+    {
+      "file": "docs/data/compact_bvh_verification.json",
+      "archival_source": "stage_records/20_compact_bvh_2026-09-29/published/docs/data/compact_bvh_verification.json",
+      "bytes": 29893,
+      "sha256": "5200c20a3ed5d4f824ac4d41898f64c25e757ed241a466bc24525a307f1bf01c"
+    },
+    {
+      "file": "docs/images/compact_bvh_performance.png",
+      "archival_source": "stage_records/20_compact_bvh_2026-09-29/published/docs/images/compact_bvh_performance.png",
+      "bytes": 143165,
+      "sha256": "a8ef6c38eddfd188b81390d8107cdf51db6ada09d2269763d9a47ea988c501c1"
+    },
+    {
+      "file": "docs/data/object_acceleration_timings.csv",
+      "archival_source": "stage_records/21_object_acceleration_2026-09-29/published/docs/data/object_acceleration_timings.csv",
+      "bytes": 9549,
+      "sha256": "c65960321c0d06d3647c5748054402bd54b7dd9c7bb3eedc049e8ea6d55e9b24"
+    },
+    {
+      "file": "docs/data/object_acceleration_verification.json",
+      "archival_source": "stage_records/21_object_acceleration_2026-09-29/published/docs/data/object_acceleration_verification.json",
+      "bytes": 16971,
+      "sha256": "3bedf8a2dbf7bdc9fc97e50762dd59d3649f620b74d0fd1ce4410338d0f8aed1"
+    },
+    {
+      "file": "docs/images/object_acceleration_comparison.png",
+      "archival_source": "stage_records/21_object_acceleration_2026-09-29/published/docs/images/object_acceleration_comparison.png",
+      "bytes": 103626,
+      "sha256": "27dbb7df6a9af3c020d92c463d375ed7bcc28feed29eb2c932f980f69a3585e4"
+    },
+    {
+      "file": "docs/data/performance_summary.json",
+      "archival_source": "stage_records/22_performance_documentation_2026-09-29/published/docs/data/performance_summary.json",
+      "bytes": 4676,
+      "sha256": "8ea75f73daddc70da37fca4c9a7826c13f09bf8fd7f9150c005cfce4c430b885"
     }
   ]
 }

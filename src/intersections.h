@@ -2,6 +2,7 @@
 
 #include "sceneStructs.h"
 #include "bvh.h"
+#include <cfloat>
 
 #include <glm/glm.hpp>
 #include <glm/gtx/intersect.hpp>
@@ -80,7 +81,7 @@ __host__ __device__ float sphereIntersectionTest(
 // return the parameter of the supplied ray, or -1 for a miss.
 __host__ __device__ __noinline__ float triangleIntersectionTest(
     const Triangle& triangle,
-    const Ray& ray);
+    const Ray& ray, glm::vec3* barycentrics = nullptr);
 
 // Conservative ray/local-AABB overlap on [0, infinity). Boundary contact and
 // rays starting inside are retained. Numerical uncertainty falls back to the
@@ -93,12 +94,13 @@ __host__ __device__ bool aabbIntersectionTest(
 // Scan the mesh's range in the shared triangle array. Return world-space
 // distance and an inverse-transpose transformed unit face normal, or -1.
 // The CPU loader supplies valid ranges and conservative local bounds.
+// maxDistance is an inclusive WORLD-distance limit; non-finite means unlimited.
 __host__ __device__ float meshIntersectionTest(
     const Geom& mesh,
     const Ray& ray,
     const Triangle* triangles,
     bool enableMeshCulling,
-    glm::vec3& normal, int* triangleId = nullptr);
+    glm::vec3& normal, int* triangleId = nullptr, float maxDistance = FLT_MAX);
 
 
 // Conservative overlap with [0, tMax], including touching endpoints. Outputs
@@ -115,6 +117,13 @@ struct BVHDeviceView
     int nodeCount = 0;
     int indexCount = 0;
     int triangleCount = 0;
+    bool cachedBounds = false;
+    // Only the renderer sets this after CPU validation and successful upload.
+    // Direct callers retain structural checks and malformed-tree fallback.
+    bool validated = false;
+    // Non-null selects the compact array instead of nodes. Only one array is
+    // uploaded by the renderer; all indices/counts keep the same meaning.
+    const CompactBVHNode* compactNodes = nullptr;
 };
 
 // Root depth is zero. DFS can hold one pending sibling per level plus the leaf.
@@ -128,11 +137,12 @@ struct BVHTraversalStats
     unsigned long long aabbTests = 0;
     unsigned long long triangleTests = 0;
     unsigned int fallbackCount = 0;
-    int maxStack = 0;
+    int maxStack = 0; // Active node plus deferred nodes, for both traversal modes.
 };
 
 __host__ __device__ float meshBVHIntersectionTest(
     const Geom& mesh, const Ray& ray, const Triangle* triangles,
     const BVHDeviceView& bvh, glm::vec3& normal,
     BVHTraversalStats* stats = nullptr,
-    int stackCapacity = BVH_STACK_CAPACITY, int* triangleId = nullptr);
+    int stackCapacity = BVH_STACK_CAPACITY, int* triangleId = nullptr,
+    float maxDistance = FLT_MAX);

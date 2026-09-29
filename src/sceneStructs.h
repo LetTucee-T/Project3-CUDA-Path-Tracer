@@ -33,7 +33,7 @@ struct TriangleSurface
 };
 struct TextureInfo { int width = 0; int height = 0; int offset = 0; };
 
-// Flat CPU/GPU BVH; indexCount > 0 denotes a leaf.
+// Flat CPU BVH, also used by the wide GPU layout; indexCount > 0 denotes a leaf.
 struct BVHNode
 {
     // Scalar arrays guarantee a trivially-copyable layout even with the old GLM
@@ -45,6 +45,20 @@ struct BVHNode
     int firstIndex = -1;
     int indexCount = 0;
 };
+
+// Lossless GPU representation. Bounds and absolute indices are unchanged.
+// An internal node stores its two child indices. A leaf stores its first index
+// and NEGATIVE primitive count; right-child indices are always nonnegative.
+// No pre-order/adjacent-child assumption or 16-bit leaf-count limit is needed.
+struct alignas(32) CompactBVHNode
+{
+    float boundsMin[3];
+    float boundsMax[3];
+    int firstOrLeft;
+    int countOrRight;
+};
+static_assert(sizeof(CompactBVHNode) == 32, "Compact BVH nodes must be 32 bytes");
+static_assert(alignof(CompactBVHNode) == 32, "Compact BVH alignment changed");
 
 struct Ray
 {

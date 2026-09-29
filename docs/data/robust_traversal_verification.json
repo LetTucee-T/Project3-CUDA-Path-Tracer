@@ -1,0 +1,739 @@
+{
+  "date": "2026-09-29",
+  "scene": "scenes/shatterseal_moonlit_hall_refined.json",
+  "scene_sha256": "6a9cae8bf3994a8457cbb9ed8e2b4b3e6cd94ec53770e3b44453251c004e7393",
+  "implementation": {
+    "triangle": "Two-sided ray-aligned projected edges. Float inputs are promoted to double before subtraction; edge products are independently rounded to preserve reversed-edge antisymmetry. No fast-math; the project near-hit threshold remains 1e-5.",
+    "attributes": "UV/shading-normal weights are evaluated by the same robust triangle routine on the winning triangle, rather than reconstructed from rounded float t.",
+    "references": [
+      "https://pbr-book.org/4ed/Shapes/Triangle_Meshes",
+      "https://jcgt.org/published/0002/01/05/"
+    ],
+    "scope": "Improved numerical robustness on stored float geometry; not an adaptive exact-arithmetic predicate or a proof for all possible floating-point inputs.",
+    "traversal": [
+      "Cache direction reciprocals per mesh query; conservative endpoint widening and reference fallback for zero/tiny/non-finite directions.",
+      "CPU validation before upload permits skipping repeated topology/index/bounds validation inside the immutable GPU tree.",
+      "Keep the active near child in registers; stack holds deferred far siblings. Logical capacity remains 33, including the active node; overflow still falls back to a triangle scan."
+    ],
+    "switches": {
+      "reference": "--reference-traversal",
+      "cached_with_structural_checks": "--checked-traversal",
+      "optimized": "default"
+    },
+    "unchanged": "Scene geometry, materials, textures, camera, RNG and estimator are unchanged. Tree policy is still SAH, 16 bins, leaf cap 2."
+  },
+  "benchmark": {
+    "gpu": "NVIDIA GeForce RTX 4070 Laptop GPU",
+    "build": "Release / CUDA 12.9",
+    "resolution": [
+      1200,
+      800
+    ],
+    "spp": 64,
+    "depth": 8,
+    "warmup_spp": 8,
+    "aa": true,
+    "compaction": true,
+    "bvh": true,
+    "dof": true,
+    "sorting": false,
+    "distance_pruning": true,
+    "rounds": 6,
+    "order": "Cyclic rotation of previous,reference,optimized; each mode occupies each position twice.",
+    "timing": "Render loop including GPU completion and final readback, excluding loading/build/upload/warmup/encoding/saving; both profilers disabled.",
+    "clocks_locked": false,
+    "range_note": "Min/max are measured ranges, not confidence intervals.",
+    "gpu_csv_fields": "temperature.gpu,clocks.current.graphics,clocks.current.memory,power.draw,utilization.gpu",
+    "summary": {
+      "previous": {
+        "runs": 6,
+        "median_ms": 5822.3748,
+        "min_ms": 5801.4379,
+        "max_ms": 6101.8202,
+        "executable_sha256": "01c01999a82468c20ed1edf4c92de7be7532cc33c2a481e43dc56366ac5b33ef"
+      },
+      "reference": {
+        "runs": 6,
+        "median_ms": 7148.09675,
+        "min_ms": 7129.4623,
+        "max_ms": 7179.5179,
+        "executable_sha256": "bbb3e03414deea02a31f8f98461b0ba8ed0e4b2b0b7494f03471d2ecf1cfbdea"
+      },
+      "optimized": {
+        "runs": 6,
+        "median_ms": 5884.63695,
+        "min_ms": 5874.6119,
+        "max_ms": 5910.5763,
+        "executable_sha256": "bbb3e03414deea02a31f8f98461b0ba8ed0e4b2b0b7494f03471d2ecf1cfbdea"
+      }
+    },
+    "optimized_speedup_vs_corrected_reference": 1.2147048000981606,
+    "optimized_time_reduction_vs_corrected_reference_percent": 17.67547144629792,
+    "optimized_time_change_vs_previous_percent": 1.0693600487553745,
+    "reproduce": "Set Camera.ITERATIONS=64 in a copy of the final scene, preserving asset paths. Run scene_render with and without --reference-traversal, six rotated rounds. The previous executable/source is only a local archival baseline.",
+    "interpretation": "Previous uses less accurate float triangle/attribute arithmetic; it is a cost baseline, not an image-equivalence oracle. Corrected reference and optimized must match bitwise."
+  },
+  "diagnostics": {
+    "phase_profiles": {
+      "reference": {
+        "camera": {
+          "calls": 64,
+          "gpu_stream_ms": 43.90348821878433,
+          "host_section_ms": 0.3619
+        },
+        "compaction": {
+          "calls": 512,
+          "gpu_stream_ms": 95.13686408475041,
+          "host_section_ms": 7098.7711
+        },
+        "display": {
+          "calls": 0,
+          "gpu_stream_ms": 0.0,
+          "host_section_ms": 0.0
+        },
+        "gather": {
+          "calls": 64,
+          "gpu_stream_ms": 9.656959980726242,
+          "host_section_ms": 0.8370000000000001
+        },
+        "intersection": {
+          "calls": 512,
+          "gpu_stream_ms": 6831.730730056763,
+          "host_section_ms": 7.7350000000000065
+        },
+        "prepare": {
+          "calls": 64,
+          "gpu_stream_ms": 1.929568000137806,
+          "host_section_ms": 0.6328999999999998
+        },
+        "readback": {
+          "calls": 3,
+          "gpu_stream_ms": 1.3766719549894333,
+          "host_section_ms": 2.7386
+        },
+        "shading": {
+          "calls": 512,
+          "gpu_stream_ms": 151.45465586706996,
+          "host_section_ms": 2.7725000000000044
+        },
+        "sorting": {
+          "calls": 0,
+          "gpu_stream_ms": 0.0,
+          "host_section_ms": 0.0
+        }
+      },
+      "checked": {
+        "camera": {
+          "calls": 64,
+          "gpu_stream_ms": 44.493856370449066,
+          "host_section_ms": 0.3905000000000001
+        },
+        "compaction": {
+          "calls": 512,
+          "gpu_stream_ms": 96.58950410410762,
+          "host_section_ms": 6304.287
+        },
+        "display": {
+          "calls": 0,
+          "gpu_stream_ms": 0.0,
+          "host_section_ms": 0.0
+        },
+        "gather": {
+          "calls": 64,
+          "gpu_stream_ms": 9.81158396601677,
+          "host_section_ms": 0.7203000000000003
+        },
+        "intersection": {
+          "calls": 512,
+          "gpu_stream_ms": 6033.283428907394,
+          "host_section_ms": 6.802099999999996
+        },
+        "prepare": {
+          "calls": 64,
+          "gpu_stream_ms": 2.008480003103614,
+          "host_section_ms": 0.6609999999999999
+        },
+        "readback": {
+          "calls": 3,
+          "gpu_stream_ms": 1.187072031199932,
+          "host_section_ms": 2.5347
+        },
+        "shading": {
+          "calls": 512,
+          "gpu_stream_ms": 152.10272023454309,
+          "host_section_ms": 2.7345999999999977
+        },
+        "sorting": {
+          "calls": 0,
+          "gpu_stream_ms": 0.0,
+          "host_section_ms": 0.0
+        }
+      },
+      "optimized": {
+        "camera": {
+          "calls": 64,
+          "gpu_stream_ms": 44.616927921772,
+          "host_section_ms": 0.35560000000000014
+        },
+        "compaction": {
+          "calls": 512,
+          "gpu_stream_ms": 96.25904002785683,
+          "host_section_ms": 5863.938600000006
+        },
+        "display": {
+          "calls": 0,
+          "gpu_stream_ms": 0.0,
+          "host_section_ms": 0.0
+        },
+        "gather": {
+          "calls": 64,
+          "gpu_stream_ms": 10.070559993386269,
+          "host_section_ms": 0.7844000000000001
+        },
+        "intersection": {
+          "calls": 512,
+          "gpu_stream_ms": 5593.0929646492,
+          "host_section_ms": 7.177699999999991
+        },
+        "prepare": {
+          "calls": 64,
+          "gpu_stream_ms": 1.9345920123159885,
+          "host_section_ms": 0.6284
+        },
+        "readback": {
+          "calls": 3,
+          "gpu_stream_ms": 1.4308159947395325,
+          "host_section_ms": 2.7843
+        },
+        "shading": {
+          "calls": 512,
+          "gpu_stream_ms": 152.18608015403152,
+          "host_section_ms": 2.6104000000000025
+        },
+        "sorting": {
+          "calls": 0,
+          "gpu_stream_ms": 0.0,
+          "host_section_ms": 0.0
+        }
+      }
+    },
+    "work": {
+      "spp": 4,
+      "pixel_stride": 64,
+      "totals": {
+        "reference": {
+          "sampled_rays": 167855,
+          "mismatches": 0,
+          "node_visits": 4447314,
+          "aabb_tests": 10886248,
+          "triangle_tests": 641232,
+          "fallbacks": 0,
+          "max_stack": 13
+        },
+        "optimized": {
+          "sampled_rays": 167855,
+          "mismatches": 0,
+          "node_visits": 4447393,
+          "aabb_tests": 10886364,
+          "triangle_tests": 641270,
+          "fallbacks": 0,
+          "max_stack": 13
+        }
+      },
+      "note": "Sampled incoming paths, separate diagnostic replay. Counts are not extrapolated, and instrumented runtime is not used as a speed benchmark."
+    },
+    "hardware_counters": "Nsight Compute access was unavailable in the preceding experiment (ERR_NVGPUCTRPERM). No achieved occupancy or warp-stall explanation is claimed."
+  },
+  "validation": {
+    "ctest": {
+      "passed": 10,
+      "failed": 0,
+      "archival_log": "stage_records/19_robust_traversal_2026-09-29/logs/ctest_final.log",
+      "sha256": "977a0e542199af68ed097ae3b65cdc4a86f39e66165724862c62226e3638cf0b"
+    },
+    "compute_sanitizer": {
+      "mesh_intersection_tests": {
+        "errors": 0,
+        "leaked_bytes": 0,
+        "archival_log": "stage_records/19_robust_traversal_2026-09-29/logs/memcheck_mesh_intersection_tests.log",
+        "sha256": "fa4a8ce23fe42a9e95a0dc8b557e227e02eec5dc355966cdfe6f33b788d56e8f"
+      },
+      "thin_lens_render_tests": {
+        "errors": 0,
+        "leaked_bytes": 0,
+        "archival_log": "stage_records/19_robust_traversal_2026-09-29/logs/memcheck_thin_lens_render_tests.log",
+        "sha256": "5f4fd00c9ba233961b8be3cce7b957098c0b93cfad2c8391733d569b1bf08e68"
+      }
+    },
+    "precision": {
+      "recorded_cases": 28,
+      "oracle_digits": 80,
+      "oracle_hit_count": 3,
+      "oracle_miss_count": 25,
+      "permutations": 6,
+      "power_of_two_scales": [
+        -30,
+        0,
+        30
+      ],
+      "cpu_gpu_queries_each": 504,
+      "t_tolerance": "2 * FLT_EPSILON * abs(expected_t); miss value exact",
+      "barycentric_tolerance": 2e-06,
+      "nonfinite_input_cases": 45,
+      "shared_edge_test": "Width 2^-30, 1025 positions, adjacent float positions, three axis permutations, both ray directions/windings; no in-quad cracks.",
+      "fixtures": "tests/data/thin_triangle_regressions.json",
+      "oracle_recheck": "python tests/verify_triangle_oracle.py"
+    },
+    "targeted_replay": {
+      "compared_active_path_queries": 301399,
+      "differences": [],
+      "mismatched_pixels": 0,
+      "pixels": 28,
+      "spp": 3072
+    },
+    "targeted_replay_note": "All 3072 samples and up to 8 bounces for the 28 formerly discrepant pixels. Same incoming production rays compared between median/4 reference and SAH/2 optimized traversal, including UVs, normals and materials.",
+    "benchmark_images": {
+      "corrected_captures": 12,
+      "png_hdr_f32_byte_identical": true,
+      "sha256": {
+        "png": "0f1161c1b92ee16b9265457a1d62ef1f36c1d66ab0c5e92ca8bff858349341bc",
+        "hdr": "cdc8189b34441875eeb48a88eda997240880de1a3d6e1485f3897c83a8737705",
+        "f32": "1c4c040f004d2608efb727909c20f5b452431a49f2407392ecaf435ab4735ec6"
+      }
+    },
+    "regression": [
+      {
+        "name": "regression_cornell_optimized",
+        "resolution": [
+          240,
+          240
+        ],
+        "spp": 32,
+        "byte_identical": {
+          "png": true,
+          "hdr": true,
+          "f32": true
+        },
+        "sha256": {
+          "png": "b8dc16d8050b1504e54ea033db6f0352d2d0fff95280d15e8a2ffc7be8736811",
+          "hdr": "211afd860bd863724aac5596dd83bcc733e4e35387ea8a8736a309b175c9c151",
+          "f32": "a23421db9541b7155ffbfb62f34bd76e8467212bdf6ef7e6fa2c23804681f53f"
+        }
+      },
+      {
+        "name": "regression_dof_gallery_optimized",
+        "resolution": [
+          240,
+          150
+        ],
+        "spp": 32,
+        "byte_identical": {
+          "png": true,
+          "hdr": true,
+          "f32": true
+        },
+        "sha256": {
+          "png": "508cbd5729781b49bac70f21ec2ae3c04c0639878d9464a5a7bafe7c11bffd15",
+          "hdr": "9741c100a576ee73b3d186ca22fdca5c7171ff08bad5f1bd66bfc1d211b34a6b",
+          "f32": "544a3d20308ed690ea76904aac93d68a52b2b31bb55643cab849c7eb62c44560"
+        }
+      },
+      {
+        "name": "regression_dof_validation_optimized",
+        "resolution": [
+          240,
+          122
+        ],
+        "spp": 32,
+        "byte_identical": {
+          "png": true,
+          "hdr": true,
+          "f32": true
+        },
+        "sha256": {
+          "png": "54fe8fdc03e4cbfc9468b0bdf3480fc2ff50c95b4d2f6c7ca29099659b5bae25",
+          "hdr": "54c182527a8d2eb3f3ce59e4d9120563af074cb39576b06c809852e78c5e4161",
+          "f32": "0718f41f144772932cb934a997de06e55466a70ce2df6fd4e4f9419d2d13601d"
+        }
+      },
+      {
+        "name": "regression_mesh_aabb_torus_exterior_optimized",
+        "resolution": [
+          240,
+          240
+        ],
+        "spp": 32,
+        "byte_identical": {
+          "png": true,
+          "hdr": true,
+          "f32": true
+        },
+        "sha256": {
+          "png": "836c7f6facfa2e4696d75f21b72d7ca10e6e52e3d74607d5867f632969ed525c",
+          "hdr": "6b850a7f5228ee043c992cf42bf62e348d4b32c61ea48525c03cdf8d45c98467",
+          "f32": "189ab201fda190a2af8a536621cc442e6ef3bb24d68063d8ccb7a811d3b5fc7d"
+        }
+      },
+      {
+        "name": "regression_mesh_aabb_torus_interior_optimized",
+        "resolution": [
+          240,
+          240
+        ],
+        "spp": 32,
+        "byte_identical": {
+          "png": true,
+          "hdr": true,
+          "f32": true
+        },
+        "sha256": {
+          "png": "ce8e265cf066f355fbd17424331750f9504def4ad47397a0d7bcb57cafb50309",
+          "hdr": "3cf7c9f196eacaec9040fd6a5df787d2de132271e711aaa952a5bb246eb27c45",
+          "f32": "ab134304f3da257d4d132251613a99f17f2f09c920cfb32fdca85a6dbe21d918"
+        }
+      },
+      {
+        "name": "regression_mesh_aabb_validation_optimized",
+        "resolution": [
+          240,
+          240
+        ],
+        "spp": 32,
+        "byte_identical": {
+          "png": true,
+          "hdr": true,
+          "f32": true
+        },
+        "sha256": {
+          "png": "bd39bd44ba968d00d41e9079d361dc6a67ecb19b50dd3b7000dbde5871808e98",
+          "hdr": "b18b28c57b7fb92041e08c08ceb0cd411fd4e49bbf053814e53936fbf519ef20",
+          "f32": "e1eecae009e7bee6c2ef10a8e0972f111e45081c1c13a1e363139eb37a81869e"
+        }
+      },
+      {
+        "name": "regression_mesh_cpu_validation_optimized",
+        "resolution": [
+          64,
+          64
+        ],
+        "spp": 32,
+        "byte_identical": {
+          "png": true,
+          "hdr": true,
+          "f32": true
+        },
+        "sha256": {
+          "png": "1f8e7a4915de91f69c595318150046237138b00fd30bd0e8aec55c0b52c8c048",
+          "hdr": "5e4ca599c8fe0dcfb12ea3b84e2d2ec1e68268b612dd0cb7522bde87e877ac47",
+          "f32": "0b7ada0a6c12fbdc237309496a86a10260d0c45d21956432b66d72b02b39a4d6"
+        }
+      },
+      {
+        "name": "regression_mesh_gpu_validation_optimized",
+        "resolution": [
+          240,
+          240
+        ],
+        "spp": 32,
+        "byte_identical": {
+          "png": true,
+          "hdr": true,
+          "f32": true
+        },
+        "sha256": {
+          "png": "bd39bd44ba968d00d41e9079d361dc6a67ecb19b50dd3b7000dbde5871808e98",
+          "hdr": "b18b28c57b7fb92041e08c08ceb0cd411fd4e49bbf053814e53936fbf519ef20",
+          "f32": "e1eecae009e7bee6c2ef10a8e0972f111e45081c1c13a1e363139eb37a81869e"
+        }
+      },
+      {
+        "name": "regression_shatterseal_moonlit_hall_refined_optimized",
+        "resolution": [
+          240,
+          160
+        ],
+        "spp": 32,
+        "byte_identical": {
+          "png": true,
+          "hdr": true,
+          "f32": true
+        },
+        "sha256": {
+          "png": "e215edb6abb65e60134910a3d722dd507d12fcdc7659c04d52840656735bdf39",
+          "hdr": "2f30d2237c60a1b6ea0b6d582cdf79b2d860ebebd37c1087de9640b1e24f8e7f",
+          "f32": "bf81c7ab709dcff116b2d3e87d19e321fd63ea19b4ae66b80fc28740458660e1"
+        }
+      },
+      {
+        "name": "regression_shatterseal_moonlit_hall_refined_detail_optimized",
+        "resolution": [
+          240,
+          160
+        ],
+        "spp": 32,
+        "byte_identical": {
+          "png": true,
+          "hdr": true,
+          "f32": true
+        },
+        "sha256": {
+          "png": "5010742e78d87f4de274b7ad64382974538b4361bec554ae098a02dae17128c1",
+          "hdr": "0331f98b254b60e3a46a40c2e3209b504315592036962bc8b81e9009c68a95cb",
+          "f32": "26524e0e26a6dd59875ffc4273f819a5ed79d2ccaef8a224c772a814dc324c43"
+        }
+      },
+      {
+        "name": "regression_shatterseal_moonlit_hall_refined_preview_optimized",
+        "resolution": [
+          240,
+          160
+        ],
+        "spp": 32,
+        "byte_identical": {
+          "png": true,
+          "hdr": true,
+          "f32": true
+        },
+        "sha256": {
+          "png": "99fef82194f844503e152b484658754560f2ea52fb86a44c023b26c61297982f",
+          "hdr": "7d4ee8f88c1defbf031effc85264707c54573a5d6927d63e8ce80b50a6c06349",
+          "f32": "d0ba9d92fca16a8f1f48c853c7082bb69601f5ffcd96a8f41bb94b3840bed531"
+        }
+      },
+      {
+        "name": "regression_sphere_optimized",
+        "resolution": [
+          240,
+          240
+        ],
+        "spp": 32,
+        "byte_identical": {
+          "png": true,
+          "hdr": true,
+          "f32": true
+        },
+        "sha256": {
+          "png": "f57f0dfb0f0312f992efa3b52bab1405d453b0647089518a21e20edefd6ab5dc",
+          "hdr": "1418275f22219109297927467d6b187d7126bd9e5df1cae563c872e24ca17fac",
+          "f32": "7bba96823a46c3379977198d6401044695d76929ffaac7040ca19e9824e8932d"
+        }
+      }
+    ],
+    "showcase_median_64spp": {
+      "capture": {
+        "antialiasing": true,
+        "bvh": true,
+        "bvh_bins": 16,
+        "bvh_build_ms": 19.192400000000003,
+        "bvh_builder": "median",
+        "bvh_leaf_size": 4,
+        "bvh_leaves": 27052,
+        "bvh_max_depth": 13,
+        "bvh_nodes": 54088,
+        "bvh_validation_ms": 3.9234999999999998,
+        "cached_bvh_bounds": true,
+        "compaction": true,
+        "cross_mesh_pruning": true,
+        "depth": 8,
+        "display_every_sample": false,
+        "dof": true,
+        "first_iteration": 1,
+        "focus_distance": 5.0,
+        "gpu": "NVIDIA GeForce RTX 4070 Laptop GPU",
+        "image_readback_bytes": 11520000,
+        "image_readbacks": 1,
+        "initialization_ms": 16.0123,
+        "kind": "production_renderer_headless",
+        "lens_radius": 0.012000000104308128,
+        "objects": 16,
+        "readback_every_sample": false,
+        "render_loop_ms": 22885.7063,
+        "resolution": [
+          1200,
+          800
+        ],
+        "scene_load_ms": 741.2404,
+        "sorting": false,
+        "spp": 64,
+        "stage_synchronizations": 0,
+        "synchronize_each_stage": false,
+        "triangles": 86355,
+        "validated_bvh_traversal": true,
+        "warmup_spp": 8
+      },
+      "byte_identical": {
+        "png": true,
+        "hdr": true,
+        "f32": true
+      }
+    },
+    "full_showcase": {
+      "optimized_capture": {
+        "antialiasing": true,
+        "bvh": true,
+        "bvh_bins": 16,
+        "bvh_build_ms": 88.69209999999998,
+        "bvh_builder": "sah",
+        "bvh_leaf_size": 2,
+        "bvh_leaves": 48299,
+        "bvh_max_depth": 22,
+        "bvh_nodes": 96582,
+        "bvh_validation_ms": 7.8969000000000005,
+        "cached_bvh_bounds": true,
+        "compaction": true,
+        "cross_mesh_pruning": true,
+        "depth": 8,
+        "display_every_sample": false,
+        "dof": true,
+        "first_iteration": 1,
+        "focus_distance": 5.0,
+        "gpu": "NVIDIA GeForce RTX 4070 Laptop GPU",
+        "image_readback_bytes": 11520000,
+        "image_readbacks": 1,
+        "initialization_ms": 17.6956,
+        "kind": "production_renderer_headless",
+        "lens_radius": 0.012000000104308128,
+        "objects": 16,
+        "readback_every_sample": false,
+        "render_loop_ms": 282832.8454,
+        "resolution": [
+          1200,
+          800
+        ],
+        "scene_load_ms": 833.9766,
+        "sorting": false,
+        "spp": 3072,
+        "stage_synchronizations": 0,
+        "synchronize_each_stage": false,
+        "triangles": 86355,
+        "validated_bvh_traversal": true,
+        "warmup_spp": 8
+      },
+      "reference_capture": {
+        "antialiasing": true,
+        "bvh": true,
+        "bvh_bins": 16,
+        "bvh_build_ms": 74.8257,
+        "bvh_builder": "sah",
+        "bvh_leaf_size": 2,
+        "bvh_leaves": 48299,
+        "bvh_max_depth": 22,
+        "bvh_nodes": 96582,
+        "bvh_validation_ms": 5.416099999999999,
+        "cached_bvh_bounds": false,
+        "compaction": true,
+        "cross_mesh_pruning": true,
+        "depth": 8,
+        "display_every_sample": false,
+        "dof": true,
+        "first_iteration": 1,
+        "focus_distance": 5.0,
+        "gpu": "NVIDIA GeForce RTX 4070 Laptop GPU",
+        "image_readback_bytes": 11520000,
+        "image_readbacks": 1,
+        "initialization_ms": 17.3489,
+        "kind": "production_renderer_headless",
+        "lens_radius": 0.012000000104308128,
+        "objects": 16,
+        "readback_every_sample": false,
+        "render_loop_ms": 343254.4638,
+        "resolution": [
+          1200,
+          800
+        ],
+        "scene_load_ms": 812.8887,
+        "sorting": false,
+        "spp": 3072,
+        "stage_synchronizations": 0,
+        "synchronize_each_stage": false,
+        "triangles": 86355,
+        "validated_bvh_traversal": false,
+        "warmup_spp": 8
+      },
+      "byte_identical_corrected_reference": {
+        "png": true,
+        "hdr": true,
+        "f32": true
+      },
+      "sha256": {
+        "png": "96b0ffb7b96c819027c0a38a626334dc2a35e947a8af992316dab2288e848158",
+        "hdr": "b9a6c027a538432adb6f3af3d01b124f851d0ba11b22bc79cf64417367e822d4",
+        "f32": "a37244254f1ef92143a0d37166fd515d246684fc61f4fd97bdab5b9dda311e47"
+      },
+      "previous_vs_corrected": {
+        "byte_identical": {
+          "png": false,
+          "hdr": false,
+          "f32": false
+        },
+        "display_uint8": {
+          "pixels": 960000,
+          "changed_pixels": 4437,
+          "changed_channels": 6115,
+          "max_abs_channel_difference": 27.0,
+          "mean_abs_channel_difference": 0.002990277777777778,
+          "rmse": 0.09184830488969903
+        },
+        "linear_float32": {
+          "pixels": 960000,
+          "changed_pixels": 954234,
+          "changed_channels": 2701193,
+          "max_abs_channel_difference": 0.02380847930908203,
+          "mean_abs_channel_difference": 3.3417954394652904e-06,
+          "rmse": 8.164596805766975e-05
+        }
+      },
+      "note": "Each full-frame time is a single capture. Numerical hit/attribute corrections intentionally change some paths and pixels versus the historical cover; no claim of old-output bitwise identity."
+    }
+  },
+  "provenance": {
+    "archive": "stage_records/19_robust_traversal_2026-09-29",
+    "executable_sha256": "bbb3e03414deea02a31f8f98461b0ba8ed0e4b2b0b7494f03471d2ecf1cfbdea",
+    "source_sha256": {
+      "src/bvh.cpp": "70f4cfee509ffc29129e41c37bf8927462edf218c2467f896b5901fb50ef5230",
+      "src/glslUtility.cpp": "6d1f638fdc3107b18c7c1acb7cb676629b37b05703752850414bd1c5cbed806b",
+      "src/image.cpp": "da6c672d1dffd3f4af7eb0c88c9924856a2caa1fcc4b3a744f4d58645270456c",
+      "src/main.cpp": "f83ed82195c1d416c911fd41a1e794f5c5e58c8bb6297e83f3115810f51fc90c",
+      "src/objLoader.cpp": "ca801cc0cbe5fbe882c67efac96ab2bf077cefc605642c940c140661777c971a",
+      "src/renderControls.cpp": "3645cf25af6b944be6679e53856c2eeb8a1f735eb63d4a914436520adf225cd1",
+      "src/scene.cpp": "fdd42aea4a87b1d75c4493e7b7690b18d7e808fb88c7caff6eed424ce985366c",
+      "src/stb.cpp": "5f55c259adf181d8b26f61b5445c3ec699635b8c71e05d3287a0fc29d79f5a79",
+      "src/utilities.cpp": "d2a041bd248b534d54c058488215eb90da76f32c40d1c5a4a69e93658874770e",
+      "src/interactions.cu": "6bbcf4c2c3bbbd0926537c203092b6cadf26a39f91865290cc131668e615e386",
+      "src/intersectionProfile.cu": "e81be3b66e67ca41cbbe76049995e15b47c2febb91e148c2422b8900a25dd8a8",
+      "src/intersections.cu": "60334de4d3b631a4d09bbbd8152f34b5b64a7878b4c3586a41892cce69c0b832",
+      "src/pathtrace.cu": "5b813da28d8e361796fdc9182f10155484cb895cc9fdc4d7d061a3cd8027ac0f",
+      "src/appearance.h": "0859907445d3e205aac590d845fd4159ffc7caadce0614671c944955376acded",
+      "src/bvh.h": "bea0f38bc8d4518564229dfae7b28d0b4a0f23c6acd8979293815a2b90f3a8e7",
+      "src/cameraOrbit.h": "e9bde0f3133a8193434879ad3e798539054302e2dde183c0f4ea2fe78bcded8d",
+      "src/cameraSampling.h": "7eea630a532f2d821b4ba4cd09d49ccf19908069676ec5ad8aeb9cd4ca6671f3",
+      "src/image.h": "407772593373d2267f54785eb18a62d17a4a6d9ebcf923ffa05552a6da862057",
+      "src/interactions.h": "2f158bd94244e764dc0841fb4861ddfadffa60b476c71f6254d508c7fdf45149",
+      "src/intersectionProfile.h": "e5cfeca1fd82f3244d0b5a6a0a151537ece025b282d4c40b43cd8bf2716fe575",
+      "src/intersections.h": "f063d6b12d200857844bccc1eed871133fd4b992bb93d79a4764e0334f27d610",
+      "src/objLoader.h": "ad54e5c04593be057a13fe3af3d164f85ef37103adbc1ffef49d24397a3ba988",
+      "src/pathtrace.h": "9bf09512fd604b3cc14a4dfad2a98197cce63bf035548addd6f456f328bfa2f1",
+      "src/renderControls.h": "8840cca4065c36069cb893a45ee63d9fa17368d73c8ae3ab97eeb01c9038fe2b",
+      "src/scene.h": "df7ac55d2535543bd435303dbda3030ba972e091280f3858a1e70b23da5bfede",
+      "src/sceneStructs.h": "1017fee11a684a945cd49673e364c80347e6626192f6c6678eb48b4aa57125ef",
+      "src/utilities.h": "2a3df0ccdf0b6944ec0dd276d463d6cebc465904129a23065627f1e4826c75ef",
+      "tests/bvh_gpu_test_cases.h": "aff30cfaec7994fbde72bd616370af63628cc14e4be843c58d893e9822f23e1e",
+      "tests/camera_sampling_test_cases.h": "19f8e986f19a8353b95ade867146864539738e7d251bbb6a57bd3291b9799718",
+      "tests/triangle_precision_cases.h": "b3b9414f0a566e3854245a9909a4052017a87da31345847f2b40302f37b0daa8",
+      "tests/appearance_tests.cpp": "f06fbc2988a5c7138c71faa5f6ea40216dc380f367dca9e04f968f00df6f186b",
+      "tests/bvh_builder_tests.cpp": "335f99ec31d8582a405aa5c670f4740533a6e97992dace3ffa506a8bc776421c",
+      "tests/camera_sampling_tests.cpp": "585d80de37c982aa421a1b80912304c1c9fd40fef31ef104ad3dc891e639ea92",
+      "tests/obj_loader_tests.cpp": "828da81f21a0c1de5484114bf7e7dfc8ad312116bf235d86228dc3cd9a84143a",
+      "tests/render_controls_tests.cpp": "f4537595b7685f4a3462355f3f1a3a8aebebb7643c3b0382007eee1f2b8d7a9c",
+      "tests/scene_loader_tests.cpp": "3bd93f8653f148ee92881aefc81ba008bfd36c95ef4fa9e2537def95f45c837e",
+      "tests/camera_sampling_gpu_tests.cu": "9c03428d36602fe96fb29e29ae2b127f6d075f1b2ee2975147e6567619e37c3f",
+      "tests/mesh_intersection_tests.cu": "532f20e6c93d339fb30c3afe8115021facaf73baf90bd4314186f52a17a6d24a",
+      "tests/thin_lens_render_tests.cu": "fe2858755b0c8d8a3e91a0e5cc186d7de38752e0c050ba7899b055eae8ab0544",
+      "tests/verify_triangle_oracle.py": "ec58586ebe59984dda14598f7b89dd9ad7d6b2d536fa1daacd53825bb11ce1f9",
+      "tests/data/thin_triangle_regressions.json": "d5d265c7fafb40e78178d45da3a3c1d275a237176d07fb884224f2c0bc1a81c8",
+      "CMakeLists.txt": "31ee2fe20036e92e77550ce3e3421a621a8d2394a017970eadae00ccfaaf8e89",
+      "tools/render_scene.cpp": "2c3444f198bce5cebd69094360e8870cdbd423eaeea0dfd1c5cbd57797388949"
+    },
+    "note": "Only final code, compact records and selected figure are distributed. Historical executables, raw captures, logs and source snapshots remain local."
+  }
+}

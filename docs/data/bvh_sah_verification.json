@@ -1,0 +1,1998 @@
+{
+  "date": "2026-09-29",
+  "scene": "scenes/shatterseal_moonlit_hall_refined.json",
+  "scene_sha256": "6a9cae8bf3994a8457cbb9ed8e2b4b3e6cd94ec53770e3b44453251c004e7393",
+  "implementation": {
+    "bins": 16,
+    "axes": "all three centroid axes",
+    "split_cost": "area(left)*count(left) + area(right)*count(right)",
+    "termination": "Fixed leaf cap or depth 32; no adaptive SAH leaf termination.",
+    "fallback": "Median split with triangle-ID tie breaking when binning cannot make two nonempty sides.",
+    "selected_default": {
+      "builder": "sah",
+      "leaf_cap": 2,
+      "bins": 16
+    },
+    "triangle_storage": "Original triangle/UV/normal arrays remain in their original order; only BVH index references are partitioned."
+  },
+  "benchmark": {
+    "gpu": "NVIDIA GeForce RTX 4070 Laptop GPU",
+    "build": "Release / CUDA 12.9",
+    "resolution": [
+      1200,
+      800
+    ],
+    "spp": 64,
+    "depth": 8,
+    "warmup_spp": 8,
+    "aa": true,
+    "compaction": true,
+    "bvh": true,
+    "dof": true,
+    "sorting": false,
+    "distance_pruning": true,
+    "rounds": 6,
+    "order": "Cyclic rotation of median2,median4,median8,sah2,sah4,sah8; each configuration occupies each position once.",
+    "timing": "Host render-loop clock includes GPU completion/final image readback, excludes loading/build/upload/warmup/encoding/saving. All profiling disabled.",
+    "clocks_locked": false,
+    "gpu_csv_fields": "temperature.gpu,clocks.current.graphics,clocks.current.memory,power.draw,utilization.gpu",
+    "gpu_sampling": "Before/after each run, not continuous. Ranges are min/max, not confidence intervals.",
+    "summary": {
+      "median2": {
+        "runs": 6,
+        "median_ms": 14497.4716,
+        "min_ms": 14445.9903,
+        "max_ms": 14565.5397,
+        "build_median_ms": 21.091099999999997,
+        "validation_median_ms": 5.494349999999999,
+        "nodes": 100376,
+        "leaves": 50196,
+        "max_depth": 14,
+        "node_and_index_bytes": 4360460,
+        "speedup_vs_median4": 1.0701964472204932
+      },
+      "median4": {
+        "runs": 6,
+        "median_ms": 15515.1426,
+        "min_ms": 15475.0804,
+        "max_ms": 15603.2737,
+        "build_median_ms": 18.60385,
+        "validation_median_ms": 3.74815,
+        "nodes": 54088,
+        "leaves": 27052,
+        "max_depth": 13,
+        "node_and_index_bytes": 2508940,
+        "speedup_vs_median4": 1.0
+      },
+      "median8": {
+        "runs": 6,
+        "median_ms": 17121.79785,
+        "min_ms": 17092.1203,
+        "max_ms": 17145.1203,
+        "build_median_ms": 17.593349999999994,
+        "validation_median_ms": 3.06955,
+        "nodes": 29132,
+        "leaves": 14574,
+        "max_depth": 12,
+        "node_and_index_bytes": 1510700,
+        "speedup_vs_median4": 0.9061631690739766
+      },
+      "sah2": {
+        "runs": 6,
+        "median_ms": 5819.53205,
+        "min_ms": 5796.7901,
+        "max_ms": 5857.663,
+        "build_median_ms": 74.55234999999999,
+        "validation_median_ms": 5.3456,
+        "nodes": 96582,
+        "leaves": 48299,
+        "max_depth": 22,
+        "node_and_index_bytes": 4208700,
+        "speedup_vs_median4": 2.666046422065843
+      },
+      "sah4": {
+        "runs": 6,
+        "median_ms": 5938.665300000001,
+        "min_ms": 5912.6548,
+        "max_ms": 5976.5823,
+        "build_median_ms": 53.36590000000001,
+        "validation_median_ms": 3.9426000000000005,
+        "nodes": 55238,
+        "leaves": 27627,
+        "max_depth": 20,
+        "node_and_index_bytes": 2554940,
+        "speedup_vs_median4": 2.6125639038792094
+      },
+      "sah8": {
+        "runs": 6,
+        "median_ms": 6338.7623,
+        "min_ms": 6307.6474,
+        "max_ms": 6497.5858,
+        "build_median_ms": 39.98745000000001,
+        "validation_median_ms": 3.1055,
+        "nodes": 30012,
+        "leaves": 15014,
+        "max_depth": 19,
+        "node_and_index_bytes": 1545900,
+        "speedup_vs_median4": 2.4476612098232486
+      }
+    },
+    "reproduce": "Copy the scene, set Camera.ITERATIONS=64 and preserve/resolve its asset paths. Run scene_render with --bvh-builder median|sah --bvh-leaf-size 2|4|8 --bvh-bins 16, six rotated rounds; no --profile or --profile-intersections."
+  },
+  "intersection_work": {
+    "resolution": [
+      1200,
+      800
+    ],
+    "spp": 4,
+    "pixel_stride": 64,
+    "population": "pixelIndex % 64 == 0 among live paths before each bounce",
+    "note": "Separate diagnostic replays. Counts are sampled, not extrapolated to all rays. The same pixel population and hits are verified across builders. Root rejections include ordinary misses and distance pruning. Instrumented wall times are excluded from speed comparisons.",
+    "configurations": {
+      "median4": {
+        "totals": {
+          "sampled_rays": 167868,
+          "queries": 2685888,
+          "bounded_queries": 1566860,
+          "hits": 156117,
+          "root_rejects": 2179608,
+          "node_visits": 14563176,
+          "aabb_tests": 29364954,
+          "triangle_tests": 3966076,
+          "fallbacks": 0,
+          "max_stack": 13
+        },
+        "by_depth": [
+          {
+            "depth": 0,
+            "sampled_rays": 60000,
+            "queries": 960000,
+            "bounded_queries": 654493,
+            "hits": 64018,
+            "root_rejects": 756026,
+            "node_visits": 5595723,
+            "aabb_tests": 11248046,
+            "triangle_tests": 1476412,
+            "fallbacks": 0
+          },
+          {
+            "depth": 1,
+            "sampled_rays": 46649,
+            "queries": 746384,
+            "bounded_queries": 356375,
+            "hits": 37970,
+            "root_rejects": 606176,
+            "node_visits": 3867233,
+            "aabb_tests": 7860684,
+            "triangle_tests": 992071,
+            "fallbacks": 0
+          },
+          {
+            "depth": 2,
+            "sampled_rays": 23152,
+            "queries": 370432,
+            "bounded_queries": 195546,
+            "hits": 18840,
+            "root_rejects": 307771,
+            "node_visits": 1951001,
+            "aabb_tests": 3939054,
+            "triangle_tests": 536695,
+            "fallbacks": 0
+          },
+          {
+            "depth": 3,
+            "sampled_rays": 14552,
+            "queries": 232832,
+            "bounded_queries": 129358,
+            "hits": 12601,
+            "root_rejects": 195535,
+            "node_visits": 1165370,
+            "aabb_tests": 2356046,
+            "triangle_tests": 334248,
+            "fallbacks": 0
+          },
+          {
+            "depth": 4,
+            "sampled_rays": 9157,
+            "queries": 146512,
+            "bounded_queries": 86090,
+            "hits": 8396,
+            "root_rejects": 122092,
+            "node_visits": 767751,
+            "aabb_tests": 1537826,
+            "triangle_tests": 234732,
+            "fallbacks": 0
+          },
+          {
+            "depth": 5,
+            "sampled_rays": 6379,
+            "queries": 102064,
+            "bounded_queries": 62401,
+            "hits": 6104,
+            "root_rejects": 85567,
+            "node_visits": 530412,
+            "aabb_tests": 1061760,
+            "triangle_tests": 165332,
+            "fallbacks": 0
+          },
+          {
+            "depth": 6,
+            "sampled_rays": 4511,
+            "queries": 72176,
+            "bounded_queries": 46347,
+            "hits": 4597,
+            "root_rejects": 60045,
+            "node_visits": 389661,
+            "aabb_tests": 773630,
+            "triangle_tests": 127975,
+            "fallbacks": 0
+          },
+          {
+            "depth": 7,
+            "sampled_rays": 3468,
+            "queries": 55488,
+            "bounded_queries": 36250,
+            "hits": 3591,
+            "root_rejects": 46396,
+            "node_visits": 296025,
+            "aabb_tests": 587908,
+            "triangle_tests": 98611,
+            "fallbacks": 0
+          }
+        ],
+        "by_object": [
+          {
+            "object_index": 0,
+            "mesh": "stone",
+            "queries": 167868,
+            "bounded_queries": 0,
+            "hits": 53802,
+            "root_rejects": 2091,
+            "node_visits": 10606182,
+            "aabb_tests": 19999238,
+            "triangle_tests": 2207247,
+            "fallbacks": 0,
+            "max_stack": 13
+          },
+          {
+            "object_index": 1,
+            "mesh": "trim",
+            "queries": 167868,
+            "bounded_queries": 53802,
+            "hits": 4494,
+            "root_rejects": 94991,
+            "node_visits": 866262,
+            "aabb_tests": 1796896,
+            "triangle_tests": 151127,
+            "fallbacks": 0,
+            "max_stack": 7
+          },
+          {
+            "object_index": 2,
+            "mesh": "mirror",
+            "queries": 167868,
+            "bounded_queries": 54899,
+            "hits": 9349,
+            "root_rejects": 144154,
+            "node_visits": 528713,
+            "aabb_tests": 1031210,
+            "triangle_tests": 377825,
+            "fallbacks": 0,
+            "max_stack": 9
+          },
+          {
+            "object_index": 3,
+            "mesh": "edges",
+            "queries": 167868,
+            "bounded_queries": 62677,
+            "hits": 3274,
+            "root_rejects": 145457,
+            "node_visits": 382785,
+            "aabb_tests": 826912,
+            "triangle_tests": 194905,
+            "fallbacks": 0,
+            "max_stack": 9
+          },
+          {
+            "object_index": 4,
+            "mesh": "metal",
+            "queries": 167868,
+            "bounded_queries": 63222,
+            "hits": 2377,
+            "root_rejects": 151014,
+            "node_visits": 187010,
+            "aabb_tests": 502720,
+            "triangle_tests": 68573,
+            "fallbacks": 0,
+            "max_stack": 11
+          },
+          {
+            "object_index": 5,
+            "mesh": "floor",
+            "queries": 167868,
+            "bounded_queries": 64457,
+            "hits": 45216,
+            "root_rejects": 122124,
+            "node_visits": 745363,
+            "aabb_tests": 1260762,
+            "triangle_tests": 640425,
+            "fallbacks": 0,
+            "max_stack": 8
+          },
+          {
+            "object_index": 6,
+            "mesh": "grout",
+            "queries": 167868,
+            "bounded_queries": 109119,
+            "hits": 476,
+            "root_rejects": 167392,
+            "node_visits": 3332,
+            "aabb_tests": 170724,
+            "triangle_tests": 5712,
+            "fallbacks": 0,
+            "max_stack": 3
+          },
+          {
+            "object_index": 7,
+            "mesh": "night_exterior",
+            "queries": 167868,
+            "bounded_queries": 109541,
+            "hits": 15821,
+            "root_rejects": 152047,
+            "node_visits": 15821,
+            "aabb_tests": 167868,
+            "triangle_tests": 31642,
+            "fallbacks": 0,
+            "max_stack": 1
+          },
+          {
+            "object_index": 8,
+            "mesh": "upper_sky",
+            "queries": 167868,
+            "bounded_queries": 125362,
+            "hits": 6151,
+            "root_rejects": 160513,
+            "node_visits": 7355,
+            "aabb_tests": 167868,
+            "triangle_tests": 14710,
+            "fallbacks": 0,
+            "max_stack": 1
+          },
+          {
+            "object_index": 9,
+            "mesh": "moon",
+            "queries": 167868,
+            "bounded_queries": 131513,
+            "hits": 70,
+            "root_rejects": 167791,
+            "node_visits": 842,
+            "aabb_tests": 168956,
+            "triangle_tests": 894,
+            "fallbacks": 0,
+            "max_stack": 4
+          },
+          {
+            "object_index": 10,
+            "mesh": "aged_brass",
+            "queries": 167868,
+            "bounded_queries": 131513,
+            "hits": 3658,
+            "root_rejects": 129100,
+            "node_visits": 537675,
+            "aabb_tests": 1160126,
+            "triangle_tests": 145796,
+            "fallbacks": 0,
+            "max_stack": 10
+          },
+          {
+            "object_index": 11,
+            "mesh": "gold_trim",
+            "queries": 167868,
+            "bounded_queries": 131899,
+            "hits": 1425,
+            "root_rejects": 127306,
+            "node_visits": 401844,
+            "aabb_tests": 925682,
+            "triangle_tests": 69460,
+            "fallbacks": 0,
+            "max_stack": 9
+          },
+          {
+            "object_index": 12,
+            "mesh": "wax",
+            "queries": 167868,
+            "bounded_queries": 132145,
+            "hits": 434,
+            "root_rejects": 150893,
+            "node_visits": 122131,
+            "aabb_tests": 397400,
+            "triangle_tests": 19943,
+            "fallbacks": 0,
+            "max_stack": 8
+          },
+          {
+            "object_index": 13,
+            "mesh": "wick",
+            "queries": 167868,
+            "bounded_queries": 132227,
+            "hits": 8,
+            "root_rejects": 154610,
+            "node_visits": 57621,
+            "aabb_tests": 277270,
+            "triangle_tests": 8930,
+            "fallbacks": 0,
+            "max_stack": 5
+          },
+          {
+            "object_index": 14,
+            "mesh": "flames",
+            "queries": 167868,
+            "bounded_queries": 132230,
+            "hits": 144,
+            "root_rejects": 151675,
+            "node_visits": 90822,
+            "aabb_tests": 343454,
+            "triangle_tests": 10051,
+            "fallbacks": 0,
+            "max_stack": 7
+          },
+          {
+            "object_index": 15,
+            "mesh": "bounce_fill",
+            "queries": 167868,
+            "bounded_queries": 132254,
+            "hits": 9418,
+            "root_rejects": 158450,
+            "node_visits": 9418,
+            "aabb_tests": 167868,
+            "triangle_tests": 18836,
+            "fallbacks": 0,
+            "max_stack": 1
+          }
+        ]
+      },
+      "sah2": {
+        "totals": {
+          "sampled_rays": 167868,
+          "queries": 2685888,
+          "bounded_queries": 1566860,
+          "hits": 156117,
+          "root_rejects": 2179608,
+          "node_visits": 4448166,
+          "aabb_tests": 10887842,
+          "triangle_tests": 641518,
+          "fallbacks": 0,
+          "max_stack": 13
+        },
+        "by_depth": [
+          {
+            "depth": 0,
+            "sampled_rays": 60000,
+            "queries": 960000,
+            "bounded_queries": 654493,
+            "hits": 64018,
+            "root_rejects": 756026,
+            "node_visits": 1541763,
+            "aabb_tests": 3830962,
+            "triangle_tests": 197881,
+            "fallbacks": 0
+          },
+          {
+            "depth": 1,
+            "sampled_rays": 46649,
+            "queries": 746384,
+            "bounded_queries": 356375,
+            "hits": 37970,
+            "root_rejects": 606176,
+            "node_visits": 1168976,
+            "aabb_tests": 2891974,
+            "triangle_tests": 177509,
+            "fallbacks": 0
+          },
+          {
+            "depth": 2,
+            "sampled_rays": 23152,
+            "queries": 370432,
+            "bounded_queries": 195546,
+            "hits": 18840,
+            "root_rejects": 307771,
+            "node_visits": 641527,
+            "aabb_tests": 1555038,
+            "triangle_tests": 91787,
+            "fallbacks": 0
+          },
+          {
+            "depth": 3,
+            "sampled_rays": 14552,
+            "queries": 232832,
+            "bounded_queries": 129358,
+            "hits": 12601,
+            "root_rejects": 195535,
+            "node_visits": 387535,
+            "aabb_tests": 942866,
+            "triangle_tests": 59886,
+            "fallbacks": 0
+          },
+          {
+            "depth": 4,
+            "sampled_rays": 9157,
+            "queries": 146512,
+            "bounded_queries": 86090,
+            "hits": 8396,
+            "root_rejects": 122092,
+            "node_visits": 266814,
+            "aabb_tests": 634752,
+            "triangle_tests": 41569,
+            "fallbacks": 0
+          },
+          {
+            "depth": 5,
+            "sampled_rays": 6379,
+            "queries": 102064,
+            "bounded_queries": 62401,
+            "hits": 6104,
+            "root_rejects": 85567,
+            "node_visits": 187829,
+            "aabb_tests": 444004,
+            "triangle_tests": 30686,
+            "fallbacks": 0
+          },
+          {
+            "depth": 6,
+            "sampled_rays": 4511,
+            "queries": 72176,
+            "bounded_queries": 46347,
+            "hits": 4597,
+            "root_rejects": 60045,
+            "node_visits": 143619,
+            "aabb_tests": 333338,
+            "triangle_tests": 23559,
+            "fallbacks": 0
+          },
+          {
+            "depth": 7,
+            "sampled_rays": 3468,
+            "queries": 55488,
+            "bounded_queries": 36250,
+            "hits": 3591,
+            "root_rejects": 46396,
+            "node_visits": 110103,
+            "aabb_tests": 254908,
+            "triangle_tests": 18641,
+            "fallbacks": 0
+          }
+        ],
+        "by_object": [
+          {
+            "object_index": 0,
+            "mesh": "stone",
+            "queries": 167868,
+            "bounded_queries": 0,
+            "hits": 53802,
+            "root_rejects": 2091,
+            "node_visits": 2183624,
+            "aabb_tests": 4308442,
+            "triangle_tests": 216151,
+            "fallbacks": 0,
+            "max_stack": 13
+          },
+          {
+            "object_index": 1,
+            "mesh": "trim",
+            "queries": 167868,
+            "bounded_queries": 53802,
+            "hits": 4494,
+            "root_rejects": 94991,
+            "node_visits": 335671,
+            "aabb_tests": 822006,
+            "triangle_tests": 16337,
+            "fallbacks": 0,
+            "max_stack": 6
+          },
+          {
+            "object_index": 2,
+            "mesh": "mirror",
+            "queries": 167868,
+            "bounded_queries": 54899,
+            "hits": 9349,
+            "root_rejects": 144154,
+            "node_visits": 366036,
+            "aabb_tests": 784134,
+            "triangle_tests": 93279,
+            "fallbacks": 0,
+            "max_stack": 9
+          },
+          {
+            "object_index": 3,
+            "mesh": "edges",
+            "queries": 167868,
+            "bounded_queries": 62677,
+            "hits": 3274,
+            "root_rejects": 145457,
+            "node_visits": 268875,
+            "aabb_tests": 631066,
+            "triangle_tests": 62959,
+            "fallbacks": 0,
+            "max_stack": 9
+          },
+          {
+            "object_index": 4,
+            "mesh": "metal",
+            "queries": 167868,
+            "bounded_queries": 63222,
+            "hits": 2377,
+            "root_rejects": 151014,
+            "node_visits": 140577,
+            "aabb_tests": 423474,
+            "triangle_tests": 22548,
+            "fallbacks": 0,
+            "max_stack": 11
+          },
+          {
+            "object_index": 5,
+            "mesh": "floor",
+            "queries": 167868,
+            "bounded_queries": 64457,
+            "hits": 45216,
+            "root_rejects": 122124,
+            "node_visits": 592691,
+            "aabb_tests": 1260594,
+            "triangle_tests": 92656,
+            "fallbacks": 0,
+            "max_stack": 7
+          },
+          {
+            "object_index": 6,
+            "mesh": "grout",
+            "queries": 167868,
+            "bounded_queries": 109119,
+            "hits": 476,
+            "root_rejects": 167392,
+            "node_visits": 2856,
+            "aabb_tests": 172628,
+            "triangle_tests": 952,
+            "fallbacks": 0,
+            "max_stack": 2
+          },
+          {
+            "object_index": 7,
+            "mesh": "night_exterior",
+            "queries": 167868,
+            "bounded_queries": 109541,
+            "hits": 15821,
+            "root_rejects": 152047,
+            "node_visits": 15821,
+            "aabb_tests": 167868,
+            "triangle_tests": 31642,
+            "fallbacks": 0,
+            "max_stack": 1
+          },
+          {
+            "object_index": 8,
+            "mesh": "upper_sky",
+            "queries": 167868,
+            "bounded_queries": 125362,
+            "hits": 6151,
+            "root_rejects": 160513,
+            "node_visits": 7355,
+            "aabb_tests": 167868,
+            "triangle_tests": 14710,
+            "fallbacks": 0,
+            "max_stack": 1
+          },
+          {
+            "object_index": 9,
+            "mesh": "moon",
+            "queries": 167868,
+            "bounded_queries": 131513,
+            "hits": 70,
+            "root_rejects": 167791,
+            "node_visits": 1373,
+            "aabb_tests": 169552,
+            "triangle_tests": 776,
+            "fallbacks": 0,
+            "max_stack": 5
+          },
+          {
+            "object_index": 10,
+            "mesh": "aged_brass",
+            "queries": 167868,
+            "bounded_queries": 131513,
+            "hits": 3658,
+            "root_rejects": 129100,
+            "node_visits": 250930,
+            "aabb_tests": 616018,
+            "triangle_tests": 50745,
+            "fallbacks": 0,
+            "max_stack": 11
+          },
+          {
+            "object_index": 11,
+            "mesh": "gold_trim",
+            "queries": 167868,
+            "bounded_queries": 131899,
+            "hits": 1425,
+            "root_rejects": 127306,
+            "node_visits": 164456,
+            "aabb_tests": 479772,
+            "triangle_tests": 16092,
+            "fallbacks": 0,
+            "max_stack": 8
+          },
+          {
+            "object_index": 12,
+            "mesh": "wax",
+            "queries": 167868,
+            "bounded_queries": 132145,
+            "hits": 434,
+            "root_rejects": 150893,
+            "node_visits": 45819,
+            "aabb_tests": 256670,
+            "triangle_tests": 2768,
+            "fallbacks": 0,
+            "max_stack": 7
+          },
+          {
+            "object_index": 13,
+            "mesh": "wick",
+            "queries": 167868,
+            "bounded_queries": 132227,
+            "hits": 8,
+            "root_rejects": 154610,
+            "node_visits": 26065,
+            "aabb_tests": 219930,
+            "triangle_tests": 62,
+            "fallbacks": 0,
+            "max_stack": 4
+          },
+          {
+            "object_index": 14,
+            "mesh": "flames",
+            "queries": 167868,
+            "bounded_queries": 132230,
+            "hits": 144,
+            "root_rejects": 151675,
+            "node_visits": 36599,
+            "aabb_tests": 239952,
+            "triangle_tests": 1005,
+            "fallbacks": 0,
+            "max_stack": 6
+          },
+          {
+            "object_index": 15,
+            "mesh": "bounce_fill",
+            "queries": 167868,
+            "bounded_queries": 132254,
+            "hits": 9418,
+            "root_rejects": 158450,
+            "node_visits": 9418,
+            "aabb_tests": 167868,
+            "triangle_tests": 18836,
+            "fallbacks": 0,
+            "max_stack": 1
+          }
+        ]
+      },
+      "sah4": {
+        "totals": {
+          "sampled_rays": 167868,
+          "queries": 2685888,
+          "bounded_queries": 1566860,
+          "hits": 156117,
+          "root_rejects": 2179608,
+          "node_visits": 4172910,
+          "aabb_tests": 10352922,
+          "triangle_tests": 1126156,
+          "fallbacks": 0,
+          "max_stack": 12
+        },
+        "by_depth": [
+          {
+            "depth": 0,
+            "sampled_rays": 60000,
+            "queries": 960000,
+            "bounded_queries": 654493,
+            "hits": 64018,
+            "root_rejects": 756026,
+            "node_visits": 1459289,
+            "aabb_tests": 3659208,
+            "triangle_tests": 368565,
+            "fallbacks": 0
+          },
+          {
+            "depth": 1,
+            "sampled_rays": 46649,
+            "queries": 746384,
+            "bounded_queries": 356375,
+            "hits": 37970,
+            "root_rejects": 606176,
+            "node_visits": 1095847,
+            "aabb_tests": 2756110,
+            "triangle_tests": 294372,
+            "fallbacks": 0
+          },
+          {
+            "depth": 2,
+            "sampled_rays": 23152,
+            "queries": 370432,
+            "bounded_queries": 195546,
+            "hits": 18840,
+            "root_rejects": 307771,
+            "node_visits": 601301,
+            "aabb_tests": 1477582,
+            "triangle_tests": 160582,
+            "fallbacks": 0
+          },
+          {
+            "depth": 3,
+            "sampled_rays": 14552,
+            "queries": 232832,
+            "bounded_queries": 129358,
+            "hits": 12601,
+            "root_rejects": 195535,
+            "node_visits": 361073,
+            "aabb_tests": 892400,
+            "triangle_tests": 103876,
+            "fallbacks": 0
+          },
+          {
+            "depth": 4,
+            "sampled_rays": 9157,
+            "queries": 146512,
+            "bounded_queries": 86090,
+            "hits": 8396,
+            "root_rejects": 122092,
+            "node_visits": 247945,
+            "aabb_tests": 598958,
+            "triangle_tests": 72507,
+            "fallbacks": 0
+          },
+          {
+            "depth": 5,
+            "sampled_rays": 6379,
+            "queries": 102064,
+            "bounded_queries": 62401,
+            "hits": 6104,
+            "root_rejects": 85567,
+            "node_visits": 173681,
+            "aabb_tests": 417548,
+            "triangle_tests": 52964,
+            "fallbacks": 0
+          },
+          {
+            "depth": 6,
+            "sampled_rays": 4511,
+            "queries": 72176,
+            "bounded_queries": 46347,
+            "hits": 4597,
+            "root_rejects": 60045,
+            "node_visits": 132510,
+            "aabb_tests": 312510,
+            "triangle_tests": 41157,
+            "fallbacks": 0
+          },
+          {
+            "depth": 7,
+            "sampled_rays": 3468,
+            "queries": 55488,
+            "bounded_queries": 36250,
+            "hits": 3591,
+            "root_rejects": 46396,
+            "node_visits": 101264,
+            "aabb_tests": 238606,
+            "triangle_tests": 32133,
+            "fallbacks": 0
+          }
+        ],
+        "by_object": [
+          {
+            "object_index": 0,
+            "mesh": "stone",
+            "queries": 167868,
+            "bounded_queries": 0,
+            "hits": 53802,
+            "root_rejects": 2091,
+            "node_visits": 2089821,
+            "aabb_tests": 4068002,
+            "triangle_tests": 488679,
+            "fallbacks": 0,
+            "max_stack": 12
+          },
+          {
+            "object_index": 1,
+            "mesh": "trim",
+            "queries": 167868,
+            "bounded_queries": 53802,
+            "hits": 4494,
+            "root_rejects": 94991,
+            "node_visits": 329210,
+            "aabb_tests": 808490,
+            "triangle_tests": 29492,
+            "fallbacks": 0,
+            "max_stack": 6
+          },
+          {
+            "object_index": 2,
+            "mesh": "mirror",
+            "queries": 167868,
+            "bounded_queries": 54899,
+            "hits": 9349,
+            "root_rejects": 144154,
+            "node_visits": 312424,
+            "aabb_tests": 710322,
+            "triangle_tests": 129106,
+            "fallbacks": 0,
+            "max_stack": 8
+          },
+          {
+            "object_index": 3,
+            "mesh": "edges",
+            "queries": 167868,
+            "bounded_queries": 62677,
+            "hits": 3274,
+            "root_rejects": 145457,
+            "node_visits": 234616,
+            "aabb_tests": 583430,
+            "triangle_tests": 85817,
+            "fallbacks": 0,
+            "max_stack": 9
+          },
+          {
+            "object_index": 4,
+            "mesh": "metal",
+            "queries": 167868,
+            "bounded_queries": 63222,
+            "hits": 2377,
+            "root_rejects": 151014,
+            "node_visits": 130106,
+            "aabb_tests": 404966,
+            "triangle_tests": 36113,
+            "fallbacks": 0,
+            "max_stack": 11
+          },
+          {
+            "object_index": 5,
+            "mesh": "floor",
+            "queries": 167868,
+            "bounded_queries": 64457,
+            "hits": 45216,
+            "root_rejects": 122124,
+            "node_visits": 548191,
+            "aabb_tests": 1166884,
+            "triangle_tests": 191076,
+            "fallbacks": 0,
+            "max_stack": 7
+          },
+          {
+            "object_index": 6,
+            "mesh": "grout",
+            "queries": 167868,
+            "bounded_queries": 109119,
+            "hits": 476,
+            "root_rejects": 167392,
+            "node_visits": 2380,
+            "aabb_tests": 171676,
+            "triangle_tests": 1904,
+            "fallbacks": 0,
+            "max_stack": 2
+          },
+          {
+            "object_index": 7,
+            "mesh": "night_exterior",
+            "queries": 167868,
+            "bounded_queries": 109541,
+            "hits": 15821,
+            "root_rejects": 152047,
+            "node_visits": 15821,
+            "aabb_tests": 167868,
+            "triangle_tests": 31642,
+            "fallbacks": 0,
+            "max_stack": 1
+          },
+          {
+            "object_index": 8,
+            "mesh": "upper_sky",
+            "queries": 167868,
+            "bounded_queries": 125362,
+            "hits": 6151,
+            "root_rejects": 160513,
+            "node_visits": 7355,
+            "aabb_tests": 167868,
+            "triangle_tests": 14710,
+            "fallbacks": 0,
+            "max_stack": 1
+          },
+          {
+            "object_index": 9,
+            "mesh": "moon",
+            "queries": 167868,
+            "bounded_queries": 131513,
+            "hits": 70,
+            "root_rejects": 167791,
+            "node_visits": 842,
+            "aabb_tests": 168956,
+            "triangle_tests": 894,
+            "fallbacks": 0,
+            "max_stack": 4
+          },
+          {
+            "object_index": 10,
+            "mesh": "aged_brass",
+            "queries": 167868,
+            "bounded_queries": 131513,
+            "hits": 3658,
+            "root_rejects": 129100,
+            "node_visits": 227476,
+            "aabb_tests": 582242,
+            "triangle_tests": 69939,
+            "fallbacks": 0,
+            "max_stack": 9
+          },
+          {
+            "object_index": 11,
+            "mesh": "gold_trim",
+            "queries": 167868,
+            "bounded_queries": 131899,
+            "hits": 1425,
+            "root_rejects": 127306,
+            "node_visits": 158418,
+            "aabb_tests": 470570,
+            "triangle_tests": 22015,
+            "fallbacks": 0,
+            "max_stack": 8
+          },
+          {
+            "object_index": 12,
+            "mesh": "wax",
+            "queries": 167868,
+            "bounded_queries": 132145,
+            "hits": 434,
+            "root_rejects": 150893,
+            "node_visits": 44702,
+            "aabb_tests": 254666,
+            "triangle_tests": 4446,
+            "fallbacks": 0,
+            "max_stack": 6
+          },
+          {
+            "object_index": 13,
+            "mesh": "wick",
+            "queries": 167868,
+            "bounded_queries": 132227,
+            "hits": 8,
+            "root_rejects": 154610,
+            "node_visits": 26042,
+            "aabb_tests": 219888,
+            "triangle_tests": 98,
+            "fallbacks": 0,
+            "max_stack": 4
+          },
+          {
+            "object_index": 14,
+            "mesh": "flames",
+            "queries": 167868,
+            "bounded_queries": 132230,
+            "hits": 144,
+            "root_rejects": 151675,
+            "node_visits": 36088,
+            "aabb_tests": 239226,
+            "triangle_tests": 1389,
+            "fallbacks": 0,
+            "max_stack": 5
+          },
+          {
+            "object_index": 15,
+            "mesh": "bounce_fill",
+            "queries": 167868,
+            "bounded_queries": 132254,
+            "hits": 9418,
+            "root_rejects": 158450,
+            "node_visits": 9418,
+            "aabb_tests": 167868,
+            "triangle_tests": 18836,
+            "fallbacks": 0,
+            "max_stack": 1
+          }
+        ]
+      },
+      "sah8": {
+        "totals": {
+          "sampled_rays": 167868,
+          "queries": 2685888,
+          "bounded_queries": 1566860,
+          "hits": 156117,
+          "root_rejects": 2179608,
+          "node_visits": 3849919,
+          "aabb_tests": 9741756,
+          "triangle_tests": 1868641,
+          "fallbacks": 0,
+          "max_stack": 11
+        },
+        "by_depth": [
+          {
+            "depth": 0,
+            "sampled_rays": 60000,
+            "queries": 960000,
+            "bounded_queries": 654493,
+            "hits": 64018,
+            "root_rejects": 756026,
+            "node_visits": 1353693,
+            "aabb_tests": 3457058,
+            "triangle_tests": 599851,
+            "fallbacks": 0
+          },
+          {
+            "depth": 1,
+            "sampled_rays": 46649,
+            "queries": 746384,
+            "bounded_queries": 356375,
+            "hits": 37970,
+            "root_rejects": 606176,
+            "node_visits": 1014736,
+            "aabb_tests": 2604200,
+            "triangle_tests": 484110,
+            "fallbacks": 0
+          },
+          {
+            "depth": 2,
+            "sampled_rays": 23152,
+            "queries": 370432,
+            "bounded_queries": 195546,
+            "hits": 18840,
+            "root_rejects": 307771,
+            "node_visits": 553960,
+            "aabb_tests": 1387342,
+            "triangle_tests": 273061,
+            "fallbacks": 0
+          },
+          {
+            "depth": 3,
+            "sampled_rays": 14552,
+            "queries": 232832,
+            "bounded_queries": 129358,
+            "hits": 12601,
+            "root_rejects": 195535,
+            "node_visits": 330988,
+            "aabb_tests": 835730,
+            "triangle_tests": 175044,
+            "fallbacks": 0
+          },
+          {
+            "depth": 4,
+            "sampled_rays": 9157,
+            "queries": 146512,
+            "bounded_queries": 86090,
+            "hits": 8396,
+            "root_rejects": 122092,
+            "node_visits": 226499,
+            "aabb_tests": 558324,
+            "triangle_tests": 123696,
+            "fallbacks": 0
+          },
+          {
+            "depth": 5,
+            "sampled_rays": 6379,
+            "queries": 102064,
+            "bounded_queries": 62401,
+            "hits": 6104,
+            "root_rejects": 85567,
+            "node_visits": 158251,
+            "aabb_tests": 388732,
+            "triangle_tests": 89231,
+            "fallbacks": 0
+          },
+          {
+            "depth": 6,
+            "sampled_rays": 4511,
+            "queries": 72176,
+            "bounded_queries": 46347,
+            "hits": 4597,
+            "root_rejects": 60045,
+            "node_visits": 120143,
+            "aabb_tests": 289604,
+            "triangle_tests": 69155,
+            "fallbacks": 0
+          },
+          {
+            "depth": 7,
+            "sampled_rays": 3468,
+            "queries": 55488,
+            "bounded_queries": 36250,
+            "hits": 3591,
+            "root_rejects": 46396,
+            "node_visits": 91649,
+            "aabb_tests": 220766,
+            "triangle_tests": 54493,
+            "fallbacks": 0
+          }
+        ],
+        "by_object": [
+          {
+            "object_index": 0,
+            "mesh": "stone",
+            "queries": 167868,
+            "bounded_queries": 0,
+            "hits": 53802,
+            "root_rejects": 2091,
+            "node_visits": 1978852,
+            "aabb_tests": 3839474,
+            "triangle_tests": 802930,
+            "fallbacks": 0,
+            "max_stack": 11
+          },
+          {
+            "object_index": 1,
+            "mesh": "trim",
+            "queries": 167868,
+            "bounded_queries": 53802,
+            "hits": 4494,
+            "root_rejects": 94991,
+            "node_visits": 318073,
+            "aabb_tests": 790644,
+            "triangle_tests": 44271,
+            "fallbacks": 0,
+            "max_stack": 5
+          },
+          {
+            "object_index": 2,
+            "mesh": "mirror",
+            "queries": 167868,
+            "bounded_queries": 54899,
+            "hits": 9349,
+            "root_rejects": 144154,
+            "node_visits": 271766,
+            "aabb_tests": 639138,
+            "triangle_tests": 226823,
+            "fallbacks": 0,
+            "max_stack": 8
+          },
+          {
+            "object_index": 3,
+            "mesh": "edges",
+            "queries": 167868,
+            "bounded_queries": 62677,
+            "hits": 3274,
+            "root_rejects": 145457,
+            "node_visits": 204875,
+            "aabb_tests": 535926,
+            "triangle_tests": 139411,
+            "fallbacks": 0,
+            "max_stack": 8
+          },
+          {
+            "object_index": 4,
+            "mesh": "metal",
+            "queries": 167868,
+            "bounded_queries": 63222,
+            "hits": 2377,
+            "root_rejects": 151014,
+            "node_visits": 119580,
+            "aabb_tests": 385354,
+            "triangle_tests": 64086,
+            "fallbacks": 0,
+            "max_stack": 10
+          },
+          {
+            "object_index": 5,
+            "mesh": "floor",
+            "queries": 167868,
+            "bounded_queries": 64457,
+            "hits": 45216,
+            "root_rejects": 122124,
+            "node_visits": 456356,
+            "aabb_tests": 986012,
+            "triangle_tests": 369150,
+            "fallbacks": 0,
+            "max_stack": 6
+          },
+          {
+            "object_index": 6,
+            "mesh": "grout",
+            "queries": 167868,
+            "bounded_queries": 109119,
+            "hits": 476,
+            "root_rejects": 167392,
+            "node_visits": 1428,
+            "aabb_tests": 169772,
+            "triangle_tests": 3808,
+            "fallbacks": 0,
+            "max_stack": 2
+          },
+          {
+            "object_index": 7,
+            "mesh": "night_exterior",
+            "queries": 167868,
+            "bounded_queries": 109541,
+            "hits": 15821,
+            "root_rejects": 152047,
+            "node_visits": 15821,
+            "aabb_tests": 167868,
+            "triangle_tests": 31642,
+            "fallbacks": 0,
+            "max_stack": 1
+          },
+          {
+            "object_index": 8,
+            "mesh": "upper_sky",
+            "queries": 167868,
+            "bounded_queries": 125362,
+            "hits": 6151,
+            "root_rejects": 160513,
+            "node_visits": 7355,
+            "aabb_tests": 167868,
+            "triangle_tests": 14710,
+            "fallbacks": 0,
+            "max_stack": 1
+          },
+          {
+            "object_index": 9,
+            "mesh": "moon",
+            "queries": 167868,
+            "bounded_queries": 131513,
+            "hits": 70,
+            "root_rejects": 167791,
+            "node_visits": 544,
+            "aabb_tests": 168594,
+            "triangle_tests": 1086,
+            "fallbacks": 0,
+            "max_stack": 3
+          },
+          {
+            "object_index": 10,
+            "mesh": "aged_brass",
+            "queries": 167868,
+            "bounded_queries": 131513,
+            "hits": 3658,
+            "root_rejects": 129100,
+            "node_visits": 209034,
+            "aabb_tests": 552834,
+            "triangle_tests": 107271,
+            "fallbacks": 0,
+            "max_stack": 9
+          },
+          {
+            "object_index": 11,
+            "mesh": "gold_trim",
+            "queries": 167868,
+            "bounded_queries": 131899,
+            "hits": 1425,
+            "root_rejects": 127306,
+            "node_visits": 151587,
+            "aabb_tests": 459486,
+            "triangle_tests": 34812,
+            "fallbacks": 0,
+            "max_stack": 7
+          },
+          {
+            "object_index": 12,
+            "mesh": "wax",
+            "queries": 167868,
+            "bounded_queries": 132145,
+            "hits": 434,
+            "root_rejects": 150893,
+            "node_visits": 43525,
+            "aabb_tests": 252498,
+            "triangle_tests": 7431,
+            "fallbacks": 0,
+            "max_stack": 6
+          },
+          {
+            "object_index": 13,
+            "mesh": "wick",
+            "queries": 167868,
+            "bounded_queries": 132227,
+            "hits": 8,
+            "root_rejects": 154610,
+            "node_visits": 26019,
+            "aabb_tests": 219848,
+            "triangle_tests": 144,
+            "fallbacks": 0,
+            "max_stack": 3
+          },
+          {
+            "object_index": 14,
+            "mesh": "flames",
+            "queries": 167868,
+            "bounded_queries": 132230,
+            "hits": 144,
+            "root_rejects": 151675,
+            "node_visits": 35686,
+            "aabb_tests": 238572,
+            "triangle_tests": 2230,
+            "fallbacks": 0,
+            "max_stack": 5
+          },
+          {
+            "object_index": 15,
+            "mesh": "bounce_fill",
+            "queries": 167868,
+            "bounded_queries": 132254,
+            "hits": 9418,
+            "root_rejects": 158450,
+            "node_visits": 9418,
+            "aabb_tests": 167868,
+            "triangle_tests": 18836,
+            "fallbacks": 0,
+            "max_stack": 1
+          }
+        ]
+      }
+    }
+  },
+  "phase_profiles": {
+    "median4": {
+      "antialiasing": true,
+      "bvh": true,
+      "bvh_bins": 16,
+      "bvh_build_ms": 18.2428,
+      "bvh_builder": "median",
+      "bvh_leaf_size": 4,
+      "bvh_leaves": 27052,
+      "bvh_max_depth": 13,
+      "bvh_nodes": 54088,
+      "bvh_validation_ms": 3.6586,
+      "compaction": true,
+      "cross_mesh_pruning": true,
+      "depth": 8,
+      "display_every_sample": false,
+      "dof": true,
+      "first_iteration": 1,
+      "focus_distance": 5.0,
+      "gpu": "NVIDIA GeForce RTX 4070 Laptop GPU",
+      "image_readback_bytes": 11520000,
+      "image_readbacks": 1,
+      "initialization_ms": 16.3916,
+      "kind": "cuda_event_instrumented",
+      "lens_radius": 0.012000000104308128,
+      "objects": 16,
+      "profile": {
+        "camera": {
+          "calls": 64,
+          "gpu_stream_ms": 44.52672028541565,
+          "host_section_ms": 0.42699999999999994
+        },
+        "compaction": {
+          "calls": 512,
+          "gpu_stream_ms": 108.30457599461079,
+          "host_section_ms": 15438.12960000001
+        },
+        "display": {
+          "calls": 0,
+          "gpu_stream_ms": 0.0,
+          "host_section_ms": 0.0
+        },
+        "gather": {
+          "calls": 64,
+          "gpu_stream_ms": 9.588256001472473,
+          "host_section_ms": 1.1920000000000004
+        },
+        "intersection": {
+          "calls": 512,
+          "gpu_stream_ms": 15161.674741744995,
+          "host_section_ms": 9.528799999999995
+        },
+        "prepare": {
+          "calls": 64,
+          "gpu_stream_ms": 2.167008001357317,
+          "host_section_ms": 0.9351999999999998
+        },
+        "readback": {
+          "calls": 3,
+          "gpu_stream_ms": 1.347808063030243,
+          "host_section_ms": 2.6853
+        },
+        "shading": {
+          "calls": 512,
+          "gpu_stream_ms": 150.69430419802666,
+          "host_section_ms": 2.947799999999998
+        },
+        "sorting": {
+          "calls": 0,
+          "gpu_stream_ms": 0.0,
+          "host_section_ms": 0.0
+        }
+      },
+      "profile_note": "Separate diagnostic run; CUDA-event stream intervals include launch gaps. Host/GPU times overlap and must not be summed. Events are resolved per sample.",
+      "readback_every_sample": false,
+      "render_loop_ms": 15486.9436,
+      "resolution": [
+        1200,
+        800
+      ],
+      "scene_load_ms": 759.3266,
+      "sorting": false,
+      "spp": 64,
+      "stage_synchronization_ms": 0.0,
+      "stage_synchronizations": 0,
+      "synchronize_each_stage": false,
+      "triangles": 86355,
+      "warmup_spp": 8
+    },
+    "sah2": {
+      "antialiasing": true,
+      "bvh": true,
+      "bvh_bins": 16,
+      "bvh_build_ms": 74.76709999999999,
+      "bvh_builder": "sah",
+      "bvh_leaf_size": 2,
+      "bvh_leaves": 48299,
+      "bvh_max_depth": 22,
+      "bvh_nodes": 96582,
+      "bvh_validation_ms": 5.281300000000001,
+      "compaction": true,
+      "cross_mesh_pruning": true,
+      "depth": 8,
+      "display_every_sample": false,
+      "dof": true,
+      "first_iteration": 1,
+      "focus_distance": 5.0,
+      "gpu": "NVIDIA GeForce RTX 4070 Laptop GPU",
+      "image_readback_bytes": 11520000,
+      "image_readbacks": 1,
+      "initialization_ms": 18.1377,
+      "kind": "cuda_event_instrumented",
+      "lens_radius": 0.012000000104308128,
+      "objects": 16,
+      "profile": {
+        "camera": {
+          "calls": 64,
+          "gpu_stream_ms": 43.88240057229996,
+          "host_section_ms": 0.3444
+        },
+        "compaction": {
+          "calls": 512,
+          "gpu_stream_ms": 98.73727989569306,
+          "host_section_ms": 5795.041099999995
+        },
+        "display": {
+          "calls": 0,
+          "gpu_stream_ms": 0.0,
+          "host_section_ms": 0.0
+        },
+        "gather": {
+          "calls": 64,
+          "gpu_stream_ms": 9.661472007632256,
+          "host_section_ms": 0.7298000000000001
+        },
+        "intersection": {
+          "calls": 512,
+          "gpu_stream_ms": 5526.282676696777,
+          "host_section_ms": 6.774800000000009
+        },
+        "prepare": {
+          "calls": 64,
+          "gpu_stream_ms": 1.797248002141714,
+          "host_section_ms": 0.6470999999999999
+        },
+        "readback": {
+          "calls": 3,
+          "gpu_stream_ms": 1.2952960133552551,
+          "host_section_ms": 2.6505
+        },
+        "shading": {
+          "calls": 512,
+          "gpu_stream_ms": 148.7691835872829,
+          "host_section_ms": 3.109999999999999
+        },
+        "sorting": {
+          "calls": 0,
+          "gpu_stream_ms": 0.0,
+          "host_section_ms": 0.0
+        }
+      },
+      "profile_note": "Separate diagnostic run; CUDA-event stream intervals include launch gaps. Host/GPU times overlap and must not be summed. Events are resolved per sample.",
+      "readback_every_sample": false,
+      "render_loop_ms": 5837.7105,
+      "resolution": [
+        1200,
+        800
+      ],
+      "scene_load_ms": 814.9633,
+      "sorting": false,
+      "spp": 64,
+      "stage_synchronization_ms": 0.0,
+      "stage_synchronizations": 0,
+      "synchronize_each_stage": false,
+      "triangles": 86355,
+      "warmup_spp": 8
+    }
+  },
+  "hardware_counter_limit": {
+    "status": "unavailable",
+    "reason": "Nsight Compute ERR_NVGPUCTRPERM: system GPU performance counters are not accessible.",
+    "note": "No achieved occupancy or warp-stall attribution is claimed. CUDA-event timing and own traversal work counters were collected successfully.",
+    "archival_log": "stage_records/18_binned_sah_2026-09-29/logs/ncu_median.log"
+  },
+  "validation": {
+    "ctest": {
+      "passed": 10,
+      "failed": 0,
+      "sha256": "1243898f05e9ce884e57a4b1f7e154351ebfcef0e85a4c9e6dd0c6dd18e73c20"
+    },
+    "compute_sanitizer": {
+      "mesh_intersection_tests": {
+        "errors": 0,
+        "leaked_bytes": 0,
+        "archival_log": "stage_records/18_binned_sah_2026-09-29/logs/memcheck_mesh_intersection_tests.log",
+        "sha256": "b16d6d528896d6b43edf28bd35dc153150040426273fe6ced1be0cee9ef147a8"
+      },
+      "thin_lens_render_tests": {
+        "errors": 0,
+        "leaked_bytes": 0,
+        "archival_log": "stage_records/18_binned_sah_2026-09-29/logs/memcheck_thin_lens_render_tests.log",
+        "sha256": "3adcca8fd868240497792c21ffec5fc6a4ed2fcd9ca91d032232b6491fbb1229"
+      }
+    },
+    "counter_oracle": "Known 5-ray, 2-mesh test verifies selected-ray count, hits/misses, triangle/node/AABB counts, and distance-bound root rejection exactly.",
+    "benchmark_images": {
+      "captures": 36,
+      "png_hdr_float32_byte_identical": true,
+      "sha256": {
+        "png": "064ee30b0ab8b37edf542794c15df7cf1252f010f416cfaa5fdf88894b8c5878",
+        "hdr": "1078e208f13d2c9558bf4dd19a9ba41989707190938d694e36bfb651266f371c",
+        "f32": "a4602f2e220aae0873d25c5f03bcf7fba3f30131053782286c9b4d753c221461"
+      }
+    },
+    "regression": [
+      {
+        "scene": "cornell.json",
+        "resolution": [
+          240,
+          240
+        ],
+        "spp": 32,
+        "byte_identical": {
+          "png": true,
+          "hdr": true,
+          "f32": true
+        },
+        "sha256": {
+          "png": "b8dc16d8050b1504e54ea033db6f0352d2d0fff95280d15e8a2ffc7be8736811",
+          "hdr": "211afd860bd863724aac5596dd83bcc733e4e35387ea8a8736a309b175c9c151",
+          "f32": "a23421db9541b7155ffbfb62f34bd76e8467212bdf6ef7e6fa2c23804681f53f"
+        }
+      },
+      {
+        "scene": "dof_gallery.json",
+        "resolution": [
+          240,
+          150
+        ],
+        "spp": 32,
+        "byte_identical": {
+          "png": true,
+          "hdr": true,
+          "f32": true
+        },
+        "sha256": {
+          "png": "4bdf17130807135cc113a18f70acef7801909336782ca7f7ebde024ef576dfca",
+          "hdr": "d4ca4e3178a14ec20c3a3ea2fdde74e1f74f5d1fa4ef360fda8002f5b792c320",
+          "f32": "fbad80f29783a4de1a201f4006478030476e9d1abf74e0ad890524835ed67b05"
+        }
+      },
+      {
+        "scene": "dof_validation.json",
+        "resolution": [
+          240,
+          122
+        ],
+        "spp": 32,
+        "byte_identical": {
+          "png": true,
+          "hdr": true,
+          "f32": true
+        },
+        "sha256": {
+          "png": "54fe8fdc03e4cbfc9468b0bdf3480fc2ff50c95b4d2f6c7ca29099659b5bae25",
+          "hdr": "54c182527a8d2eb3f3ce59e4d9120563af074cb39576b06c809852e78c5e4161",
+          "f32": "0718f41f144772932cb934a997de06e55466a70ce2df6fd4e4f9419d2d13601d"
+        }
+      },
+      {
+        "scene": "mesh_aabb_torus_exterior.json",
+        "resolution": [
+          240,
+          240
+        ],
+        "spp": 32,
+        "byte_identical": {
+          "png": true,
+          "hdr": true,
+          "f32": true
+        },
+        "sha256": {
+          "png": "836c7f6facfa2e4696d75f21b72d7ca10e6e52e3d74607d5867f632969ed525c",
+          "hdr": "6b850a7f5228ee043c992cf42bf62e348d4b32c61ea48525c03cdf8d45c98467",
+          "f32": "189ab201fda190a2af8a536621cc442e6ef3bb24d68063d8ccb7a811d3b5fc7d"
+        }
+      },
+      {
+        "scene": "mesh_aabb_torus_interior.json",
+        "resolution": [
+          240,
+          240
+        ],
+        "spp": 32,
+        "byte_identical": {
+          "png": true,
+          "hdr": true,
+          "f32": true
+        },
+        "sha256": {
+          "png": "ce8e265cf066f355fbd17424331750f9504def4ad47397a0d7bcb57cafb50309",
+          "hdr": "3cf7c9f196eacaec9040fd6a5df787d2de132271e711aaa952a5bb246eb27c45",
+          "f32": "ab134304f3da257d4d132251613a99f17f2f09c920cfb32fdca85a6dbe21d918"
+        }
+      },
+      {
+        "scene": "mesh_aabb_validation.json",
+        "resolution": [
+          240,
+          240
+        ],
+        "spp": 32,
+        "byte_identical": {
+          "png": true,
+          "hdr": true,
+          "f32": true
+        },
+        "sha256": {
+          "png": "bd39bd44ba968d00d41e9079d361dc6a67ecb19b50dd3b7000dbde5871808e98",
+          "hdr": "b18b28c57b7fb92041e08c08ceb0cd411fd4e49bbf053814e53936fbf519ef20",
+          "f32": "e1eecae009e7bee6c2ef10a8e0972f111e45081c1c13a1e363139eb37a81869e"
+        }
+      },
+      {
+        "scene": "mesh_cpu_validation.json",
+        "resolution": [
+          64,
+          64
+        ],
+        "spp": 32,
+        "byte_identical": {
+          "png": true,
+          "hdr": true,
+          "f32": true
+        },
+        "sha256": {
+          "png": "1f8e7a4915de91f69c595318150046237138b00fd30bd0e8aec55c0b52c8c048",
+          "hdr": "5e4ca599c8fe0dcfb12ea3b84e2d2ec1e68268b612dd0cb7522bde87e877ac47",
+          "f32": "0b7ada0a6c12fbdc237309496a86a10260d0c45d21956432b66d72b02b39a4d6"
+        }
+      },
+      {
+        "scene": "mesh_gpu_validation.json",
+        "resolution": [
+          240,
+          240
+        ],
+        "spp": 32,
+        "byte_identical": {
+          "png": true,
+          "hdr": true,
+          "f32": true
+        },
+        "sha256": {
+          "png": "bd39bd44ba968d00d41e9079d361dc6a67ecb19b50dd3b7000dbde5871808e98",
+          "hdr": "b18b28c57b7fb92041e08c08ceb0cd411fd4e49bbf053814e53936fbf519ef20",
+          "f32": "e1eecae009e7bee6c2ef10a8e0972f111e45081c1c13a1e363139eb37a81869e"
+        }
+      },
+      {
+        "scene": "shatterseal_moonlit_hall_refined.json",
+        "resolution": [
+          240,
+          160
+        ],
+        "spp": 32,
+        "byte_identical": {
+          "png": true,
+          "hdr": true,
+          "f32": true
+        },
+        "sha256": {
+          "png": "e60d97385bfdb147794712e31ce79529874093db05eb0fe5de7cedf82226be49",
+          "hdr": "34883a3e53077c4c5b08baf673ab1ee4c6ddbc7afbddbc3faf54ee79db1235f9",
+          "f32": "c9e0afdb9e7827bb92e4507dbd3d5cc3988d23807501ae6ba1ce8845a0bebac1"
+        }
+      },
+      {
+        "scene": "shatterseal_moonlit_hall_refined_detail.json",
+        "resolution": [
+          240,
+          160
+        ],
+        "spp": 32,
+        "byte_identical": {
+          "png": true,
+          "hdr": true,
+          "f32": true
+        },
+        "sha256": {
+          "png": "33a26c77b7f638f2c2487cbd896b58325d265f47ae8f9e19cd0969c6ec6d519e",
+          "hdr": "1b4d235e2e803d2611c86336db1b1bfe9bff310786a0446f7d0f25b3a561be8a",
+          "f32": "8c05d01e32cc4f0226caecd7d32eee3e2377943bc0321acf3d57197f7898d982"
+        }
+      },
+      {
+        "scene": "shatterseal_moonlit_hall_refined_preview.json",
+        "resolution": [
+          240,
+          160
+        ],
+        "spp": 32,
+        "byte_identical": {
+          "png": true,
+          "hdr": true,
+          "f32": true
+        },
+        "sha256": {
+          "png": "164cef48d840c694f4cf337e5d3b25e3c9c31c474f5f16c1b906df42e79ca3df",
+          "hdr": "fe8ef097242a546467b6567b7f82633bd05b73374d2301175f8c5ceb038e587b",
+          "f32": "294128fecb5745a71bf4d9342e9c6a12d059d861d37c287bb3cc110829cbc423"
+        }
+      },
+      {
+        "scene": "sphere.json",
+        "resolution": [
+          240,
+          240
+        ],
+        "spp": 32,
+        "byte_identical": {
+          "png": true,
+          "hdr": true,
+          "f32": true
+        },
+        "sha256": {
+          "png": "f57f0dfb0f0312f992efa3b52bab1405d453b0647089518a21e20edefd6ab5dc",
+          "hdr": "1418275f22219109297927467d6b187d7126bd9e5df1cae563c872e24ca17fac",
+          "f32": "7bba96823a46c3379977198d6401044695d76929ffaac7040ca19e9824e8932d"
+        }
+      }
+    ],
+    "full_showcase": {
+      "capture": {
+        "antialiasing": true,
+        "bvh": true,
+        "bvh_bins": 16,
+        "bvh_build_ms": 75.7038,
+        "bvh_builder": "sah",
+        "bvh_leaf_size": 2,
+        "bvh_leaves": 48299,
+        "bvh_max_depth": 22,
+        "bvh_nodes": 96582,
+        "bvh_validation_ms": 5.5574,
+        "compaction": true,
+        "cross_mesh_pruning": true,
+        "depth": 8,
+        "display_every_sample": false,
+        "dof": true,
+        "first_iteration": 1,
+        "focus_distance": 5.0,
+        "gpu": "NVIDIA GeForce RTX 4070 Laptop GPU",
+        "image_readback_bytes": 11520000,
+        "image_readbacks": 1,
+        "initialization_ms": 18.0397,
+        "kind": "production_renderer_headless",
+        "lens_radius": 0.012000000104308128,
+        "objects": 16,
+        "readback_every_sample": false,
+        "render_loop_ms": 280404.5688,
+        "resolution": [
+          1200,
+          800
+        ],
+        "scene_load_ms": 816.6967,
+        "sorting": false,
+        "spp": 3072,
+        "stage_synchronizations": 0,
+        "synchronize_each_stage": false,
+        "triangles": 86355,
+        "warmup_spp": 8
+      },
+      "byte_identical": {
+        "png": true,
+        "hdr": false,
+        "f32": false
+      },
+      "sha256": {
+        "png": "03dff433c091ca5afb80ac446e549547fb0fd284906697d400017666aff40540",
+        "hdr": "42865cd634031b4b1d82499f67c4de93a628efbd906fc45a127fcb999afb5057",
+        "f32": "a848ec3775ea0ba04fe84fcd2f5a589f82ca8d88e221384a05097259a8e10d6f"
+      },
+      "linear_difference": {
+        "pixels": 960000,
+        "changed_pixels": 28,
+        "changed_channels": 77,
+        "max_abs_channel_difference": 0.0002967417240142822,
+        "mean_abs_channel_difference": 6.696586448621626e-10,
+        "rmse": 3.041044065430699e-07,
+        "note": "The final PNG is byte-identical, but linear HDR/float32 are not. Tight SAH boxes expose numerical sensitivity of the existing float triangle test at very thin triangle edges. The old triangle arithmetic is preserved; no claim of full-frame bitwise linear equivalence is made.",
+        "reproduced_example": {
+          "pixel_index": 542850,
+          "iteration": 173,
+          "depth": 0,
+          "median_t": 6.262088298797607,
+          "sah_t": 6.26209831237793,
+          "local_ray_origin": [
+            2.351316452026367,
+            -1.9668140411376953,
+            1.6489074230194092
+          ],
+          "local_ray_direction": [
+            -0.40374821424484253,
+            0.28503501415252686,
+            -0.25374072790145874
+          ],
+          "triangle_vertices": [
+            [
+              -0.1871969997882843,
+              -0.18479299545288086,
+              0.06089799851179123
+            ],
+            [
+              -0.17699900269508362,
+              -0.18191100656986237,
+              0.05994199961423874
+            ],
+            [
+              -0.17700299620628357,
+              -0.18189099431037903,
+              0.05999099835753441
+            ]
+          ],
+          "double_arithmetic_on_stored_float_geometry": {
+            "u": 0.5960568245693364,
+            "v": 0.4049768407441146,
+            "u_plus_v": 1.001033665313451,
+            "inside": false
+          },
+          "explanation": "Median/float brute force accept the thin triangle. Its double-arithmetic barycentrics lie outside the triangle; the tighter SAH leaf rejects it. This is a numerical-boundary case, not changed source geometry or BSDFs.",
+          "archival_details": "stage_records/18_binned_sah_2026-09-29/debug_source/first_difference.json"
+        },
+        "targeted_replay": {
+          "pixels": 28,
+          "samples_per_pixel": 3072,
+          "first_disagreements_on_primary_rays": 28,
+          "stored_float_triangle_outside_with_double_arithmetic": 25,
+          "remaining_distance_precision_cases": 3,
+          "note": "Reuses linked production camera/intersection/shading objects and both trees on identical selected rays. Follows median paths; captures the first intersection disagreement for each affected pixel. Double arithmetic is a diagnostic on stored float geometry, not a replacement renderer.",
+          "archival_details": "stage_records/18_binned_sah_2026-09-29/debug_source/pixel_differences.json",
+          "sha256": "efad831b17c0427ae7269c14882a0f17b0ea9989e653f32285534a553ae3d90f"
+        }
+      },
+      "note": "Final executable, no BVH override flags. One 3072-spp capture, not a repeated benchmark; compared to the previous full output. PNG identical; linear differences are reported explicitly."
+    }
+  },
+  "provenance": {
+    "benchmark_executable_sha256": "2762e50df6f31682ceed533d9e1d9dd4b184ef92d803ac3e9476eec0bbe94c67",
+    "final_executable_sha256": "01c01999a82468c20ed1edf4c92de7be7532cc33c2a481e43dc56366ac5b33ef",
+    "benchmark_source_sha256": {
+      "CMakeLists.txt": "31ee2fe20036e92e77550ce3e3421a621a8d2394a017970eadae00ccfaaf8e89",
+      "src/bvh.cpp": "70f4cfee509ffc29129e41c37bf8927462edf218c2467f896b5901fb50ef5230",
+      "src/bvh.h": "3cf2cd42f4df2798dfbc718cc31c7d7c3bf03f848cef641651b5a050b34df268",
+      "src/intersectionProfile.cu": "e81be3b66e67ca41cbbe76049995e15b47c2febb91e148c2422b8900a25dd8a8",
+      "src/intersectionProfile.h": "e5cfeca1fd82f3244d0b5a6a0a151537ece025b282d4c40b43cd8bf2716fe575",
+      "src/pathtrace.cu": "1939197d4832ff7567e3290c22405909a84e9926dfd6670e2adc795b96eab0b0",
+      "src/pathtrace.h": "d65f337e44138e1ec31225fabbe5ef8ec60f213d2998601dc1eb7cb138a040a1",
+      "src/scene.cpp": "fdd42aea4a87b1d75c4493e7b7690b18d7e808fb88c7caff6eed424ce985366c",
+      "src/scene.h": "df7ac55d2535543bd435303dbda3030ba972e091280f3858a1e70b23da5bfede",
+      "tools/render_scene.cpp": "744bde823b3cc5af8d6a6f2beec798c0596d4c9a5b918fcb27d71c2761aad403"
+    },
+    "final_source_sha256": {
+      "CMakeLists.txt": "31ee2fe20036e92e77550ce3e3421a621a8d2394a017970eadae00ccfaaf8e89",
+      "src/bvh.cpp": "70f4cfee509ffc29129e41c37bf8927462edf218c2467f896b5901fb50ef5230",
+      "src/bvh.h": "bea0f38bc8d4518564229dfae7b28d0b4a0f23c6acd8979293815a2b90f3a8e7",
+      "src/intersectionProfile.cu": "e81be3b66e67ca41cbbe76049995e15b47c2febb91e148c2422b8900a25dd8a8",
+      "src/intersectionProfile.h": "e5cfeca1fd82f3244d0b5a6a0a151537ece025b282d4c40b43cd8bf2716fe575",
+      "src/pathtrace.cu": "1939197d4832ff7567e3290c22405909a84e9926dfd6670e2adc795b96eab0b0",
+      "src/pathtrace.h": "d65f337e44138e1ec31225fabbe5ef8ec60f213d2998601dc1eb7cb138a040a1",
+      "src/scene.cpp": "fdd42aea4a87b1d75c4493e7b7690b18d7e808fb88c7caff6eed424ce985366c",
+      "src/scene.h": "df7ac55d2535543bd435303dbda3030ba972e091280f3858a1e70b23da5bfede",
+      "tools/render_scene.cpp": "744bde823b3cc5af8d6a6f2beec798c0596d4c9a5b918fcb27d71c2761aad403"
+    },
+    "note": "Benchmark binary used explicit builder/leaf flags. The final build promotes the measured winner to the default. Relevant source snapshots, binaries and raw captures stay in the local archive.",
+    "archive": "stage_records/18_binned_sah_2026-09-29"
+  }
+}

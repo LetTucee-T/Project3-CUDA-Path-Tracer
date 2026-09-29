@@ -8,10 +8,14 @@
 // Root depth is zero. Keep this limit explicit for the future GPU traversal stack.
 constexpr int BVH_MAX_DEPTH = 32;
 
+enum class BVHSplitMethod { Median, BinnedSAH };
+
 struct BVHBuildOptions
 {
-    int maxLeafTriangles = 4;
+    int maxLeafTriangles = 1;
     int maxDepth = BVH_MAX_DEPTH;
+    BVHSplitMethod splitMethod = BVHSplitMethod::BinnedSAH;
+    int binCount = 16;
 };
 
 struct BVHStats
@@ -47,3 +51,7 @@ BVHStats validateMeshBVH(
     const std::vector<Triangle>& triangles, const Geom& mesh,
     const std::vector<BVHNode>& nodes, const std::vector<int>& triangleIndices,
     int maxDepth = BVH_MAX_DEPTH);
+
+// Encode an already topology-validated node array without changing any bounds,
+// node positions or primitive references. Reject unrepresentable node metadata.
+std::vector<CompactBVHNode> packBVHNodes(const std::vector<BVHNode>& nodes);

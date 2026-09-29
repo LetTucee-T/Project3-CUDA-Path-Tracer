@@ -70,13 +70,14 @@ bool equalImage(const std::vector<glm::vec3>& a, const std::vector<glm::vec3>& b
 }
 struct RenderSession {
     DeviceArray<uchar4> output;
-    explicit RenderSession(Scene& s) : output(s.state.image.size()) { pathtraceInit(&s); }
+    explicit RenderSession(Scene& s, const PathtraceOptions& options = {}) : output(s.state.image.size()) { pathtraceInit(&s, options); }
     ~RenderSession() { pathtraceFree(); }
 };
 std::vector<glm::vec3> render(Scene& s, int samples)
 {
     RenderSession session(s);
     for (int i = 1; i <= samples; ++i) pathtrace(session.output.data, 0, i);
+    pathtraceReadback();
     for (auto p : s.state.image) {
         require(cameraSampling::finite(p), "Image contains NaN/Inf");
         require(p.x >= 0 && p.y >= 0 && p.z >= 0, "Negative radiance");
@@ -213,7 +214,73 @@ int main(int argc, char** argv)
         }
         pathtraceFree();
     });
-    test("production renderer reports invalid lens before gathering", [&] {
+    test("explicit readback, display, profiling, synchronization and pruning agree", [&] {
+        std::vector<glm::vec3> reference;
+        std::vector<uchar4> displayReference;
+        for (int mode = 0; mode < 32; ++mode) {
+            Scene s(fixture.string()); smallScene(s);
+            s.state.enableDepthOfField = true; s.state.enableAntialiasing = true;
+            s.state.enableBVH = true; s.state.enableStreamCompaction = true;
+            const bool each = (mode & 8) != 0, display = (mode & 16) != 0;
+            PathtraceOptions options;
+            options.synchronizeEachStage = (mode & 1) != 0;
+            options.crossMeshPruning = (mode & 2) != 0;
+            options.profile = (mode & 4) != 0;
+            RenderSession session(s, options);
+            std::fill(s.state.image.begin(), s.state.image.end(), glm::vec3(-17));
+            for (int i = 1; i <= 3; ++i) {
+                pathtrace(display ? session.output.data : nullptr, 0, i);
+                if (each) pathtraceReadback();
+                else require(s.state.image[0].x == -17, "Step unexpectedly read back host image");
+            }
+            pathtraceReadback();
+            const auto statistics = pathtraceGetMetrics();
+            require(statistics.samples == 3 && statistics.imageReadbacks == (each ? 3 : 1), "Wrong readback/sample count");
+            require(statistics.readbackBytes == statistics.imageReadbacks * s.state.image.size() * sizeof(glm::vec3), "Wrong transfer byte count");
+            if (reference.empty()) reference = s.state.image;
+            else require(equalImage(reference, s.state.image), "Execution options changed radiance");
+            if (display) {
+                const auto pixels = session.output.read();
+                if (displayReference.empty()) displayReference = pixels;
+                else require(std::memcmp(pixels.data(), displayReference.data(), pixels.size()*sizeof(uchar4)) == 0, "Execution options changed preview");
+            }
+        }
+    });
+    test("BVH layouts, SAH leaf sizes and sampled replay preserve the rendered image", [&] {
+        std::vector<glm::vec3> reference;
+        for(auto method : {BVHSplitMethod::Median, BVHSplitMethod::BinnedSAH})
+        for(int leaf : {1,2,4,8}) for(bool compact : {false,true})
+        for(int stride : {0,1,7}) for(bool pruning : {false,true}) {
+            Scene s(fixture.string(), {leaf,BVH_MAX_DEPTH,method,16}); smallScene(s);
+            s.state.enableBVH=true; s.state.enableDepthOfField=true;
+            s.state.enableStreamCompaction=true; s.state.enableMaterialSorting=true;
+            PathtraceOptions options; options.profileIntersections=stride!=0;
+            options.intersectionProfileStride=stride;
+            options.crossMeshPruning=pruning;
+            options.compactBVHNodes=compact;
+            RenderSession session(s,options);
+            for(int i=1;i<=3;++i) pathtrace(nullptr,0,i);
+            pathtraceReadback();
+            if(reference.empty()) reference=s.state.image;
+            else require(equalImage(reference,s.state.image), "SAH/profiling changed radiance");
+            const auto m=pathtraceGetMetrics();
+            if(stride) {
+                require(m.intersectionWork[0].sampledRays==3*((s.state.image.size()+stride-1)/stride), "Wrong sampled ray count");
+                unsigned long long triangleTests=0;
+                for(const auto& bounce:m.intersectionWork) {
+                    require(bounce.mismatches==0,"Replay mismatch");
+                    for(const auto& row:bounce.perGeometry) {
+                        require(row.queries==bounce.sampledRays,"Per-object population changed");
+                        require(row.fallbacks==0,"Valid SAH tree fell back to brute force");
+                        triangleTests+=row.triangleTests;
+                        if(!pruning) require(row.boundedQueries==0,"Unbounded query recorded a distance cap");
+                    }
+                }
+                require(triangleTests>0,"Diagnostic never visited any mesh triangles");
+            } else require(m.intersectionWork.empty(),"Disabled profiler collected work");
+        }
+    });
+    test("production renderer reports invalid lens before exposing the image", [&] {
         Scene s(fixture.string()); smallScene(s);
         s.state.enableDepthOfField = true; s.state.camera.focalDistance = 0;
         bool rejected = false;

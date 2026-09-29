@@ -1,0 +1,776 @@
+{
+  "date": "2026-09-29",
+  "build_configuration": "Release",
+  "cuda_toolkit": "12.9",
+  "scene": "scenes/shatterseal_moonlit_hall_refined.json",
+  "scene_sha256": "6a9cae8bf3994a8457cbb9ed8e2b4b3e6cd94ec53770e3b44453251c004e7393",
+  "hardware": {
+    "gpu": "NVIDIA GeForce RTX 4070 Laptop GPU",
+    "clocks_locked": false,
+    "gpu_state_csv_fields": "temperature.gpu,clocks.current.graphics,clocks.current.memory,power.draw,utilization.gpu",
+    "note": "GPU state was sampled before/after each run, not continuously."
+  },
+  "provenance": {
+    "git_revision": "d802360260d8d3cb8dd35b2821397a32277f9bdf",
+    "baseline_executable_sha256": "5056e82e724953f773cea2c82ed0cf29c509b75c41e6a67576fd25893fa6167d",
+    "optimized_executable_sha256": "0f61f14102ed540b48595a8bbe8a5221894ad66c4b28e66c77d8b51ce53beaec",
+    "source_sha256": {
+      "src/pathtrace.cu": "ae1c51364912959afaacdd27b124f6f1a32b0d559046f4bc654a6e723e50e386",
+      "src/pathtrace.h": "89f61e94836aa8e69cbf6feb43250499474b1be0d4f58f3c054172b5190e8f6d",
+      "src/intersections.cu": "1a011a4d6ec24a39d15a0233e4c9e6eb2288a8cfb343d456fa48ca73c1df5ca5",
+      "src/intersections.h": "9a5a40030e7dc8573674af8086d11bda72e788952009b323fcc2e306ad37c141",
+      "src/main.cpp": "f83ed82195c1d416c911fd41a1e794f5c5e58c8bb6297e83f3115810f51fc90c",
+      "tools/render_scene.cpp": "bd11ee21e8c25beae59318592bf8f4bc266c48cbef1e152de5d83b3656b151f2",
+      "tests/bvh_gpu_test_cases.h": "4bd4e147dba476f0c479ca7be4dc84cb32ed451dad76b4325ce43d03f1e41a8d",
+      "tests/mesh_intersection_tests.cu": "78bfaa5d377d5039590a520e696ca49fa3e5f1251f130f2515e89c080aec025f",
+      "tests/thin_lens_render_tests.cu": "5a9607938fb9ef02e1c9e8747933b6a941ee452ffc26c668da3767dcfbf24a0f"
+    },
+    "local_archive": "stage_records\\17_render_performance_2026-09-29",
+    "note": "Old executable, source snapshot, raw images and experiment drivers remain local."
+  },
+  "benchmark": {
+    "resolution": [
+      1200,
+      800
+    ],
+    "spp": 64,
+    "depth": 8,
+    "warmup_spp": 8,
+    "aa": true,
+    "compaction": true,
+    "sorting": false,
+    "bvh": true,
+    "dof": true,
+    "profile_enabled": false,
+    "rounds": 5,
+    "order": "Cyclic rotation of original, compatibility, scheduling, distance_only, optimized; each occupies each position once.",
+    "timing": "Render loop includes GPU completion and final readback; excludes loading, initialization, warmup and file encoding/writing.",
+    "ranges": "Observed min/max, not confidence intervals.",
+    "summary": {
+      "original": {
+        "runs": 5,
+        "median_ms": 16873.1056,
+        "min_ms": 16800.0586,
+        "max_ms": 16901.939,
+        "speedup_vs_original": 1.0,
+        "time_reduction_vs_original_percent": 0.0,
+        "speedup_vs_compatibility": 0.9974198229400046
+      },
+      "compatibility": {
+        "runs": 5,
+        "median_ms": 16829.57,
+        "min_ms": 16745.9725,
+        "max_ms": 17168.4129,
+        "speedup_vs_original": 1.0025868515951388,
+        "time_reduction_vs_original_percent": 0.2580177059995359,
+        "speedup_vs_compatibility": 1.0
+      },
+      "scheduling": {
+        "runs": 5,
+        "median_ms": 16715.0645,
+        "min_ms": 16645.2991,
+        "max_ms": 16734.3717,
+        "speedup_vs_original": 1.0094550098804584,
+        "time_reduction_vs_original_percent": 0.9366450003133853,
+        "speedup_vs_compatibility": 1.0068504372208673
+      },
+      "distance_only": {
+        "runs": 5,
+        "median_ms": 15710.1418,
+        "min_ms": 15647.8276,
+        "max_ms": 15762.4238,
+        "speedup_vs_original": 1.074026308279407,
+        "time_reduction_vs_original_percent": 6.892411080506722,
+        "speedup_vs_compatibility": 1.071255130236953
+      },
+      "optimized": {
+        "runs": 5,
+        "median_ms": 15640.7683,
+        "min_ms": 15563.1494,
+        "max_ms": 15896.0093,
+        "speedup_vs_original": 1.0787900745259424,
+        "time_reduction_vs_original_percent": 7.303559458550413,
+        "speedup_vs_compatibility": 1.0760066051231
+      }
+    },
+    "flags": {
+      "original": "Archived unmodified executable",
+      "compatibility": [
+        "--sync-every-stage",
+        "--readback-every-sample",
+        "--display-every-sample",
+        "--no-distance-pruning"
+      ],
+      "scheduling": [
+        "--no-distance-pruning"
+      ],
+      "distance_only": [
+        "--sync-every-stage",
+        "--readback-every-sample",
+        "--display-every-sample"
+      ],
+      "optimized": []
+    },
+    "reproduce": "Copy the scene JSON, set Camera.ITERATIONS to 64, preserve/resolve relative asset paths; build Release; run scene_render for each flag combination after its built-in warmup. Do not add --profile to timing trials.",
+    "readbacks_note": "The original executable does not report transfer counters; blank CSV cells mean unavailable."
+  },
+  "profiling": {
+    "note": "Separate diagnostic runs. CUDA-event stream intervals include launch gaps. Host sections, GPU stream time and synchronization waits overlap; never add them. Events are resolved once per sample.",
+    "stage_synchronizations_note": "Counters include the initialization check; render-loop time starts after initialization. These are explicit checkCUDAError synchronizations only; Thrust and readbacks can still synchronize.",
+    "runs": {
+      "compatibility": {
+        "antialiasing": true,
+        "bvh": true,
+        "compaction": true,
+        "cross_mesh_pruning": false,
+        "depth": 8,
+        "display_every_sample": true,
+        "dof": true,
+        "first_iteration": 1,
+        "focus_distance": 5.0,
+        "gpu": "NVIDIA GeForce RTX 4070 Laptop GPU",
+        "image_readback_bytes": 737280000,
+        "image_readbacks": 64,
+        "initialization_ms": 16.4084,
+        "kind": "cuda_event_instrumented",
+        "lens_radius": 0.012000000104308128,
+        "objects": 16,
+        "profile": {
+          "camera": {
+            "calls": 64,
+            "gpu_stream_ms": 44.742240488529205,
+            "host_section_ms": 0.42019999999999985
+          },
+          "compaction": {
+            "calls": 512,
+            "gpu_stream_ms": 109.36892813444138,
+            "host_section_ms": 109.53129999999996
+          },
+          "display": {
+            "calls": 64,
+            "gpu_stream_ms": 4.909215994179249,
+            "host_section_ms": 4.5093000000000005
+          },
+          "gather": {
+            "calls": 64,
+            "gpu_stream_ms": 10.28284801542759,
+            "host_section_ms": 1.0337999999999998
+          },
+          "intersection": {
+            "calls": 512,
+            "gpu_stream_ms": 16255.060618400574,
+            "host_section_ms": 7.978399999999994
+          },
+          "prepare": {
+            "calls": 64,
+            "gpu_stream_ms": 2.9811519999057055,
+            "host_section_ms": 1.1252
+          },
+          "readback": {
+            "calls": 128,
+            "gpu_stream_ms": 78.55097582750022,
+            "host_section_ms": 77.81959999999995
+          },
+          "shading": {
+            "calls": 512,
+            "gpu_stream_ms": 163.19369594752789,
+            "host_section_ms": 11.471099999999986
+          },
+          "sorting": {
+            "calls": 0,
+            "gpu_stream_ms": 0.0,
+            "host_section_ms": 0.0
+          }
+        },
+        "profile_note": "Separate diagnostic run; CUDA-event stream intervals include launch gaps. Host/GPU times overlap and must not be summed. Events are resolved per sample.",
+        "readback_every_sample": true,
+        "render_loop_ms": 16723.8336,
+        "resolution": [
+          1200,
+          800
+        ],
+        "scene_load_ms": 753.5381,
+        "sorting": false,
+        "spp": 64,
+        "stage_synchronization_ms": 16476.682100000005,
+        "stage_synchronizations": 1729,
+        "synchronize_each_stage": true,
+        "triangles": 86355,
+        "warmup_spp": 8
+      },
+      "scheduling": {
+        "antialiasing": true,
+        "bvh": true,
+        "compaction": true,
+        "cross_mesh_pruning": false,
+        "depth": 8,
+        "display_every_sample": false,
+        "dof": true,
+        "first_iteration": 1,
+        "focus_distance": 5.0,
+        "gpu": "NVIDIA GeForce RTX 4070 Laptop GPU",
+        "image_readback_bytes": 11520000,
+        "image_readbacks": 1,
+        "initialization_ms": 14.5709,
+        "kind": "cuda_event_instrumented",
+        "lens_radius": 0.012000000104308128,
+        "objects": 16,
+        "profile": {
+          "camera": {
+            "calls": 64,
+            "gpu_stream_ms": 43.71340811252594,
+            "host_section_ms": 0.40340000000000004
+          },
+          "compaction": {
+            "calls": 512,
+            "gpu_stream_ms": 110.49254399910569,
+            "host_section_ms": 16605.80670000001
+          },
+          "display": {
+            "calls": 0,
+            "gpu_stream_ms": 0.0,
+            "host_section_ms": 0.0
+          },
+          "gather": {
+            "calls": 64,
+            "gpu_stream_ms": 9.43392001092434,
+            "host_section_ms": 0.8622000000000001
+          },
+          "intersection": {
+            "calls": 512,
+            "gpu_stream_ms": 16319.970927238464,
+            "host_section_ms": 8.702100000000014
+          },
+          "prepare": {
+            "calls": 64,
+            "gpu_stream_ms": 2.038528000935912,
+            "host_section_ms": 0.7870999999999999
+          },
+          "readback": {
+            "calls": 3,
+            "gpu_stream_ms": 1.5135040432214737,
+            "host_section_ms": 2.8769
+          },
+          "shading": {
+            "calls": 512,
+            "gpu_stream_ms": 155.28041549399495,
+            "host_section_ms": 2.8376
+          },
+          "sorting": {
+            "calls": 0,
+            "gpu_stream_ms": 0.0,
+            "host_section_ms": 0.0
+          }
+        },
+        "profile_note": "Separate diagnostic run; CUDA-event stream intervals include launch gaps. Host/GPU times overlap and must not be summed. Events are resolved per sample.",
+        "readback_every_sample": false,
+        "render_loop_ms": 16652.3769,
+        "resolution": [
+          1200,
+          800
+        ],
+        "scene_load_ms": 740.2215,
+        "sorting": false,
+        "spp": 64,
+        "stage_synchronization_ms": 0.0,
+        "stage_synchronizations": 0,
+        "synchronize_each_stage": false,
+        "triangles": 86355,
+        "warmup_spp": 8
+      },
+      "distance_only": {
+        "antialiasing": true,
+        "bvh": true,
+        "compaction": true,
+        "cross_mesh_pruning": true,
+        "depth": 8,
+        "display_every_sample": true,
+        "dof": true,
+        "first_iteration": 1,
+        "focus_distance": 5.0,
+        "gpu": "NVIDIA GeForce RTX 4070 Laptop GPU",
+        "image_readback_bytes": 737280000,
+        "image_readbacks": 64,
+        "initialization_ms": 15.2762,
+        "kind": "cuda_event_instrumented",
+        "lens_radius": 0.012000000104308128,
+        "objects": 16,
+        "profile": {
+          "camera": {
+            "calls": 64,
+            "gpu_stream_ms": 43.82652819156647,
+            "host_section_ms": 0.5538
+          },
+          "compaction": {
+            "calls": 512,
+            "gpu_stream_ms": 109.5951997935772,
+            "host_section_ms": 108.65609999999992
+          },
+          "display": {
+            "calls": 64,
+            "gpu_stream_ms": 5.045375969260931,
+            "host_section_ms": 4.3015
+          },
+          "gather": {
+            "calls": 64,
+            "gpu_stream_ms": 10.477600038051605,
+            "host_section_ms": 1.1029
+          },
+          "intersection": {
+            "calls": 512,
+            "gpu_stream_ms": 15200.408366203308,
+            "host_section_ms": 7.866400000000004
+          },
+          "prepare": {
+            "calls": 64,
+            "gpu_stream_ms": 2.678176013752818,
+            "host_section_ms": 1.2022
+          },
+          "readback": {
+            "calls": 128,
+            "gpu_stream_ms": 77.79913583397865,
+            "host_section_ms": 77.3134
+          },
+          "shading": {
+            "calls": 512,
+            "gpu_stream_ms": 163.03961618244648,
+            "host_section_ms": 11.507799999999996
+          },
+          "sorting": {
+            "calls": 0,
+            "gpu_stream_ms": 0.0,
+            "host_section_ms": 0.0
+          }
+        },
+        "profile_note": "Separate diagnostic run; CUDA-event stream intervals include launch gaps. Host/GPU times overlap and must not be summed. Events are resolved per sample.",
+        "readback_every_sample": true,
+        "render_loop_ms": 15664.9496,
+        "resolution": [
+          1200,
+          800
+        ],
+        "scene_load_ms": 739.0568,
+        "sorting": false,
+        "spp": 64,
+        "stage_synchronization_ms": 15418.030300000008,
+        "stage_synchronizations": 1729,
+        "synchronize_each_stage": true,
+        "triangles": 86355,
+        "warmup_spp": 8
+      },
+      "optimized": {
+        "antialiasing": true,
+        "bvh": true,
+        "compaction": true,
+        "cross_mesh_pruning": true,
+        "depth": 8,
+        "display_every_sample": false,
+        "dof": true,
+        "first_iteration": 1,
+        "focus_distance": 5.0,
+        "gpu": "NVIDIA GeForce RTX 4070 Laptop GPU",
+        "image_readback_bytes": 11520000,
+        "image_readbacks": 1,
+        "initialization_ms": 15.8101,
+        "kind": "cuda_event_instrumented",
+        "lens_radius": 0.012000000104308128,
+        "objects": 16,
+        "profile": {
+          "camera": {
+            "calls": 64,
+            "gpu_stream_ms": 44.472447752952576,
+            "host_section_ms": 0.44730000000000036
+          },
+          "compaction": {
+            "calls": 512,
+            "gpu_stream_ms": 113.0384959038347,
+            "host_section_ms": 15476.222899999997
+          },
+          "display": {
+            "calls": 0,
+            "gpu_stream_ms": 0.0,
+            "host_section_ms": 0.0
+          },
+          "gather": {
+            "calls": 64,
+            "gpu_stream_ms": 9.659136041998863,
+            "host_section_ms": 1.1083
+          },
+          "intersection": {
+            "calls": 512,
+            "gpu_stream_ms": 15192.696840286255,
+            "host_section_ms": 10.034699999999999
+          },
+          "prepare": {
+            "calls": 64,
+            "gpu_stream_ms": 2.1252160063013434,
+            "host_section_ms": 0.8895999999999997
+          },
+          "readback": {
+            "calls": 3,
+            "gpu_stream_ms": 1.8049279674887657,
+            "host_section_ms": 3.1505
+          },
+          "shading": {
+            "calls": 512,
+            "gpu_stream_ms": 152.94937582686543,
+            "host_section_ms": 3.0028000000000006
+          },
+          "sorting": {
+            "calls": 0,
+            "gpu_stream_ms": 0.0,
+            "host_section_ms": 0.0
+          }
+        },
+        "profile_note": "Separate diagnostic run; CUDA-event stream intervals include launch gaps. Host/GPU times overlap and must not be summed. Events are resolved per sample.",
+        "readback_every_sample": false,
+        "render_loop_ms": 15526.5267,
+        "resolution": [
+          1200,
+          800
+        ],
+        "scene_load_ms": 752.2789,
+        "sorting": false,
+        "spp": 64,
+        "stage_synchronization_ms": 0.0,
+        "stage_synchronizations": 0,
+        "synchronize_each_stage": false,
+        "triangles": 86355,
+        "warmup_spp": 8
+      }
+    }
+  },
+  "intersection_kernel_static_resources": {
+    "tool": "CUDA 12.9 cuobjdump --dump-resource-usage",
+    "target_architecture": "sm_89",
+    "values": {
+      "original": {
+        "registers_per_thread": 179,
+        "stack_bytes_per_thread": 1336,
+        "static_shared_bytes": 0,
+        "local_bytes": 0
+      },
+      "optimized": {
+        "registers_per_thread": 180,
+        "stack_bytes_per_thread": 1344,
+        "static_shared_bytes": 0,
+        "local_bytes": 0
+      }
+    },
+    "note": "Static compiled-resource data, not a measurement of achieved occupancy or memory stalls. Stack bytes alone do not establish register spills; the original already had similar resource use."
+  },
+  "validation": {
+    "ctest": {
+      "passed": 10,
+      "failed": 0,
+      "log_sha256": "95c22964e889682d2dbbe733ab3336c73c8f26fa2edb2d490ac476ff1bd69ef5"
+    },
+    "compute_sanitizer": {
+      "options": "--tool memcheck --leak-check full --error-exitcode 99",
+      "targets": {
+        "mesh_intersection_tests": {
+          "errors": 0,
+          "leaked_bytes": 0,
+          "log_sha256": "ed599da57db96a847de569aecafe975741b5fe817016bcf2288d184780fddc1e",
+          "archival_log": "stage_records\\17_render_performance_2026-09-29\\logs\\memcheck_mesh_intersection_tests.log"
+        },
+        "thin_lens_render_tests": {
+          "errors": 0,
+          "leaked_bytes": 0,
+          "log_sha256": "08b3a218c8c891051a43b711bd50e0c5e6bed7a7bcac920dfe2fa2854fe8556e",
+          "archival_log": "stage_records\\17_render_performance_2026-09-29\\logs\\memcheck_thin_lens_render_tests.log"
+        }
+      }
+    },
+    "benchmark_image_check": {
+      "captures": 25,
+      "all_byte_identical": true,
+      "reference_sha256": {
+        "png": "064ee30b0ab8b37edf542794c15df7cf1252f010f416cfaa5fdf88894b8c5878",
+        "hdr": "1078e208f13d2c9558bf4dd19a9ba41989707190938d694e36bfb651266f371c",
+        "f32": "a4602f2e220aae0873d25c5f03bcf7fba3f30131053782286c9b4d753c221461"
+      }
+    },
+    "regression": [
+      {
+        "scene": "cornell.json",
+        "resolution": [
+          240,
+          240
+        ],
+        "spp": 32,
+        "depth": 8,
+        "byte_identical": {
+          "png": true,
+          "hdr": true,
+          "f32": true
+        },
+        "sha256": {
+          "png": "b8dc16d8050b1504e54ea033db6f0352d2d0fff95280d15e8a2ffc7be8736811",
+          "hdr": "211afd860bd863724aac5596dd83bcc733e4e35387ea8a8736a309b175c9c151",
+          "f32": "a23421db9541b7155ffbfb62f34bd76e8467212bdf6ef7e6fa2c23804681f53f"
+        }
+      },
+      {
+        "scene": "dof_gallery.json",
+        "resolution": [
+          240,
+          150
+        ],
+        "spp": 32,
+        "depth": 8,
+        "byte_identical": {
+          "png": true,
+          "hdr": true,
+          "f32": true
+        },
+        "sha256": {
+          "png": "4bdf17130807135cc113a18f70acef7801909336782ca7f7ebde024ef576dfca",
+          "hdr": "d4ca4e3178a14ec20c3a3ea2fdde74e1f74f5d1fa4ef360fda8002f5b792c320",
+          "f32": "fbad80f29783a4de1a201f4006478030476e9d1abf74e0ad890524835ed67b05"
+        }
+      },
+      {
+        "scene": "dof_validation.json",
+        "resolution": [
+          240,
+          122
+        ],
+        "spp": 32,
+        "depth": 2,
+        "byte_identical": {
+          "png": true,
+          "hdr": true,
+          "f32": true
+        },
+        "sha256": {
+          "png": "54fe8fdc03e4cbfc9468b0bdf3480fc2ff50c95b4d2f6c7ca29099659b5bae25",
+          "hdr": "54c182527a8d2eb3f3ce59e4d9120563af074cb39576b06c809852e78c5e4161",
+          "f32": "0718f41f144772932cb934a997de06e55466a70ce2df6fd4e4f9419d2d13601d"
+        }
+      },
+      {
+        "scene": "mesh_aabb_torus_exterior.json",
+        "resolution": [
+          240,
+          240
+        ],
+        "spp": 32,
+        "depth": 8,
+        "byte_identical": {
+          "png": true,
+          "hdr": true,
+          "f32": true
+        },
+        "sha256": {
+          "png": "836c7f6facfa2e4696d75f21b72d7ca10e6e52e3d74607d5867f632969ed525c",
+          "hdr": "6b850a7f5228ee043c992cf42bf62e348d4b32c61ea48525c03cdf8d45c98467",
+          "f32": "189ab201fda190a2af8a536621cc442e6ef3bb24d68063d8ccb7a811d3b5fc7d"
+        }
+      },
+      {
+        "scene": "mesh_aabb_torus_interior.json",
+        "resolution": [
+          240,
+          240
+        ],
+        "spp": 32,
+        "depth": 8,
+        "byte_identical": {
+          "png": true,
+          "hdr": true,
+          "f32": true
+        },
+        "sha256": {
+          "png": "ce8e265cf066f355fbd17424331750f9504def4ad47397a0d7bcb57cafb50309",
+          "hdr": "3cf7c9f196eacaec9040fd6a5df787d2de132271e711aaa952a5bb246eb27c45",
+          "f32": "ab134304f3da257d4d132251613a99f17f2f09c920cfb32fdca85a6dbe21d918"
+        }
+      },
+      {
+        "scene": "mesh_aabb_validation.json",
+        "resolution": [
+          240,
+          240
+        ],
+        "spp": 32,
+        "depth": 8,
+        "byte_identical": {
+          "png": true,
+          "hdr": true,
+          "f32": true
+        },
+        "sha256": {
+          "png": "bd39bd44ba968d00d41e9079d361dc6a67ecb19b50dd3b7000dbde5871808e98",
+          "hdr": "b18b28c57b7fb92041e08c08ceb0cd411fd4e49bbf053814e53936fbf519ef20",
+          "f32": "e1eecae009e7bee6c2ef10a8e0972f111e45081c1c13a1e363139eb37a81869e"
+        }
+      },
+      {
+        "scene": "mesh_cpu_validation.json",
+        "resolution": [
+          64,
+          64
+        ],
+        "spp": 32,
+        "depth": 8,
+        "byte_identical": {
+          "png": true,
+          "hdr": true,
+          "f32": true
+        },
+        "sha256": {
+          "png": "1f8e7a4915de91f69c595318150046237138b00fd30bd0e8aec55c0b52c8c048",
+          "hdr": "5e4ca599c8fe0dcfb12ea3b84e2d2ec1e68268b612dd0cb7522bde87e877ac47",
+          "f32": "0b7ada0a6c12fbdc237309496a86a10260d0c45d21956432b66d72b02b39a4d6"
+        }
+      },
+      {
+        "scene": "mesh_gpu_validation.json",
+        "resolution": [
+          240,
+          240
+        ],
+        "spp": 32,
+        "depth": 8,
+        "byte_identical": {
+          "png": true,
+          "hdr": true,
+          "f32": true
+        },
+        "sha256": {
+          "png": "bd39bd44ba968d00d41e9079d361dc6a67ecb19b50dd3b7000dbde5871808e98",
+          "hdr": "b18b28c57b7fb92041e08c08ceb0cd411fd4e49bbf053814e53936fbf519ef20",
+          "f32": "e1eecae009e7bee6c2ef10a8e0972f111e45081c1c13a1e363139eb37a81869e"
+        }
+      },
+      {
+        "scene": "shatterseal_moonlit_hall_refined.json",
+        "resolution": [
+          240,
+          160
+        ],
+        "spp": 32,
+        "depth": 8,
+        "byte_identical": {
+          "png": true,
+          "hdr": true,
+          "f32": true
+        },
+        "sha256": {
+          "png": "e60d97385bfdb147794712e31ce79529874093db05eb0fe5de7cedf82226be49",
+          "hdr": "34883a3e53077c4c5b08baf673ab1ee4c6ddbc7afbddbc3faf54ee79db1235f9",
+          "f32": "c9e0afdb9e7827bb92e4507dbd3d5cc3988d23807501ae6ba1ce8845a0bebac1"
+        }
+      },
+      {
+        "scene": "shatterseal_moonlit_hall_refined_detail.json",
+        "resolution": [
+          240,
+          160
+        ],
+        "spp": 32,
+        "depth": 8,
+        "byte_identical": {
+          "png": true,
+          "hdr": true,
+          "f32": true
+        },
+        "sha256": {
+          "png": "33a26c77b7f638f2c2487cbd896b58325d265f47ae8f9e19cd0969c6ec6d519e",
+          "hdr": "1b4d235e2e803d2611c86336db1b1bfe9bff310786a0446f7d0f25b3a561be8a",
+          "f32": "8c05d01e32cc4f0226caecd7d32eee3e2377943bc0321acf3d57197f7898d982"
+        }
+      },
+      {
+        "scene": "shatterseal_moonlit_hall_refined_preview.json",
+        "resolution": [
+          240,
+          160
+        ],
+        "spp": 32,
+        "depth": 8,
+        "byte_identical": {
+          "png": true,
+          "hdr": true,
+          "f32": true
+        },
+        "sha256": {
+          "png": "164cef48d840c694f4cf337e5d3b25e3c9c31c474f5f16c1b906df42e79ca3df",
+          "hdr": "fe8ef097242a546467b6567b7f82633bd05b73374d2301175f8c5ceb038e587b",
+          "f32": "294128fecb5745a71bf4d9342e9c6a12d059d861d37c287bb3cc110829cbc423"
+        }
+      },
+      {
+        "scene": "sphere.json",
+        "resolution": [
+          240,
+          240
+        ],
+        "spp": 32,
+        "depth": 8,
+        "byte_identical": {
+          "png": true,
+          "hdr": true,
+          "f32": true
+        },
+        "sha256": {
+          "png": "f57f0dfb0f0312f992efa3b52bab1405d453b0647089518a21e20edefd6ab5dc",
+          "hdr": "1418275f22219109297927467d6b187d7126bd9e5df1cae563c872e24ca17fac",
+          "f32": "7bba96823a46c3379977198d6401044695d76929ffaac7040ca19e9824e8932d"
+        }
+      }
+    ],
+    "full_showcase": {
+      "capture": {
+        "antialiasing": true,
+        "bvh": true,
+        "compaction": true,
+        "cross_mesh_pruning": true,
+        "depth": 8,
+        "display_every_sample": false,
+        "dof": true,
+        "first_iteration": 1,
+        "focus_distance": 5.0,
+        "gpu": "NVIDIA GeForce RTX 4070 Laptop GPU",
+        "image_readback_bytes": 11520000,
+        "image_readbacks": 1,
+        "initialization_ms": 14.4269,
+        "kind": "production_renderer_headless",
+        "lens_radius": 0.012000000104308128,
+        "objects": 16,
+        "readback_every_sample": false,
+        "render_loop_ms": 751089.619,
+        "resolution": [
+          1200,
+          800
+        ],
+        "scene_load_ms": 751.1999,
+        "sorting": false,
+        "spp": 3072,
+        "stage_synchronizations": 0,
+        "synchronize_each_stage": false,
+        "triangles": 86355,
+        "warmup_spp": 8
+      },
+      "byte_identical": {
+        "png": true,
+        "hdr": true,
+        "f32": true
+      },
+      "sha256": {
+        "png": "03dff433c091ca5afb80ac446e549547fb0fd284906697d400017666aff40540",
+        "hdr": "49f274b46331f1af665db0a74cc641ffc6f592b25f5507fff2fd312abebf7cab",
+        "f32": "d1c61c0768b89a19b93ed30153a642e5353489596e6d88e7a2f5034e86550597"
+      },
+      "displayed_image": "docs/images/showcase.png",
+      "note": "One full-resolution, 3072-spp validation capture; not a repeated speed benchmark. Compared to the archived original final PNG/HDR/float32 RGB."
+    }
+  },
+  "interpretation": [
+    "At unchanged sample count, cross-mesh distance pruning supplies most of the observed improvement.",
+    "The optimized diagnostic still spends roughly 98% of its render-loop time in intersection stream intervals.",
+    "This does not measure convergence at equal error or establish speedup on other GPUs/scenes.",
+    "Next: instrument BVH node/triangle visits by mesh and bounce; inspect kernel occupancy, stack accesses and stalls; then compare binned SAH/leaf sizes or reduce traversal state according to the measured bottleneck."
+  ]
+}

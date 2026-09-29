@@ -72,6 +72,7 @@ set(sources
     src/glslUtility.cpp
     src/pathtrace.cu
     src/intersections.cu
+    src/intersectionProfile.cu
     src/interactions.cu
     src/scene.cpp
     src/objLoader.cpp
@@ -179,6 +180,7 @@ if(BUILD_TESTING)
         src/bvh.cpp
         src/pathtrace.cu
         src/intersections.cu
+        src/intersectionProfile.cu
         src/interactions.cu
         src/scene.cpp
         src/objLoader.cpp
@@ -201,7 +203,7 @@ if(BUILD_TESTING)
 
     add_executable(thin_lens_render_tests
         tests/thin_lens_render_tests.cu
-        src/bvh.cpp src/pathtrace.cu src/intersections.cu src/interactions.cu
+        src/bvh.cpp src/pathtrace.cu src/intersections.cu src/intersectionProfile.cu src/interactions.cu
         src/scene.cpp src/objLoader.cpp src/utilities.cpp src/stb.cpp)
     target_include_directories(thin_lens_render_tests PRIVATE
         "${CMAKE_CURRENT_SOURCE_DIR}/src" ${CMAKE_CUDA_TOOLKIT_INCLUDE_DIRECTORIES})
@@ -230,7 +232,7 @@ endif()
 
 # Reproducible scene captures with the production renderer, without an OpenGL window.
 add_executable(scene_render tools/render_scene.cpp src/bvh.cpp src/pathtrace.cu
-    src/intersections.cu src/interactions.cu src/scene.cpp src/objLoader.cpp src/utilities.cpp src/image.cpp src/stb.cpp)
+    src/intersections.cu src/intersectionProfile.cu src/interactions.cu src/scene.cpp src/objLoader.cpp src/utilities.cpp src/image.cpp src/stb.cpp)
 target_include_directories(scene_render PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/src" ${CMAKE_CUDA_TOOLKIT_INCLUDE_DIRECTORIES})
 set_target_properties(scene_render PROPERTIES CUDA_SEPARABLE_COMPILATION ON CUDA_ARCHITECTURES native)
 

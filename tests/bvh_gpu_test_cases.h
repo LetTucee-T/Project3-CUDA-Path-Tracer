@@ -37,22 +37,23 @@ struct TraversalProbe {
     BVHTraversalStats stats;
 };
 __global__ void probeTraversal(Geom mesh, const Triangle* triangles, BVHDeviceView bvh,
-    const PathSegment* rays, int count, TraversalProbe* probes, int stackCapacity)
+    const PathSegment* rays, int count, TraversalProbe* probes, int stackCapacity, float maxDistance)
 {
     const int i = blockIdx.x * blockDim.x + threadIdx.x;
     if (i >= count) return;
     TraversalProbe result{};
     result.bruteNormal = result.bvhNormal = result.plainNormal = glm::vec3(9, 8, 7);
-    result.bruteT = meshIntersectionTest(mesh, rays[i].ray, triangles, false, result.bruteNormal);
+    result.bruteT = meshIntersectionTest(mesh, rays[i].ray, triangles, false, result.bruteNormal, nullptr, maxDistance);
     result.bvhT = meshBVHIntersectionTest(mesh, rays[i].ray, triangles, bvh, result.bvhNormal,
-        &result.stats, stackCapacity);
+        &result.stats, stackCapacity, nullptr, maxDistance);
     result.plainT = meshBVHIntersectionTest(mesh, rays[i].ray, triangles, bvh, result.plainNormal,
-        nullptr, stackCapacity);
+        nullptr, stackCapacity, nullptr, maxDistance);
     probes[i] = result;
 }
 
 std::vector<TraversalProbe> probe(const BVHFixture& fixture, const std::vector<PathSegment>& rays,
-    int capacity = BVH_STACK_CAPACITY, int fault = 0)
+    int capacity = BVH_STACK_CAPACITY, int fault = 0, float maxDistance = FLT_MAX,
+    int compactFault = 0)
 {
     DeviceArray<Triangle> triangles(fixture.triangles);
     DeviceArray<BVHNode> nodes(fixture.nodes);
@@ -64,16 +65,52 @@ std::vector<TraversalProbe> probe(const BVHFixture& fixture, const std::vector<P
     if (fault == 2) view.triangleIndices = nullptr;
     if (fault == 3) view.nodeCount = 0;
     if (fault == 4) view.indexCount = 0;
-    probeTraversal<<<(int(rays.size()) + 127) / 128, 128>>>(fixture.mesh, triangles.data, view,
-        paths.data, int(rays.size()), results.data, capacity);
-    cudaCheck(cudaGetLastError());
-    cudaCheck(cudaDeviceSynchronize());
-    auto output = results.read();
-    for (const auto& p : output) {
-        near(p.bvhT, p.bruteT, 0);
-        near(p.plainT, p.bruteT, 0);
-        nearVector(p.bvhNormal, p.bruteNormal, 0);
-        nearVector(p.plainNormal, p.bruteNormal, 0);
+    // Match the renderer's validation gate. Malformed fixtures must continue
+    // through the checked path; every valid fixture also exercises the fast path.
+    bool validated = false;
+    if (fault == 0) {
+        try {
+            validateMeshBVH(fixture.triangles, fixture.mesh, fixture.nodes, fixture.indices);
+            validated = true;
+        } catch (const std::exception&) {}
+    }
+    auto packed = validated ? packBVHNodes(fixture.nodes) : std::vector<CompactBVHNode>{};
+    if (compactFault) {
+        require(packed.size() >= 3, "Compact corruption requires a two-leaf tree");
+        if (compactFault == 1) packed[0].countOrRight = (std::numeric_limits<int>::min)();
+        if (compactFault == 2) packed[1].firstOrLeft = -1;
+        if (compactFault == 3) packed[1].countOrRight = -(std::numeric_limits<int>::max)();
+        if (compactFault == 4) packed[0].firstOrLeft = int(packed.size());
+        if (compactFault == 5) packed[0].firstOrLeft = packed[0].countOrRight;
+        if (compactFault == 6) packed[0].firstOrLeft = 0;
+        if (compactFault == 7) { packed[1].firstOrLeft = 0; packed[1].countOrRight = 2; }
+    }
+    DeviceArray<CompactBVHNode> compact(packed);
+    const auto originalView = view;
+    std::vector<TraversalProbe> output;
+    for (int layout = compactFault ? 1 : 0; layout < (validated ? 2 : 1); ++layout) {
+      view = originalView;
+      if (layout) { view.nodes = nullptr; view.compactNodes = compact.data; }
+      if (compactFault == 8) view.triangleIndices = nullptr;
+      if (compactFault == 9) view.nodeCount = 0;
+      if (compactFault == 10) view.indexCount = 0;
+      if (compactFault == 11) view.compactNodes = nullptr;
+      for(int mode=0; mode<(validated && !compactFault ? 3 : 2); ++mode) {
+        view.cachedBounds=mode!=0;
+        view.validated=mode==2;
+        probeTraversal<<<(int(rays.size()) + 127) / 128, 128>>>(fixture.mesh, triangles.data, view,
+            paths.data, int(rays.size()), results.data, capacity, maxDistance);
+        cudaCheck(cudaGetLastError());
+        cudaCheck(cudaDeviceSynchronize());
+        output = results.read();
+        for (const auto& p : output) {
+            near(p.bvhT, p.bruteT, 0);
+            near(p.plainT, p.bruteT, 0);
+            nearVector(p.bvhNormal, p.bruteNormal, 0);
+            nearVector(p.plainNormal, p.bruteNormal, 0);
+            if (compactFault) require(p.stats.fallbackCount > 0, "Invalid compact tree did not fall back");
+        }
+      }
     }
     return output;
 }
@@ -104,8 +141,21 @@ __global__ void inspectBVHUpload(BVHDeviceView view, const Geom* geoms, int geom
     BVHNode* nodes, int* indices, int* metadata, int* sizes)
 {
     const int i = blockIdx.x * blockDim.x + threadIdx.x;
-    if (i == 0) { sizes[0] = sizeof(BVHNode); sizes[1] = sizeof(Geom); }
+    if (i == 0) { sizes[0] = view.compactNodes ? sizeof(CompactBVHNode) : sizeof(BVHNode); sizes[1] = sizeof(Geom); }
     if (i < view.nodeCount) {
+      if (view.compactNodes) {
+        const auto& n = view.compactNodes[i];
+        for (int a = 0; a < 3; ++a) {
+            nodes[i].boundsMin[a] = n.boundsMin[a];
+            nodes[i].boundsMax[a] = n.boundsMax[a];
+        }
+        // Decode independently of the production traversal accessors.
+        const bool leaf = n.countOrRight < 0;
+        nodes[i].leftChild = leaf ? -1 : n.firstOrLeft;
+        nodes[i].rightChild = leaf ? -1 : n.countOrRight;
+        nodes[i].firstIndex = leaf ? n.firstOrLeft : -1;
+        nodes[i].indexCount = leaf ? -n.countOrRight : 0;
+      } else {
         for (int a = 0; a < 3; ++a) {
             nodes[i].boundsMin[a] = view.nodes[i].boundsMin[a];
             nodes[i].boundsMax[a] = view.nodes[i].boundsMax[a];
@@ -114,6 +164,7 @@ __global__ void inspectBVHUpload(BVHDeviceView view, const Geom* geoms, int geom
         nodes[i].rightChild = view.nodes[i].rightChild;
         nodes[i].firstIndex = view.nodes[i].firstIndex;
         nodes[i].indexCount = view.nodes[i].indexCount;
+      }
     }
     if (i < view.indexCount) indices[i] = view.triangleIndices[i];
     if (i < geomCount) {
@@ -127,13 +178,38 @@ __global__ void inspectBVHUpload(BVHDeviceView view, const Geom* geoms, int geom
 void checkFreedBVH()
 {
     const auto view = pathtraceBVHForTesting();
-    require(!view.nodes && !view.triangleIndices && !view.nodeCount
+    require(!view.nodes && !view.compactNodes && !view.triangleIndices && !view.nodeCount
         && !view.indexCount && !view.triangleCount && !pathtraceGeomsForTesting(),
         "Device pointers/counts were not cleared after free");
 }
 
 template<class Test> void runBVHGPUTests(Test& test, const std::filesystem::path& sampleScene)
 {
+    for (int fault = 1; fault <= 11; ++fault)
+        test("compact BVH corruption safely falls back: " + std::to_string(fault), [=] {
+            probe(twoLeafFixture(true), {path()}, BVH_STACK_CAPACITY, 0, FLT_MAX, fault);
+        });
+    test("bounded mesh queries preserve inclusive hits, ties and fallback", [&] {
+        const auto f = twoLeafFixture(true);
+        for (float limit : {0.0f, -1.0f, std::nextafter(5.0f, 0.0f), 5.0f,
+                           std::nextafter(5.0f, 6.0f), FLT_MAX,
+                           std::numeric_limits<float>::infinity(), std::numeric_limits<float>::quiet_NaN()}) {
+            for (int fault = 0; fault <= 4; ++fault) {
+                const auto result = probe(f, {path()}, BVH_STACK_CAPACITY, fault, limit)[0];
+                if (limit < 5) require(result.bvhT < 0, "Hit beyond supplied distance");
+                else { near(result.bvhT, 5, 0); nearVector(result.bvhNormal, {0,0,1}, 0); }
+            }
+        }
+        const auto clipped = probe(f, {path()}, BVH_STACK_CAPACITY, 0, 0.5f)[0];
+        require(clipped.stats.triangleTests == 0, "Distance bound did not reject root");
+        BVHFixture scaled;
+        scaled.triangles = {triangle()};
+        scaled.mesh = geometry(MESH, {0,0,1}, {0,0,0}, {-2,3,0.5f});
+        scaled.build();
+        near(probe(scaled, {path()}, BVH_STACK_CAPACITY, 0, 4.0f)[0].bvhT, 4, 0);
+        require(probe(scaled, {path()}, BVH_STACK_CAPACITY, 0, 3.9f)[0].bvhT < 0,
+            "Nonuniform transform changed the distance units");
+    });
     const float nan = std::numeric_limits<float>::quiet_NaN();
     struct IntervalCase { std::string name; IntervalQuery query; bool hit; float enter, exit; };
     const glm::vec3 lo(-1), hi(1);
@@ -181,9 +257,12 @@ template<class Test> void runBVHGPUTests(Test& test, const std::filesystem::path
         scene.rebuildMeshBVHs();
         require(scene.geoms[1].bvhRoot > 0 && scene.geoms[1].bvhIndexStart > 0, "Missing offset fixture");
         scene.state.camera.resolution = glm::ivec2(7, 5); scene.state.image.resize(35);
-        {
-            RenderSession session(scene);
+        for (bool compact : {false, true}) {
+            PathtraceOptions options; options.compactBVHNodes = compact;
+            RenderSession session(scene, options);
             const auto view = pathtraceBVHForTesting();
+            require(compact ? (view.compactNodes && !view.nodes) : (view.nodes && !view.compactNodes),
+                "Renderer uploaded an unexpected node representation");
             require(view.nodeCount == int(scene.bvhNodes.size())
                 && view.indexCount == int(scene.bvhTriangleIndices.size())
                 && view.triangleCount == int(scene.triangles.size()), "Uploaded counts differ");
@@ -195,7 +274,8 @@ template<class Test> void runBVHGPUTests(Test& test, const std::filesystem::path
             const auto actual = nodes.read();
             const auto ids = metadata.read();
             const auto layout = sizes.read();
-            require(layout[0] == sizeof(BVHNode) && layout[1] == sizeof(Geom), "Host/device ABI mismatch");
+            require(layout[0] == (compact ? sizeof(CompactBVHNode) : sizeof(BVHNode))
+                && layout[1] == sizeof(Geom), "Host/device ABI mismatch");
             require(indices.read() == scene.bvhTriangleIndices, "Global triangle indices changed");
             for (size_t i = 0; i < actual.size(); ++i) {
                 const auto& a = actual[i]; const auto& b = scene.bvhNodes[i];
@@ -224,10 +304,11 @@ template<class Test> void runBVHGPUTests(Test& test, const std::filesystem::path
         const auto saved = scene.geoms;
         scene.geoms = {geometry(SPHERE)}; scene.triangles.clear(); scene.rebuildMeshBVHs();
         scene.state.enableBVH = true;
-        {
-            RenderSession session(scene);
+        for (bool compact : {false, true}) {
+            PathtraceOptions options; options.compactBVHNodes = compact;
+            RenderSession session(scene, options);
             const auto view = pathtraceBVHForTesting();
-            require(!view.nodes && !view.triangleIndices && !view.nodeCount && !view.indexCount,
+            require(!view.nodes && !view.compactNodes && !view.triangleIndices && !view.nodeCount && !view.indexCount,
                 "Empty scene allocated BVH buffers");
         }
         pathtraceFree(); checkFreedBVH();

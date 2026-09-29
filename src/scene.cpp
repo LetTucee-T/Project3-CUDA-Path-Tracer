@@ -80,7 +80,7 @@ bool finiteMatrix(const glm::mat4& matrix) {
 
 } // namespace
 
-Scene::Scene(string filename)
+Scene::Scene(string filename, const BVHBuildOptions& options)
 {
     cout << "Reading scene from " << filename << " ..." << endl;
     cout << " " << endl;
@@ -91,7 +91,7 @@ Scene::Scene(string filename)
         throw std::runtime_error("Scene file must use the .json extension: " + filename);
     }
     loadFromJSON(filename);
-    rebuildMeshBVHs();
+    rebuildMeshBVHs(options);
 }
 
 void Scene::rebuildMeshBVHs(const BVHBuildOptions& options)
@@ -144,6 +144,7 @@ void Scene::rebuildMeshBVHs(const BVHBuildOptions& options)
         geoms[i].bvhIndexStart = newGeoms[i].bvhIndexStart;
     }
     bvhStats = totals;
+    bvhBuildOptions = options;
     cout << report.str();
 }
 

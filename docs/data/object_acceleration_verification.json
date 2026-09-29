@@ -1,0 +1,429 @@
+{
+  "date": "2026-09-29",
+  "decision": "REJECTED AND ROLLED BACK: neither world-space object AABBs nor the scene BVH improved this showcase enough to justify additional production code.",
+  "production_policy": "Unchanged preceding renderer: robust triangle tests, validated compact mesh BVHs, 16-bin SAH, leaf cap one, cross-mesh closest-distance pruning.",
+  "candidate_scope": {
+    "world_aabb": "Conservative world bounds for meshes, tested before ray transformation/mesh traversal. Unsafe transforms and analytic primitives use the original query path.",
+    "tlas": "CPU SAH tree over mesh world bounds; compact nodes, near-first GPU traversal, original object-index tie handling, checked stack/overflow fallback.",
+    "specialization": "The measured candidate uses separate compile-time AABB/TLAS kernels and a CPU-validation-gated fast TLAS path; the disabled mode calls the original intersection kernel.",
+    "geometry_and_sampling": "Unchanged geometry, materials, textures, camera, triangle arithmetic, sample numbers, and estimator.",
+    "shipping": "Experimental code and switches were removed after timing. Both candidates and frozen executables remain in the ignored local stage_records directory."
+  },
+  "benchmark": {
+    "settings": {
+      "resolution": [
+        1200,
+        800
+      ],
+      "spp": 64,
+      "depth": 8,
+      "warmup_spp": 8,
+      "gpu": "NVIDIA GeForce RTX 4070 Laptop GPU",
+      "triangles": 86355,
+      "objects": 16,
+      "bvh_builder": "sah",
+      "bvh_bins": 16,
+      "bvh_leaf_size": 1,
+      "bvh_layout": "compact",
+      "bvh_node_bytes": 32,
+      "antialiasing": true,
+      "compaction": true,
+      "bvh": true,
+      "dof": true,
+      "sorting": false,
+      "cross_mesh_pruning": true,
+      "cached_bvh_bounds": true,
+      "validated_bvh_traversal": true,
+      "lens_radius": 0.012000000104308128,
+      "focus_distance": 5.0,
+      "synchronize_each_stage": false,
+      "display_every_sample": false,
+      "readback_every_sample": false
+    },
+    "build": "Release, CUDA 12.9, Windows 11",
+    "rounds": 8,
+    "order": "Rotate previous, none, aabb, tlas once each round; each configuration occupies every position twice.",
+    "timing": "Render-loop wall time includes GPU completion and one final readback; excludes loading, initialization, eight warmup samples and saving. Both profilers are disabled.",
+    "clocks_locked": false,
+    "gpu_csv_fields": "temperature.gpu,clocks.current.graphics,clocks.current.memory,power.draw,utilization.gpu",
+    "range_note": "Min/max are observed ranges, not confidence intervals. All samples are retained, including the 5863.3834 ms AABB outlier; its cause was not established.",
+    "summary": {
+      "previous": {
+        "runs": 8,
+        "median_ms": 5570.7432,
+        "min_ms": 5550.3865,
+        "max_ms": 5614.7,
+        "mean_ms": 5578.1431875,
+        "time_change_percent_vs_preserved": 0.0,
+        "time_change_percent_vs_candidate_off": 0.1645977450383196
+      },
+      "none": {
+        "runs": 8,
+        "median_ms": 5561.588949999999,
+        "min_ms": 5553.2984,
+        "max_ms": 5610.5138,
+        "mean_ms": 5574.4718625,
+        "time_change_percent_vs_preserved": -0.1643272660639017,
+        "time_change_percent_vs_candidate_off": 0.0
+      },
+      "aabb": {
+        "runs": 8,
+        "median_ms": 5567.267,
+        "min_ms": 5543.7104,
+        "max_ms": 5863.3834,
+        "mean_ms": 5602.1998375,
+        "time_change_percent_vs_preserved": -0.06240100961752981,
+        "time_change_percent_vs_candidate_off": 0.1020940247660862
+      },
+      "tlas": {
+        "runs": 8,
+        "median_ms": 6973.55005,
+        "min_ms": 6961.043,
+        "max_ms": 7025.6899,
+        "mean_ms": 6983.0129125,
+        "time_change_percent_vs_preserved": 25.18168222150323,
+        "time_change_percent_vs_candidate_off": 25.387728447640857
+      }
+    },
+    "executable_hashes": {
+      "previous": [
+        "535d0bdb027aac32734510cf62cb00bb465eb322dcc8ccbc5d968392713bfa18"
+      ],
+      "none": [
+        "9b2b08ba1df236ef78d185e3e05d0d2f9de7ad1d067e29c8580b0450f64af779"
+      ],
+      "aabb": [
+        "9b2b08ba1df236ef78d185e3e05d0d2f9de7ad1d067e29c8580b0450f64af779"
+      ],
+      "tlas": [
+        "9b2b08ba1df236ef78d185e3e05d0d2f9de7ad1d067e29c8580b0450f64af779"
+      ]
+    }
+  },
+  "sampled_work": {
+    "spp": 4,
+    "pixel_stride": 64,
+    "note": "Separate replay of sampled incoming path segments over all bounces, not extrapolated to the full image. Timings from these diagnostic captures are excluded from the benchmark.",
+    "count_semantics": "Object node visits count processed deferred entries before distance pruning; mesh node visits count entries passing that check. Neither is a measured memory transaction. Mode none has no object-level counter, but its mesh query count includes every original object query.",
+    "modes": {
+      "none": {
+        "sampled_rays": 167855,
+        "replay_mismatches": 0,
+        "mesh_bvh": {
+          "queries": 2685680,
+          "bounded_queries": 1566616,
+          "root_rejects": 2179428,
+          "node_visits": 4980691,
+          "aabb_tests": 11474802,
+          "triangle_tests": 586130,
+          "fallbacks": 0
+        },
+        "object_acceleration": {
+          "bounds_tests": 0,
+          "node_visits": 0,
+          "object_tests": 0,
+          "fallbacks": 0,
+          "max_stack": 0
+        }
+      },
+      "aabb": {
+        "sampled_rays": 167855,
+        "replay_mismatches": 0,
+        "mesh_bvh": {
+          "queries": 570112,
+          "bounded_queries": 185875,
+          "root_rejects": 63860,
+          "node_visits": 4980691,
+          "aabb_tests": 9359234,
+          "triangle_tests": 586130,
+          "fallbacks": 0
+        },
+        "object_acceleration": {
+          "bounds_tests": 2685680,
+          "node_visits": 0,
+          "object_tests": 570112,
+          "fallbacks": 0,
+          "max_stack": 0
+        }
+      },
+      "tlas": {
+        "sampled_rays": 167855,
+        "replay_mismatches": 0,
+        "mesh_bvh": {
+          "queries": 566401,
+          "bounded_queries": 101325,
+          "root_rejects": 63230,
+          "node_visits": 4858086,
+          "aabb_tests": 9154259,
+          "triangle_tests": 564157,
+          "fallbacks": 0
+        },
+        "object_acceleration": {
+          "bounds_tests": 2705617,
+          "node_visits": 1937780,
+          "object_tests": 566401,
+          "fallbacks": 0,
+          "max_stack": 7
+        }
+      }
+    }
+  },
+  "phase_diagnostics": {
+    "note": "Separate CUDA-event captures, not the repeated timing benchmark. Host-section waits overlap preceding GPU execution and must not be added to GPU intervals.",
+    "modes": {
+      "none": {
+        "camera": {
+          "calls": 64,
+          "gpu_stream_ms": 45.01107203960419,
+          "host_section_ms": 0.4519
+        },
+        "compaction": {
+          "calls": 512,
+          "gpu_stream_ms": 100.4536639675498,
+          "host_section_ms": 5527.623400000001
+        },
+        "display": {
+          "calls": 0,
+          "gpu_stream_ms": 0.0,
+          "host_section_ms": 0.0
+        },
+        "gather": {
+          "calls": 64,
+          "gpu_stream_ms": 9.56479999423027,
+          "host_section_ms": 1.0038999999999996
+        },
+        "intersection": {
+          "calls": 512,
+          "gpu_stream_ms": 5257.094042301178,
+          "host_section_ms": 8.795499999999999
+        },
+        "prepare": {
+          "calls": 64,
+          "gpu_stream_ms": 2.13043200597167,
+          "host_section_ms": 0.9787000000000005
+        },
+        "readback": {
+          "calls": 3,
+          "gpu_stream_ms": 1.2381759993731976,
+          "host_section_ms": 2.904
+        },
+        "shading": {
+          "calls": 512,
+          "gpu_stream_ms": 150.64902417734265,
+          "host_section_ms": 2.733999999999997
+        },
+        "sorting": {
+          "calls": 0,
+          "gpu_stream_ms": 0.0,
+          "host_section_ms": 0.0
+        }
+      },
+      "aabb": {
+        "camera": {
+          "calls": 64,
+          "gpu_stream_ms": 43.88236838579178,
+          "host_section_ms": 0.4584000000000001
+        },
+        "compaction": {
+          "calls": 512,
+          "gpu_stream_ms": 95.6542398929596,
+          "host_section_ms": 5510.168899999996
+        },
+        "display": {
+          "calls": 0,
+          "gpu_stream_ms": 0.0,
+          "host_section_ms": 0.0
+        },
+        "gather": {
+          "calls": 64,
+          "gpu_stream_ms": 9.654336020350456,
+          "host_section_ms": 1.1016000000000004
+        },
+        "intersection": {
+          "calls": 512,
+          "gpu_stream_ms": 5245.810149669647,
+          "host_section_ms": 8.738000000000007
+        },
+        "prepare": {
+          "calls": 64,
+          "gpu_stream_ms": 1.961503991857171,
+          "host_section_ms": 0.8455999999999999
+        },
+        "readback": {
+          "calls": 3,
+          "gpu_stream_ms": 1.4315200373530388,
+          "host_section_ms": 2.7774
+        },
+        "shading": {
+          "calls": 512,
+          "gpu_stream_ms": 149.83081666752696,
+          "host_section_ms": 2.728800000000002
+        },
+        "sorting": {
+          "calls": 0,
+          "gpu_stream_ms": 0.0,
+          "host_section_ms": 0.0
+        }
+      },
+      "tlas": {
+        "camera": {
+          "calls": 64,
+          "gpu_stream_ms": 43.94905650615692,
+          "host_section_ms": 0.4542
+        },
+        "compaction": {
+          "calls": 512,
+          "gpu_stream_ms": 101.68169610388577,
+          "host_section_ms": 6936.352499999993
+        },
+        "display": {
+          "calls": 0,
+          "gpu_stream_ms": 0.0,
+          "host_section_ms": 0.0
+        },
+        "gather": {
+          "calls": 64,
+          "gpu_stream_ms": 10.181600019335747,
+          "host_section_ms": 0.9810000000000002
+        },
+        "intersection": {
+          "calls": 512,
+          "gpu_stream_ms": 6666.42112326622,
+          "host_section_ms": 9.762199999999998
+        },
+        "prepare": {
+          "calls": 64,
+          "gpu_stream_ms": 2.00560000911355,
+          "host_section_ms": 0.9595999999999998
+        },
+        "readback": {
+          "calls": 3,
+          "gpu_stream_ms": 1.2072960063815117,
+          "host_section_ms": 2.5819
+        },
+        "shading": {
+          "calls": 512,
+          "gpu_stream_ms": 150.36137633025646,
+          "host_section_ms": 2.8272000000000013
+        },
+        "sorting": {
+          "calls": 0,
+          "gpu_stream_ms": 0.0,
+          "host_section_ms": 0.0
+        }
+      }
+    }
+  },
+  "static_kernel_resources": {
+    "tool": "CUDA 12.9 cuobjdump --dump-resource-usage, sm_89",
+    "reports": {
+      "baseline": [
+        {
+          "symbol": "_Z20computeIntersectionsiiP11PathSegmentP4GeomiPK8Triangle13BVHDeviceViewbbP21ShadeableIntersectionPK15TriangleSurfaceb",
+          "registers": 229,
+          "stack_bytes": 1920
+        }
+      ],
+      "candidate": [
+        {
+          "symbol": "_Z20computeIntersectionsiiP11PathSegmentP4GeomiPK8Triangle13BVHDeviceViewbbP21ShadeableIntersectionPK15TriangleSurfaceb",
+          "registers": 229,
+          "stack_bytes": 1920
+        },
+        {
+          "symbol": "_Z26computeObjectIntersectionsIL22ObjectAccelerationMode2EEviPK11PathSegmentPK4GeomiPK8Triangle13BVHDeviceView22ObjectAccelerationViewbbP21ShadeableIntersectionPK15TriangleSurfaceb",
+          "registers": 229,
+          "stack_bytes": 2472
+        },
+        {
+          "symbol": "_Z26computeObjectIntersectionsIL22ObjectAccelerationMode1EEviPK11PathSegmentPK4GeomiPK8Triangle13BVHDeviceView22ObjectAccelerationViewbbP21ShadeableIntersectionPK15TriangleSurfaceb",
+          "registers": 229,
+          "stack_bytes": 1880
+        }
+      ]
+    },
+    "limitation": "Compiler resource reports only: no achieved occupancy, cache misses, local-memory traffic, or stall counters were measured."
+  },
+  "interpretation": [
+    "World AABB removes about 78.8% of mesh queries, but leaves mesh node visits and triangle tests unchanged; the skipped calls were predominantly cheap mesh-root rejections.",
+    "World AABB adds 2685680 outer bounds tests. Its combined outer/mesh bounds count exceeds the original mesh bounds count despite fewer mesh queries.",
+    "The scene BVH reduces triangle tests by only about 3.75% and mesh node visits by 2.46%, while adding 1937780 top-level node entries and 2705617 bounds tests. Sixteen material-group meshes with large overlapping extents provide limited object-level pruning.",
+    "The TLAS kernel also has a larger reported stack frame. These observations are consistent with the slowdown, but do not isolate hardware-level causes.",
+    "The AABB median differs from the preserved executable by less than 0.1% and is slightly slower than the candidate-disabled median, with overlapping ranges. It is not a demonstrated speedup."
+  ],
+  "validation": {
+    "capture_count": 57,
+    "formal_captures": 32,
+    "screening_captures": 16,
+    "diagnostic_captures": 6,
+    "restored_captures": 3,
+    "all_png_hdr_f32_byte_identical": true,
+    "reference_images": {
+      "stage_records/20_compact_bvh_2026-09-29/runs/final_r1.json": {
+        "captures": 54,
+        "hashes": {
+          "png": "0f1161c1b92ee16b9265457a1d62ef1f36c1d66ab0c5e92ca8bff858349341bc",
+          "hdr": "cdc8189b34441875eeb48a88eda997240880de1a3d6e1485f3897c83a8737705",
+          "f32": "1c4c040f004d2608efb727909c20f5b452431a49f2407392ecaf435ab4735ec6"
+        }
+      },
+      "stage_records/20_compact_bvh_2026-09-29/runs/work_n1_compact.json": {
+        "captures": 3,
+        "hashes": {
+          "png": "de5e67692b358b459e083d4162d5f88ae6c530654ec134fedf73781e58c06cc5",
+          "hdr": "8ced5de56b0628c26650e070a9d8cfa62b444ac43a2db9b57830be0c5d129d6c",
+          "f32": "172f95dbcb0c49f70879aa679cfb2d8f119fa3fb23ff96e4aa221d3c3d33df9c"
+        }
+      }
+    },
+    "sampled_replay_mismatches": 0,
+    "sampled_fallbacks": 0,
+    "scope": "Candidates passed the recorded showcase captures and sampled replay only. They were rejected before full 3072-spp rendering, broad candidate regression tests or candidate memory checks; those validations are not claimed.",
+    "restored_build": "Release build passed; all 10 CTest targets passed with no skips.",
+    "restored_captures_summary": {
+      "runs": 3,
+      "median_ms": 5554.7913,
+      "min_ms": 5554.3047,
+      "max_ms": 5556.6295,
+      "mean_ms": 5555.2418333333335
+    },
+    "restored_executable_sha256": "8fbbbd84d0e65e8d126c03736a0caa0dc2bc894ab5d71b164c10e85f769b71eb",
+    "clean_submission_build": "Exported only Git submission candidates into build/submit21/source; independent Release configure/build and all 10 CTest targets passed, without ignored archives or build products.",
+    "clean_export_code_hashes_match_preserved": true,
+    "restored_code_hashes_match_preserved": true,
+    "verified_code_and_dependency_files": 334,
+    "rollback": {
+      "restored": [
+        "CMakeLists.txt",
+        "tools/render_scene.cpp",
+        "src/bvh.cpp",
+        "src/bvh.h",
+        "src/intersectionProfile.cu",
+        "src/intersectionProfile.h",
+        "src/pathtrace.cu",
+        "src/pathtrace.h"
+      ],
+      "removed_experiment_only_files": [
+        "src/objectAcceleration.cpp",
+        "src/objectAcceleration.cu",
+        "src/objectAcceleration.h",
+        "src/objectTraversal.cuh"
+      ],
+      "source_matches_baseline": true
+    },
+    "retained_cover": {
+      "path": "docs/images/showcase.png",
+      "sha256": "96b0ffb7b96c819027c0a38a626334dc2a35e947a8af992316dab2288e848158",
+      "note": "Unchanged earlier 3072-spp render and 267.4978061 s timing; not re-rendered in this rejected experiment."
+    }
+  },
+  "local_archive": {
+    "directory": "stage_records/21_object_acceleration_2026-09-29",
+    "baseline_files": 447,
+    "baseline_manifest_sha256": "c720b346b9ef2cf4e39836026d0812f51522206159a26a421249f8c0497d1c3f",
+    "candidate_v1_manifest_sha256": "4c6124a22bb2772704f6032ff8fb0fdbb3350724f6aa83b0f3006473cf626966",
+    "candidate_v2_manifest_sha256": "7d6b05397777f1fd78473cc94686b9efe46134c339597f9219674477e279677d",
+    "capture_record_sha256": "2e6e4dd021d8b12bd85c6a1cce5eb8071d7e25cd66b7403340959f8270de8517",
+    "note": "Full original submission candidates in before/; both candidates, binaries, raw images, commands, logs and rollback script remain local. The published CSV and this summary are the submitted experiment evidence."
+  }
+}
