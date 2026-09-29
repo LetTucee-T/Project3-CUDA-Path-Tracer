@@ -232,17 +232,9 @@ JSON scenes contain `Materials`, `Objects` and `Camera`. The renderer extends th
 
 For brute force set `BVH=false, MESH_CULLING=false`; for one mesh AABB use `false,true`; for hierarchical traversal use `BVH=true`. Each mesh receives one JSON material; MTL shading is not imported automatically. Textured meshes require UVs. [OBJ input details](external/THIRD_PARTY.md#supported-obj-input).
 
-## Limitations and further work
+## Limitations
 
 Materials support ideal reflection and diffuse/specular mixtures; rough microfacet reflection, refraction and normal mapping are possible extensions. Small emitters are reached through scattered paths, so direct-light sampling would improve convergence. The exterior uses a finite textured backdrop rather than an environment-map system. Per-sample speed improvements and improved convergence are separate goals.
-
-## Credits and references
-
-The project builds on the CIS 565 CUDA/OpenGL starter framework. It uses **CUDA/Thrust** for GPU execution and path organization, **GLM** for math, **nlohmann/json** for scenes, **stb** for image I/O, **GLFW/GLEW/OpenGL** for previewing, and **Dear ImGui** for controls. [Dependency details and notices](external/THIRD_PARTY.md). OBJ parsing and triangulation are implemented in this repository.
-
-The **Shatterseal Drakesnest weapon mesh and original color texture are Monster Hunter Wilds assets by CAPCOM**, extracted and provided by the project owner. Hall and candle geometry, floor layout and procedural material textures were generated with offline scene-building scripts. Concept references and the distant night texture use OpenAI image generation ([texture prompt](docs/data/sky_prompt.txt)). The cover and feature comparisons are rendered by this CUDA path tracer.
-
-Technical references: PBRT's [thin-lens camera model](https://pbr-book.org/4ed/Cameras_and_Film/Projective_Camera_Models#TheThinLensModelandDepthofField) and [ray-aligned triangle intersections](https://pbr-book.org/4ed/Shapes/Triangle_Meshes).
 
 ## Additional results and data
 
