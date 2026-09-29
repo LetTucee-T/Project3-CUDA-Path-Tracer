@@ -1,0 +1,26 @@
+Internal ctest changing into directory: D:/CodeForCourses/GPU Programming/Project3-CUDA-Path-Tracer/build
+Test project D:/CodeForCourses/GPU Programming/Project3-CUDA-Path-Tracer/build
+      Start  1: obj_loader_cpu
+ 1/10 Test  #1: obj_loader_cpu ...................   Passed    0.05 sec
+      Start  2: camera_sampling_cpu
+ 2/10 Test  #2: camera_sampling_cpu ..............   Passed    0.02 sec
+      Start  3: camera_sampling_gpu
+ 3/10 Test  #3: camera_sampling_gpu ..............   Passed    0.45 sec
+      Start  4: bvh_builder_cpu
+ 4/10 Test  #4: bvh_builder_cpu ..................   Passed    0.01 sec
+      Start  5: scene_loader_cpu
+ 5/10 Test  #5: scene_loader_cpu .................   Passed    0.14 sec
+      Start  6: mesh_intersection_gpu
+ 6/10 Test  #6: mesh_intersection_gpu ............   Passed    0.96 sec
+      Start  7: thin_lens_render_gpu
+ 7/10 Test  #7: thin_lens_render_gpu .............   Passed    0.65 sec
+      Start  8: render_controls_cpu
+ 8/10 Test  #8: render_controls_cpu ..............   Passed    0.02 sec
+      Start  9: scene_loader_validate_cli
+ 9/10 Test  #9: scene_loader_validate_cli ........   Passed    0.08 sec
+      Start 10: appearance_cpu
+10/10 Test #10: appearance_cpu ...................   Passed    0.02 sec
+
+100% tests passed, 0 tests failed out of 10
+
+Total Test time (real) =   2.41 sec

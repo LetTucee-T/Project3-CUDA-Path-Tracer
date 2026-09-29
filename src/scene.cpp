@@ -10,11 +10,7 @@
 #include <glm/gtx/string_cast.hpp>
 #include "json.hpp"
 
-#define TINYOBJLOADER_IMPLEMENTATION
-#include "tiny_obj_loader.h"
-
-#include <array>
-#include "mapbox/earcut.hpp"
+#include "objLoader.h"
 
 #include <filesystem>
 #include <cfloat>
@@ -80,76 +76,6 @@ bool finiteMatrix(const glm::mat4& matrix) {
         }
     }
     return true;
-}
-
-// TinyObjLoader supplies defaults for malformed/missing vertex numbers.
-// Reject them before parsing, so a bad coordinate cannot silently become zero.
-void validateObjVertexRecords(const std::string& filename) {
-    std::ifstream input(filename);
-    if (!input) {
-        throw std::runtime_error("Unable to open OBJ file: " + filename);
-    }
-    std::string line;
-    size_t lineNumber = 0;
-    while (std::getline(input, line)) {
-        ++lineNumber;
-        std::istringstream fields(line);
-        std::string tag;
-        fields >> tag;
-        if (tag != "v") continue;
-        for (int axis = 0; axis < 3; ++axis) {
-            std::string token;
-            fields >> token;
-            bool valid = false;
-            try {
-                size_t consumed = 0;
-                const double value = std::stod(token, &consumed);
-                valid = consumed == token.size() && std::isfinite(value)
-                    && std::abs(value) <= (std::numeric_limits<float>::max)();
-            } catch (const std::exception&) {
-                valid = false;
-            }
-            if (!valid) {
-                throw std::runtime_error("Invalid or non-finite OBJ vertex at "
-                    + filename + ":" + std::to_string(lineNumber));
-            }
-        }
-    }
-    if (input.bad()) {
-        throw std::runtime_error("Unable to read OBJ file: " + filename);
-    }
-}
-
-// Inspect original faces before triangulation: a loader may otherwise discard
-// a polygon with an invalid vertex index while retaining the rest of the mesh.
-void validateObjIndices(const tinyobj::ObjReader& reader,
-                        const std::string& filename) {
-    const auto& vertices = reader.GetAttrib().vertices;
-    const size_t vertexCount = vertices.size() / 3;
-    for (const auto coordinate : vertices) {
-        if (!std::isfinite(coordinate)) {
-            throw std::runtime_error("Non-finite OBJ vertex in " + filename);
-        }
-    }
-    for (const auto& shape : reader.GetShapes()) {
-        size_t offset = 0;
-        for (const auto faceSize : shape.mesh.num_face_vertices) {
-            if (faceSize < 3 || offset > shape.mesh.indices.size()
-                || faceSize > shape.mesh.indices.size() - offset) {
-                throw std::runtime_error("Invalid OBJ face in " + filename);
-            }
-            for (size_t corner = 0; corner < faceSize; ++corner) {
-                const int index = shape.mesh.indices[offset + corner].vertex_index;
-                if (index < 0 || static_cast<size_t>(index) >= vertexCount) {
-                    throw std::runtime_error("Invalid OBJ vertex index in " + filename);
-                }
-            }
-            offset += faceSize;
-        }
-        if (offset != shape.mesh.indices.size()) {
-            throw std::runtime_error("Invalid OBJ index buffer in " + filename);
-        }
-    }
 }
 
 } // namespace
@@ -223,28 +149,13 @@ void Scene::rebuildMeshBVHs(const BVHBuildOptions& options)
 
 void Scene::loadObjMesh(const std::string& filename, Geom& geom)
 {
-    std::string extension = std::filesystem::path(filename).extension().string();
+    std::string extension = std::filesystem::u8path(filename).extension().string();
     std::transform(extension.begin(), extension.end(), extension.begin(),
         [](unsigned char value) { return static_cast<char>(std::tolower(value)); });
     if (extension != ".obj") {
         throw std::runtime_error("Mesh file must use the .obj extension: " + filename);
     }
-    validateObjVertexRecords(filename);
-
-    tinyobj::ObjReaderConfig config;
-    config.triangulate = false;
-    config.vertex_color = false;
-    config.mtl_search_path = std::filesystem::path(filename).parent_path().string();
-    tinyobj::ObjReader original;
-    if (!original.ParseFromFile(filename, config)) {
-        throw std::runtime_error("Failed to load OBJ: " + filename + "\n" + original.Error());
-    }
-    if (!original.Warning().empty()) {
-        std::cerr << "OBJ warning (" << filename << "): " << original.Warning();
-    }
-
-    validateObjIndices(original, filename);
-    const auto& vertices = original.GetAttrib().vertices;
+    const obj::Mesh source = obj::read(filename);
     std::vector<Triangle> loadedTriangles;
     std::vector<TriangleSurface> loadedSurfaces;
     glm::vec3 boundsMin(FLT_MAX);
@@ -253,7 +164,7 @@ void Scene::loadObjMesh(const std::string& filename, Geom& geom)
     const size_t maximumIndex = static_cast<size_t>((std::numeric_limits<int>::max)());
 
     auto appendTriangle = [&](const glm::vec3& v0, const glm::vec3& v1, const glm::vec3& v2,
-                              tinyobj::index_t i0, tinyobj::index_t i1, tinyobj::index_t i2) {
+                              obj::Index i0, obj::Index i1, obj::Index i2) {
         Triangle triangle{v0, v1, v2, glm::vec3(0.0f)};
         // Double precision prevents normal computation from overflowing or
         // underflowing for otherwise representable float positions.
@@ -271,24 +182,23 @@ void Scene::loadObjMesh(const std::string& filename, Geom& geom)
             throw std::runtime_error("OBJ triangle count exceeds int indexing: " + filename);
         }
         TriangleSurface surface{};
-        const tinyobj::index_t indices[3] = {i0, i1, i2};
-        const auto& source = original.GetAttrib();
+        const obj::Index indices[3] = {i0, i1, i2};
         for (int k = 0; k < 3; ++k) {
             surface.normals[k] = triangle.normal;
-            if (geom.smoothNormals && indices[k].normal_index >= 0) {
-                const size_t index = size_t(indices[k].normal_index) * 3;
-                if (index + 2 >= source.normals.size()) throw std::runtime_error("Invalid OBJ normal index: " + filename);
-                glm::vec3 n(source.normals[index], source.normals[index+1], source.normals[index+2]);
+            if (geom.smoothNormals && indices[k].normal >= 0) {
+                const size_t index = size_t(indices[k].normal);
+                if (index >= source.normals.size()) throw std::runtime_error("Invalid OBJ normal index: " + filename);
+                glm::vec3 n(source.normals[index][0], source.normals[index][1], source.normals[index][2]);
                 if (!std::isfinite(n.x) || !std::isfinite(n.y) || !std::isfinite(n.z)
                     || !std::isfinite(glm::dot(n,n)) || glm::dot(n,n) <= 0)
                     throw std::runtime_error("Invalid OBJ normal: " + filename);
                 surface.normals[k] = glm::normalize(n);
             }
             if (geom.textured) {
-                const int index = indices[k].texcoord_index;
-                if (index < 0 || size_t(index)*2+1 >= source.texcoords.size())
+                const int index = indices[k].uv;
+                if (index < 0 || size_t(index) >= source.texcoords.size())
                     throw std::runtime_error("Textured mesh requires valid OBJ UVs: " + filename);
-                surface.uvs[k] = glm::vec2(source.texcoords[size_t(index)*2], source.texcoords[size_t(index)*2+1]);
+                surface.uvs[k] = glm::vec2(source.texcoords[size_t(index)][0], source.texcoords[size_t(index)][1]);
                 if (!std::isfinite(surface.uvs[k].x) || !std::isfinite(surface.uvs[k].y))
                     throw std::runtime_error("Invalid OBJ UV: " + filename);
             }
@@ -301,64 +211,18 @@ void Scene::loadObjMesh(const std::string& filename, Geom& geom)
         }
     };
 
-    for (const auto& shape : original.GetShapes()) {
-        size_t offset = 0;
-        for (const auto faceSize : shape.mesh.num_face_vertices) {
-            const size_t faceStart = offset;
-            offset += faceSize;
-            auto corner = [&](size_t index) {
-                const size_t vertex = static_cast<size_t>(
-                    shape.mesh.indices[faceStart + index].vertex_index);
-                return glm::vec3(vertices[3 * vertex], vertices[3 * vertex + 1], vertices[3 * vertex + 2]);
+    for (const auto& face : source.faces) {
+        const auto indices = obj::triangulate(source, face, filename);
+        if (indices.empty()) { ++skippedDegenerate; continue; }
+        for (const auto& triangle : indices) {
+            const auto i0 = face.corners[triangle[0]];
+            const auto i1 = face.corners[triangle[1]];
+            const auto i2 = face.corners[triangle[2]];
+            const auto point = [&](int index) {
+                const auto& p = source.positions[index];
+                return glm::vec3(p[0], p[1], p[2]);
             };
-            if (faceSize == 3) {
-                appendTriangle(corner(0), corner(1), corner(2), shape.mesh.indices[faceStart],
-                    shape.mesh.indices[faceStart+1], shape.mesh.indices[faceStart+2]);
-                continue;
-            }
-
-            // Project polygons onto the dominant normal plane. Earcut handles
-            // concavity; preserve the input winding when returning to 3D.
-            const glm::dvec3 origin(corner(0));
-            glm::dvec3 polygonNormal(0.0);
-            for (size_t i = 1; i + 1 < faceSize; ++i) {
-                polygonNormal += glm::cross(glm::dvec3(corner(i)) - origin,
-                    glm::dvec3(corner(i + 1)) - origin);
-            }
-            if (glm::dot(polygonNormal, polygonNormal) == 0.0) {
-                ++skippedDegenerate;
-                continue;
-            }
-            int droppedAxis = 0;
-            for (int axis = 1; axis < 3; ++axis) {
-                if (std::abs(polygonNormal[axis]) > std::abs(polygonNormal[droppedAxis])) {
-                    droppedAxis = axis;
-                }
-            }
-            const int axis0 = (droppedAxis + 1) % 3;
-            const int axis1 = (droppedAxis + 2) % 3;
-            std::vector<std::vector<std::array<double, 2>>> polygon(1);
-            polygon[0].reserve(faceSize);
-            for (size_t i = 0; i < faceSize; ++i) {
-                const glm::dvec3 point = glm::dvec3(corner(i)) - origin;
-                polygon[0].push_back({point[axis0], point[axis1]});
-            }
-            const auto indices = mapbox::earcut<uint32_t>(polygon);
-            if (indices.empty()) {
-                throw std::runtime_error("Unable to triangulate OBJ polygon: " + filename);
-            }
-            for (size_t i = 0; i < indices.size(); i += 3) {
-                const glm::vec3 v0 = corner(indices[i]);
-                glm::vec3 v1 = corner(indices[i + 1]);
-                glm::vec3 v2 = corner(indices[i + 2]);
-                const glm::dvec3 triangleNormal = glm::cross(
-                    glm::dvec3(v1) - glm::dvec3(v0), glm::dvec3(v2) - glm::dvec3(v0));
-                auto i0 = shape.mesh.indices[faceStart+indices[i]];
-                auto i1 = shape.mesh.indices[faceStart+indices[i+1]];
-                auto i2 = shape.mesh.indices[faceStart+indices[i+2]];
-                if (glm::dot(triangleNormal, polygonNormal) < 0.0) { std::swap(v1, v2); std::swap(i1, i2); }
-                appendTriangle(v0, v1, v2, i0, i1, i2);
-            }
+            appendTriangle(point(i0.vertex), point(i1.vertex), point(i2.vertex), i0, i1, i2);
         }
     }
     if (loadedTriangles.empty()) {
@@ -388,7 +252,7 @@ void Scene::loadObjMesh(const std::string& filename, Geom& geom)
     geom.boundsMin = boundsMin;
     geom.boundsMax = boundsMax;
 
-    cout << "Loaded OBJ '" << filename << "': groups=" << original.GetShapes().size()
+    cout << "Loaded OBJ '" << filename << "': faces=" << source.faces.size()
          << ", triangles=" << count << ", triangleStart=" << start
          << ", skipped_degenerate=" << skippedDegenerate << '\n'
          << "  Local bounds: " << glm::to_string(boundsMin)
@@ -505,7 +369,7 @@ void Scene::loadFromJSON(const std::string& jsonName)
                 throw std::runtime_error("Mesh FILE must not be empty");
             }
             const auto meshPath = (sceneDirectory / std::filesystem::u8path(filename)).lexically_normal();
-            loadObjMesh(meshPath.string(), newGeom);
+            loadObjMesh(meshPath.u8string(), newGeom);
         }
 
         geoms.push_back(newGeom);

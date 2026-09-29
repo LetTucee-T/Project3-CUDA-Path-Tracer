@@ -58,6 +58,7 @@ set(headers
     src/glslUtility.hpp
     src/pathtrace.h
     src/scene.h
+    src/objLoader.h
     src/sceneStructs.h
     src/utilities.h
 )
@@ -73,6 +74,7 @@ set(sources
     src/intersections.cu
     src/interactions.cu
     src/scene.cpp
+    src/objLoader.cpp
     src/utilities.cpp
 )
 
@@ -128,6 +130,10 @@ set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT $
 # CPU scene-loading checks do not create a CUDA context or an OpenGL window.
 include(CTest)
 if(BUILD_TESTING)
+    add_executable(obj_loader_tests tests/obj_loader_tests.cpp src/objLoader.cpp)
+    target_include_directories(obj_loader_tests PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/src")
+    add_test(NAME obj_loader_cpu COMMAND obj_loader_tests "${CMAKE_CURRENT_BINARY_DIR}/Testing/obj_loader")
+
     add_executable(camera_sampling_tests tests/camera_sampling_tests.cpp)
     target_include_directories(camera_sampling_tests PRIVATE
         "${CMAKE_CURRENT_SOURCE_DIR}/src" ${CMAKE_CUDA_TOOLKIT_INCLUDE_DIRECTORIES})
@@ -154,6 +160,7 @@ if(BUILD_TESTING)
         tests/scene_loader_tests.cpp
         src/bvh.cpp
         src/scene.cpp
+        src/objLoader.cpp
         src/stb.cpp
         src/utilities.cpp
     )
@@ -174,6 +181,7 @@ if(BUILD_TESTING)
         src/intersections.cu
         src/interactions.cu
         src/scene.cpp
+        src/objLoader.cpp
         src/stb.cpp
         src/utilities.cpp
     )
@@ -194,7 +202,7 @@ if(BUILD_TESTING)
     add_executable(thin_lens_render_tests
         tests/thin_lens_render_tests.cu
         src/bvh.cpp src/pathtrace.cu src/intersections.cu src/interactions.cu
-        src/scene.cpp src/utilities.cpp src/stb.cpp)
+        src/scene.cpp src/objLoader.cpp src/utilities.cpp src/stb.cpp)
     target_include_directories(thin_lens_render_tests PRIVATE
         "${CMAKE_CURRENT_SOURCE_DIR}/src" ${CMAKE_CUDA_TOOLKIT_INCLUDE_DIRECTORIES})
     set_target_properties(thin_lens_render_tests PROPERTIES
@@ -222,12 +230,12 @@ endif()
 
 # Reproducible scene captures with the production renderer, without an OpenGL window.
 add_executable(scene_render tools/render_scene.cpp src/bvh.cpp src/pathtrace.cu
-    src/intersections.cu src/interactions.cu src/scene.cpp src/utilities.cpp src/image.cpp src/stb.cpp)
+    src/intersections.cu src/interactions.cu src/scene.cpp src/objLoader.cpp src/utilities.cpp src/image.cpp src/stb.cpp)
 target_include_directories(scene_render PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/src" ${CMAKE_CUDA_TOOLKIT_INCLUDE_DIRECTORIES})
 set_target_properties(scene_render PROPERTIES CUDA_SEPARABLE_COMPILATION ON CUDA_ARCHITECTURES native)
 
 if(BUILD_TESTING)
-    add_executable(appearance_tests tests/appearance_tests.cpp src/scene.cpp src/bvh.cpp src/utilities.cpp src/stb.cpp)
+    add_executable(appearance_tests tests/appearance_tests.cpp src/scene.cpp src/objLoader.cpp src/bvh.cpp src/utilities.cpp src/stb.cpp)
     target_include_directories(appearance_tests PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/src" ${CMAKE_CUDA_TOOLKIT_INCLUDE_DIRECTORIES})
     add_test(NAME appearance_cpu COMMAND appearance_tests "${CMAKE_CURRENT_BINARY_DIR}/Testing/appearance")
 endif()

@@ -61,6 +61,13 @@ __pycache__/
 /docs/SCENE.md
 /docs/SUBMISSION.md
 
+# Retired OBJ dependencies stay local if restored from an older checkout.
+# Keep the framework headers, Windows libraries, and their notices in external/.
+/external/include/tiny_obj_loader.h
+/external/include/mapbox/earcut.hpp
+/external/licenses/tinyobjloader-LICENSE.txt
+/external/licenses/earcut-LICENSE.txt
+
 # Raw captures and ad-hoc renders; published PNGs are under docs/images/.
 /*.png
 /*.jpg

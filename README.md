@@ -14,7 +14,7 @@ The fractured blade reflects Gothic windows and candles above a textured stone f
 
 - Cosine-weighted diffuse scattering, ideal mirror reflection, emissive surfaces, and multiple path bounces.
 - Stochastic pixel sampling, Thrust stream compaction, and independently toggleable material sorting.
-- OBJ meshes with optional smooth normals and UV textures; brute-force, mesh AABB, and BVH intersection modes.
+- An in-tree OBJ reader and polygon triangulator, optional smooth normals and UV textures; brute-force, mesh AABB, and BVH intersection modes.
 - Physical depth of field with adjustable aperture radius and focus distance.
 - Textured diffuse/specular mixtures, interactive controls, and headless PNG / linear HDR capture.
 
@@ -69,7 +69,7 @@ Material sorting uses `thrust::sort_by_key` on paired path/intersection records 
 
 ### OBJ meshes and BVH
 
-OBJ polygons are triangulated on the CPU. A mesh-level AABB rejects misses before scanning triangles. The BVH further partitions each mesh into a binary hierarchy, built on the CPU and traversed on the GPU with an explicit stack, near-child ordering, and closest-hit pruning.
+The custom [OBJ reader and ear-clipping triangulator](src/objLoader.cpp) run on the CPU using only the C++17 standard library. Independent corner UVs/normals and polygon winding are preserved; triangles and simple planar polygons, including concave faces, are supported ([input scope](external/THIRD_PARTY.md#supported-obj-input)). A mesh-level AABB rejects misses before scanning triangles. The BVH further partitions each mesh into a binary hierarchy, built on the CPU and traversed on the GPU with an explicit stack, near-child ordering, and closest-hit pruning.
 
 | Scene | Brute force | Mesh AABB | BVH | BVH speedup vs. brute force |
 | --- | ---: | ---: | ---: | ---: |
@@ -85,7 +85,7 @@ OBJ parsing and tree construction already run on the CPU. A hypothetical CPU tra
 
 ## Build and run
 
-The tested setup uses CMake 3.24+, Visual Studio 2022 C++ tools, CUDA 12.9, and the bundled Windows graphics dependencies. From the repository root, adjusting the CUDA installation path if needed:
+The tested setup uses CMake 3.24+, Visual Studio 2022 C++ tools, CUDA 12.9, and the bundled Windows graphics dependencies. No external OBJ library is needed; the other [framework dependencies](external/THIRD_PARTY.md#framework-dependencies) remain in use. From the repository root, adjusting the CUDA installation path if needed:
 
 ```powershell
 cmake -S . -B build -G "Visual Studio 17 2022" -A x64 -T "cuda=C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.9" -DBUILD_TESTING=ON
@@ -105,8 +105,6 @@ Headless capture writes PNG, HDR, float32 RGB, and a JSON timing record:
 Mouse: left drag orbits, right drag zooms, middle drag pans. `S` saves; `Esc` saves and exits; `Space` resets the look-at point. ImGui exposes AA, compaction, sorting, mesh culling/BVH, and lens controls. Changes restart accumulation.
 
 In `Camera`, `BVH=false, MESH_CULLING=false` selects brute force; `false,true` selects one mesh AABB; `BVH=true` selects hierarchical traversal. Enable `DEPTH_OF_FIELD` to use `LENS_RADIUS` and `FOCAL_DISTANCE`, both in world units. Materials are assigned per mesh in JSON, including `BASE_COLOR_TEXTURE` and `COAT_WEIGHT`; optional `SMOOTH_NORMALS` belongs to the mesh object. MTL shading is not imported automatically.
-
-[Validation summary](docs/data/submission_validation.json) · [CTest output](docs/data/submission_ctest.txt).
 
 ## Limitations
 
