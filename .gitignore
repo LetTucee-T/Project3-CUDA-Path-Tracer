@@ -74,6 +74,10 @@ __pycache__/
 *.f32
 *.hdr
 
+# Early diagnostic scenes stay local; keep fixtures used by automated tests.
+/scenes/mesh_aabb_validation.json
+/scenes/dof_validation.json
+
 # Superseded scene entry points; keep only the final hall variants.
 /scenes/shatterseal_asset_preview.json
 /scenes/shatterseal_moonlit_hall.json
