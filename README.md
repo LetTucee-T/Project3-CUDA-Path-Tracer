@@ -236,6 +236,13 @@ For brute force set `BVH=false, MESH_CULLING=false`; for one mesh AABB use `fals
 
 Materials support ideal reflection and diffuse/specular mixtures; rough microfacet reflection, refraction and normal mapping are possible extensions. Small emitters are reached through scattered paths, so direct-light sampling would improve convergence. The exterior uses a finite textured backdrop rather than an environment-map system. Per-sample speed improvements and improved convergence are separate goals.
 
+## Credits
+
+- **Framework:** University of Pennsylvania's [CIS565 CUDA Path Tracer](https://github.com/CIS5650-Fall-2025/Project3-CUDA-Path-Tracer).
+- **Weapon model:** Monster Hunter Wilds.
+- **Scene assets:** Hall geometry and procedural textures were generated for this project. The distant night backdrop was created with OpenAI image generation ([prompt](docs/data/sky_prompt.txt)).
+- **Libraries:** CUDA/Thrust, GLM, nlohmann/json, stb, GLFW/GLEW/OpenGL, and Dear ImGui. See [dependencies and OBJ input details](external/THIRD_PARTY.md).
+
 ## Additional results and data
 
 <details>

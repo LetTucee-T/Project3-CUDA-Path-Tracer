@@ -61,8 +61,11 @@ __pycache__/
 /docs/SCENE.md
 /docs/SUBMISSION.md
 
-# Retired OBJ dependencies stay local if restored from an older checkout.
-# Keep the framework headers, Windows libraries, and their notices in external/.
+# Development-only verification records.
+/docs/data/obj_loader_verification.json
+/docs/data/obj_loader_ctest.txt
+
+# Local-only import support files.
 /external/include/tiny_obj_loader.h
 /external/include/mapbox/earcut.hpp
 /external/licenses/tinyobjloader-LICENSE.txt

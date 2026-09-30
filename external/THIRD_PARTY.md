@@ -1,6 +1,6 @@
 # Dependencies and OBJ input scope
 
-OBJ parsing and polygon triangulation are implemented in [objLoader.cpp](../src/objLoader.cpp) using only the C++17 standard library. No external OBJ parser or triangulation library is required.
+OBJ parsing and polygon triangulation are implemented in [objLoader.cpp](../src/objLoader.cpp) using only the C++17 standard library.
 
 ## Supported OBJ input
 
@@ -12,8 +12,4 @@ OBJ parsing and polygon triangulation are implemented in [objLoader.cpp](../src/
 
 ## Framework dependencies
 
-The framework still uses CUDA/Thrust for GPU execution and generic algorithms, GLM for rendering math, nlohmann/json for scene descriptions, stb for image I/O, GLFW/GLEW/OpenGL for the preview, and Dear ImGui for controls. Install the CUDA toolkit and a compatible graphics driver; the remaining headers/sources and Windows GLFW/GLEW libraries are bundled. Their existing copyright and license notices are retained.
-
-## Historical OBJ libraries
-
-Earlier captures used tinyobjloader v2.0.0rc13 and Earcut v2.2.4. Both libraries have been removed from the current build; their headers and standalone license files are excluded from submission. Historical evidence keeps its original provenance. [Replacement and appearance verification](../docs/data/obj_loader_verification.json) records the unchanged output.
+The framework uses CUDA/Thrust for GPU execution and generic algorithms, GLM for rendering math, nlohmann/json for scene descriptions, stb for image I/O, GLFW/GLEW/OpenGL for the preview, and Dear ImGui for controls. Install the CUDA toolkit and a compatible graphics driver; the remaining headers/sources and Windows GLFW/GLEW libraries are bundled. Their existing copyright and license notices are retained.
